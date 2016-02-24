@@ -28,12 +28,22 @@ class User extends \yii\db\ActiveRecord
         return '{{%user}}';
     }
 
+    public function beforeValidate()
+    {
+        if($this->isNewRecord){
+            $this->created_at = time();
+        }
+        $this->updated_at = time();
+        return parent::beforeValidate();
+    }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
+            [['email', 'username'], 'filter', 'filter' => 'trim'],
             [['username', 'password_hash', 'email', 'created_at', 'updated_at'], 'required'],
             [['role'], 'string'],
             [['status', 'created_at', 'updated_at'], 'integer'],
@@ -41,7 +51,9 @@ class User extends \yii\db\ActiveRecord
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'unique'],
             [['email'], 'unique'],
-            [['password_reset_token'], 'unique']
+            [['email'], 'email'],
+            [['password_reset_token'], 'unique'],
+            ['password_hash', 'string', 'min' => 6],
         ];
     }
 
@@ -52,15 +64,38 @@ class User extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'username' => Yii::t('app', 'Username'),
-            'role' => Yii::t('app', 'Role'),
+            'username' => Yii::t('app', 'Ф.И.О.'),
+            'role' => Yii::t('app', 'Роль'),
             'auth_key' => Yii::t('app', 'Auth Key'),
-            'password_hash' => Yii::t('app', 'Password Hash'),
+            'password_hash' => Yii::t('app', 'Пароль'),
             'password_reset_token' => Yii::t('app', 'Password Reset Token'),
             'email' => Yii::t('app', 'Email'),
-            'status' => Yii::t('app', 'Status'),
-            'created_at' => Yii::t('app', 'Created At'),
-            'updated_at' => Yii::t('app', 'Updated At'),
+            'status' => Yii::t('app', 'Статус'),
+            'created_at' => Yii::t('app', 'Дата регистрации'),
+            'updated_at' => Yii::t('app', 'Последнее обновление'),
         ];
+    }
+
+    public static function listStatus(){
+        return [
+            10 => Yii::t('app', 'Активный'),
+            20 => Yii::t('app', 'Забанен'),
+        ];
+    }
+
+    public static function getStatusName($id){
+        return isset(self::listStatus()[$id]) ? self::listStatus()[$id] : null;
+    }
+
+    public static function listRole(){
+        return [
+            'user' => Yii::t('app', 'Пользователь'),
+            'moderator' => Yii::t('app', 'Модератор'),
+            'admin' => Yii::t('app', 'Админ'),
+        ];
+    }
+
+    public static function getRoleName($id){
+        return isset(self::listRole()[$id]) ? self::listRole()[$id] : null;
     }
 }

@@ -43,6 +43,7 @@ AppAsset::register($this);
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => Yii::t('app', 'Вход'), 'url' => ['/site/login']];
     } else {
+        $menuItems[] = ['label' => Yii::t('app', 'Пользователи'), 'url' => ['/user/index']];
         $menuItems[] = ['label' => Yii::t('app', 'Категории'), 'items' => [
             ['label' => Yii::t('app', 'Категории'), 'url' => ['/category/index']],
             ['label' => Yii::t('app', 'Подкатегории'), 'url' => ['/podcategory/index']],
