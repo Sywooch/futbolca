@@ -18,9 +18,12 @@ AppAsset::register($this);
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="php-shaman">
+    <meta name="generator" content="php-shaman">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
+    <title><?= Html::encode($this->title . ' | ' . Yii::$app->name) ?></title>
     <?php $this->head() ?>
+    <link rel="shortcut icon" href="/admin/css/favicon.ico">
 </head>
 <body>
 <?php $this->beginBody() ?>
@@ -28,22 +31,23 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => Yii::$app->name,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
+        ['label' => Yii::t('app', 'Главная'), 'url' => ['/site/index']],
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $menuItems[] = ['label' => Yii::t('app', 'Вход'), 'url' => ['/site/login']];
     } else {
+        $menuItems[] = ['label' => Yii::t('app', 'Категории'), 'url' => ['/category/index']];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
+                Yii::t('app', 'Выход ({user})', ['user' => Yii::$app->user->identity->username]),
                 ['class' => 'btn btn-link']
             )
             . Html::endForm()
@@ -55,7 +59,6 @@ AppAsset::register($this);
     ]);
     NavBar::end();
     ?>
-
     <div class="container">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
@@ -67,9 +70,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <p class="pull-left">&copy; <?=Yii::$app->name?> <?= date('Y') ?></p>
     </div>
 </footer>
 

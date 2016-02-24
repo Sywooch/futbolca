@@ -14,8 +14,13 @@ return [
     'sourceLanguage'=>'en_US',
     'language' => 'ru',
     'charset' => 'UTF-8',
-    'name' => \Yii::t('app', 'Futboland admin'),
-    'modules' => [],
+    'name' => \Yii::t('app', 'Футболки admin'),
+    'modules' => [
+        'gii' => [
+            'class' => 'yii\gii\Module',
+            'allowedIPs' => ['127.0.0.1', '::1']
+        ],
+    ],
     'components' => [
         'authManager' => [
             'class' => 'yii\rbac\PhpManager',

@@ -103,13 +103,15 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         $model = new <?= $modelClass ?>();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', <?= $urlParams ?>]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        if ($model->load(Yii::$app->request->post())) {
+            if($model->validate()){
+                $model->save();
+                return $this->redirect(['view', <?= $urlParams ?>]);
+            }
         }
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -123,12 +125,14 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $model = $this->findModel(<?= $actionParams ?>);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', <?= $urlParams ?>]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            if($model->validate()){
+                $model->save();
+                return $this->redirect(['view', <?= $urlParams ?>]);
+            }
         }
+        return $this->render('update', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -167,7 +171,7 @@ if (count($pks) === 1) {
         if (($model = <?= $modelClass ?>::findOne(<?= $condition ?>)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
         }
     }
 }

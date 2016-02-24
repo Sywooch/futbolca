@@ -14,7 +14,7 @@ return [
     'language' => 'ru',
     'charset' => 'UTF-8',
     'timeZone' => 'Europe/Kiev',
-    'name' => \Yii::t('app', 'Futboland'),
+    'name' => \Yii::t('app', 'Футболки'),
     'controllerNamespace' => 'frontend\controllers',
     'modules' => [
         'gii' => [
