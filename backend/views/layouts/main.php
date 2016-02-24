@@ -45,7 +45,8 @@ AppAsset::register($this);
     } else {
         $menuItems[] = ['label' => Yii::t('app', 'Категории'), 'items' => [
             ['label' => Yii::t('app', 'Категории'), 'url' => ['/category/index']],
-            ['label' => Yii::t('app', 'Подкатегории'), 'url' => ['/podcategory/index']]
+            ['label' => Yii::t('app', 'Подкатегории'), 'url' => ['/podcategory/index']],
+            ['label' => Yii::t('app', 'Метки'), 'url' => ['/marker/index']],
         ]];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
