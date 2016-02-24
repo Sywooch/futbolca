@@ -3,24 +3,24 @@
 namespace backend\controllers;
 
 use Yii;
-use backend\models\Category;
-use backend\models\CategorySearch;
+use backend\models\Podcategory;
+use backend\models\PodcategorySearch;
 use backend\ext\BaseController;
 use yii\web\NotFoundHttpException;
 
 /**
- * CategoryController implements the CRUD actions for Category model.
+ * PodcategoryController implements the CRUD actions for Podcategory model.
  */
-class CategoryController extends BaseController
+class PodcategoryController extends BaseController
 {
 
     /**
-     * Lists all Category models.
+     * Lists all Podcategory models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new CategorySearch();
+        $searchModel = new PodcategorySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -30,7 +30,7 @@ class CategoryController extends BaseController
     }
 
     /**
-     * Displays a single Category model.
+     * Displays a single Podcategory model.
      * @param string $id
      * @return mixed
      */
@@ -42,18 +42,18 @@ class CategoryController extends BaseController
     }
 
     /**
-     * Creates a new Category model.
+     * Creates a new Podcategory model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Category();
+        $model = new Podcategory();
 
         if ($model->load(Yii::$app->request->post())) {
             if($model->validate()){
                 $model->save();
-                return $this->redirect(['index']);
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         }
         return $this->render('create', [
@@ -62,7 +62,7 @@ class CategoryController extends BaseController
     }
 
     /**
-     * Updates an existing Category model.
+     * Updates an existing Podcategory model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
@@ -84,7 +84,7 @@ class CategoryController extends BaseController
     }
 
     /**
-     * Deletes an existing Category model.
+     * Deletes an existing Podcategory model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
@@ -97,15 +97,15 @@ class CategoryController extends BaseController
     }
 
     /**
-     * Finds the Category model based on its primary key value.
+     * Finds the Podcategory model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return Category the loaded model
+     * @return Podcategory the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Category::findOne($id)) !== null) {
+        if (($model = Podcategory::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));

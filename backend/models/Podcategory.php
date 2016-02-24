@@ -2,14 +2,14 @@
 
 namespace backend\models;
 
-use common\UrlHelper;
 use Yii;
-use yii\helpers\ArrayHelper;
+use common\UrlHelper;
 
 /**
- * This is the model class for table "{{%category}}".
+ * This is the model class for table "{{%podcategory}}".
  *
  * @property string $id
+ * @property string $category
  * @property integer $position
  * @property string $name
  * @property string $url
@@ -17,15 +17,18 @@ use yii\helpers\ArrayHelper;
  * @property string $keywords
  * @property string $text
  * @property string $text2
+ *
+ * @property Category $category0
  */
-class Category extends \yii\db\ActiveRecord
+
+class Podcategory extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%category}}';
+        return '{{%podcategory}}';
     }
 
     public function beforeValidate()
@@ -46,13 +49,12 @@ class Category extends \yii\db\ActiveRecord
         return [
             [['name', 'url', 'keywords', 'description'], 'filter', 'filter' => 'trim', 'skipOnArray' => true],
             [['name', 'url', 'keywords', 'description'], 'filter', 'filter' => 'strip_tags', 'skipOnArray' => true],
-            [['position'], 'integer'],
-            [['position'], 'default', 'value' => 0],
-            [['name', 'url'], 'required'],
+            [['category', 'name', 'url'], 'required'],
+            [['category', 'position'], 'integer'],
             [['text', 'text2'], 'string'],
             [['name', 'url', 'description', 'keywords'], 'string', 'max' => 255],
             [['name'], 'unique'],
-            [['url'], 'unique'],
+            [['url'], 'unique']
         ];
     }
 
@@ -63,25 +65,22 @@ class Category extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'position' => Yii::t('app', 'Позиция'),
-            'name' => Yii::t('app', 'Название'),
+            'category' => Yii::t('app', 'Category'),
+            'position' => Yii::t('app', 'Position'),
+            'name' => Yii::t('app', 'Name'),
             'url' => Yii::t('app', 'Url'),
             'description' => Yii::t('app', 'Description'),
             'keywords' => Yii::t('app', 'Keywords'),
-            'text' => Yii::t('app', 'Текст'),
-            'text2' => Yii::t('app', 'Дополнительный текст'),
+            'text' => Yii::t('app', 'Text'),
+            'text2' => Yii::t('app', 'Text2'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPodcategories()
+    public function getCategory0()
     {
-        return $this->hasMany(Podcategory::className(), ['category' => 'id']);
-    }
-
-    public static function getCatForList(){
-        return ArrayHelper::map(self::find()->orderBy("name asc")->all(), 'id', 'name');
+        return $this->hasOne(Category::className(), ['id' => 'category']);
     }
 }

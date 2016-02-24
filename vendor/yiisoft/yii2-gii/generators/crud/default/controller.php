@@ -124,7 +124,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         $model = $this->findModel(<?= $actionParams ?>);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
             if($model->validate()){
                 $model->save();
                 return $this->redirect(['view', <?= $urlParams ?>]);
