@@ -18,6 +18,9 @@ use Yii;
  * @property integer $created_at
  * @property integer $updated_at
  */
+
+// $2y$13$zMx1jhNbJ1h9To0g9FJM2.5AkOFnMkaUIf8mmbr2jFe0A/4sb9a3W = 111111
+
 class User extends \yii\db\ActiveRecord
 {
     /**
@@ -30,10 +33,7 @@ class User extends \yii\db\ActiveRecord
 
     public function beforeValidate()
     {
-        if($this->isNewRecord){
-            $this->created_at = time();
-        }
-        $this->updated_at = time();
+
         return parent::beforeValidate();
     }
 
@@ -44,7 +44,7 @@ class User extends \yii\db\ActiveRecord
     {
         return [
             [['email', 'username'], 'filter', 'filter' => 'trim'],
-            [['username', 'password_hash', 'email', 'created_at', 'updated_at'], 'required'],
+            [['username', 'email', 'created_at', 'updated_at'], 'required'],
             [['role'], 'string'],
             [['status', 'created_at', 'updated_at'], 'integer'],
             [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],

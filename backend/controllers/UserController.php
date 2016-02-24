@@ -51,6 +51,11 @@ class UserController extends BaseController
         $model = new User();
 
         if ($model->load(Yii::$app->request->post())) {
+            $model->created_at = time();
+            $model->updated_at = time();
+            if(!$model->password_hash){
+                $model->password_hash = rand(111111, 999999);
+            }
             if($model->validate()){
                 $model->password_hash = Yii::$app->security->generatePasswordHash($model->password_hash);
                 $model->save();
@@ -76,6 +81,7 @@ class UserController extends BaseController
             if(!$model->password_hash){
                 $model->password_hash = $oldPass;
             }
+            $model->updated_at = time();
             if($model->validate()){
                 if($model->password_hash != $oldPass){
                     $model->password_hash = Yii::$app->security->generatePasswordHash($model->password_hash);
