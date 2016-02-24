@@ -13,8 +13,8 @@ return [
     'sourceLanguage'=>'en_US',
     'language' => 'ru',
     'charset' => 'UTF-8',
-    'timeZone' => 'Europe/Moscow',
-    'name' => \Yii::t('app', 'Book'),
+    'timeZone' => 'Europe/Kiev',
+    'name' => \Yii::t('app', 'Futboland'),
     'controllerNamespace' => 'frontend\controllers',
     'modules' => [
         'gii' => [
@@ -50,11 +50,11 @@ return [
         ],
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname='.(($_SERVER['REMOTE_ADDR'] == '127.0.0.1')?'booking':''),
-            'username' => ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')?'root':'',
-            'password' => ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')?'':'',
+            'dsn' => 'mysql:host=localhost;dbname=futbolca',
+            'username' => 'root',
+            'password' => '',
             'charset' => 'utf8',
-            'tablePrefix' => 'b_',
+            'tablePrefix' => 'fl_',
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,

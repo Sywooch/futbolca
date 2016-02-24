@@ -2,6 +2,12 @@
 
 $config = [
     'components' => [
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=futbolca',
+            'username' => 'root',
+            'password' => '',
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => '0npz9bGwqKJdh6n8OAvYvCdOwuS36ovg',

@@ -12,6 +12,14 @@ return [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'console\controllers',
     'components' => [
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname='.((mb_substr_count(__DIR__, ':\\') > 0)?'futbolca':''),
+            'username' => (mb_substr_count(__DIR__, ':\\'))?'root':'',
+            'password' => (mb_substr_count(__DIR__, ':\\'))?'':'',
+            'charset' => 'utf8',
+            'tablePrefix' => 'fl_',
+        ],
         'log' => [
             'targets' => [
                 [

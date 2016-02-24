@@ -11,8 +11,54 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
+    'sourceLanguage'=>'en_US',
+    'language' => 'ru',
+    'charset' => 'UTF-8',
+    'name' => \Yii::t('app', 'Futboland admin'),
     'modules' => [],
     'components' => [
+        'authManager' => [
+            'class' => 'yii\rbac\PhpManager',
+        ],
+        'formatter' => [
+            'dateFormat' => 'dd.MM.yyyy',
+            'decimalSeparator' => ',',
+            'thousandSeparator' => ' ',
+            'currencyCode' => 'USD',
+        ],
+        'i18n'=> [
+            'translations' => [
+                'app' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                    'sourceLanguage' => 'en_US',
+                ]
+            ],
+        ],
+        'request' => [
+            'baseUrl' => '/admin/'
+        ],
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'enableStrictParsing' => true,
+            'baseUrl' => '/admin/',
+            'suffix' => '/',
+            'rules' => [
+                '/' => 'site/index',
+                '<controller:\w+>/<id:\d+>/<action:(create|update|delete)>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                '<controller:\w+>' => '<controller>/index',
+            ],
+        ],
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=base',
+            'username' => '',
+            'password' => '',
+            'charset' => 'utf8',
+            'tablePrefix' => 'fl_',
+        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
@@ -29,14 +75,6 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
-        ],
-        */
     ],
     'params' => $params,
 ];
