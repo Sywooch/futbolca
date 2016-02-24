@@ -1,13 +1,13 @@
 # yii console command
-#/yii
-#
-#/frontend/web/assets
-#/frontend/runtime
-#
-#/backend/web/assets
-#/backend/runtime
-#
-#/console/runtime
+/yii
+
+/frontend/web/assets
+/frontend/runtime
+
+/backend/web/assets
+/backend/runtime
+
+/console/runtime
 
 # phpstorm project files
 .idea
@@ -24,7 +24,7 @@ nbproject
 Thumbs.db
 
 # composer vendor dir
-#/vendor
+/vendor
 
 # composer itself is not needed
 composer.phar
