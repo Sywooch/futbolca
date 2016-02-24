@@ -4,10 +4,10 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\Podcategory */
+/* @var $model backend\models\Paying */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Podcategories'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Payings'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="modal-header">
@@ -15,21 +15,18 @@ $this->params['breadcrumbs'][] = $this->title;
     <h4 class="modal-title" id="myModalLabel"><?=Yii::t('app', 'Podcategory')?>: "<?= Html::encode($this->title) ?>"</h4>
 </div>
 <div class="modal-body">
+
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
-            [
-                'attribute' => 'category',
-                'value'=> $model->category0->name,
-            ],
-            'position',
             'name',
-            'url',
-            'description',
-            'keywords',
             'text:ntext',
-            'text2:ntext',
+            [
+                'attribute' => 'img',
+                'format' => 'raw',
+                'value'=> Html::img($model->getImageLink(), ['class' => 'img-responsive', 'style' => 'max-width: 300px;']),
+            ],
         ],
     ]) ?>
 </div>

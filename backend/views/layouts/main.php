@@ -50,6 +50,8 @@ AppAsset::register($this);
             ['label' => Yii::t('app', 'Метки'), 'url' => ['/marker/index']],
         ]];
         $menuItems[] = ['label' => Yii::t('app', 'Тексты'), 'items' => [
+            ['label' => Yii::t('app', 'Доставка'), 'url' => ['/delivery/index']],
+            ['label' => Yii::t('app', 'Способы оплаты'), 'url' => ['/paying/index']],
             ['label' => Yii::t('app', 'Стат страницы'), 'url' => ['/page/index']],
             ['label' => Yii::t('app', 'Новости'), 'url' => ['/news/index']],
         ]];
