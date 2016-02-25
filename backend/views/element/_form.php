@@ -36,16 +36,16 @@ $this->registerJs($js, $this::POS_END, 'my-img-delete');
             <label class="control-label" for="element-fashion">&nbsp;</label>
                 <div id="element-size">
                     <label>
-                        <?=Yii::t('app', 'или создать новый фасон')?> <input type="checkbox" name="newf" value="1" <?=(isset($_POST['Fashion']['name']) && $_POST['Fashion']['name']) ? 'checked="checked"' : ''?>>
+                        <?=Yii::t('app', 'или создать новый фасон')?> <input type="checkbox" name="newf" value="1" <?=(isset($_POST['Fashion']['name']) && $_POST['Fashion']['name'] != '-') ? 'checked="checked"' : ''?>>
                     </label>
                 </div>
             </div>
         </div>
     </div>
-    <div id="addNewF" style="display: <?=(isset($_POST['Fashion']['name']) && $_POST['Fashion']['name']) ? 'block' : 'none'?>;">
+    <div id="addNewF" style="display: <?=(isset($_POST['Fashion']['name']) && $_POST['Fashion']['name'] != '-') ? 'block' : 'none'?>;">
         <div class="row">
             <div class="col-sm-6 col-xs-12">
-                <?= $form->field($fashion, 'name')->textInput(['maxlength' => true])->hint(Yii::t('app', 'Для нового фасона')) ?>
+                <?= $form->field($fashion, 'name')->textInput(['maxlength' => true])->hint(Yii::t('app', 'Для нового фасона. Если не нужно оставить прочерк "-"')) ?>
             </div>
             <div class="col-sm-6 col-xs-12">
                 <?= $form->field($fashion, 'price')->textInput(['maxlength' => true])->hint(Yii::t('app', 'Для нового фасона')) ?>
@@ -64,10 +64,6 @@ $this->registerJs($js, $this::POS_END, 'my-img-delete');
         </div>
     </div>
     <?= $form->field($model, 'size')->checkboxList(Proportion::getToList()) ?>
-    <?php foreach(Proportion::getToList() AS $idSize => $sizeName){ ?>
-
-
-    <?php } ?>
     <div class="row">
         <div class="col-sm-3 col-xs-12">
             <?= $form->field($model, 'toppx')->textInput() ?>
@@ -87,7 +83,7 @@ $this->registerJs($js, $this::POS_END, 'my-img-delete');
             <?= $form->field($model, 'resizeW')->textInput()->hint(Yii::t('app', 'можно указать один параметр - второй рассчитывается пропорционально')) ?>
         </div>
         <div class="col-sm-6 col-xs-12">
-            <?= $form->field($model, 'resizeH')->textInput() ?>
+            <?= $form->field($model, 'resizeH')->textInput()->hint(Yii::t('app', '0 - не обрезать')) ?>
         </div>
     </div>
 

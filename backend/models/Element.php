@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use common\CImageHandler;
 use common\UrlHelper;
 use Yii;
 
@@ -111,24 +112,42 @@ class Element extends \yii\db\ActiveRecord
         if(!is_dir(Yii::getAlias('@frontend/web/images/element'))){
             mkdir(Yii::getAlias('@frontend/web/images/element'), 0777);
         }
-        if ($this->validate()) {
-            if(!is_dir(Yii::getAlias('@frontend/web/images/element/').$this->id)){
-                mkdir(Yii::getAlias('@frontend/web/images/element/').$this->id, 0777);
-            }
-            $this->image->saveAs(Yii::getAlias('@frontend/web/images/element/').$this->id.'/' . UrlHelper::translateUrl($this->image->baseName) . '.' . $this->image->extension);
-            return UrlHelper::translateUrl($this->image->baseName) . '.' . $this->image->extension;
+        if(!is_dir(Yii::getAlias('@frontend/web/images/tepm'))){
+            mkdir(Yii::getAlias('@frontend/web/images/tepm'), 0777);
         }
-        return false;
+        if(!is_dir(Yii::getAlias('@frontend/web/images/element/').$this->id)){
+            mkdir(Yii::getAlias('@frontend/web/images/element/').$this->id, 0777);
+        }
+        $this->deleteImage();
+        $nameImg  = UrlHelper::translateUrl($this->image->baseName) . '.' . $this->image->extension;
+        $imgDirName = Yii::getAlias('@frontend/web/images/element/').$this->id.'/' . $nameImg;
+        $imgDirNameMini = Yii::getAlias('@frontend/web/images/element/').$this->id.'/mini_' . $nameImg;
+        $this->image->saveAs(Yii::getAlias('@frontend/web/images/tepm').'/'.$nameImg);
+        $ih = new CImageHandler();
+        if($this->resizeH || $this->resizeW){
+            $this->resizeW = !$this->resizeW ? ($this->resizeH * 2) : $this->resizeW;
+            $this->resizeH = !$this->resizeH ? ($this->resizeW * 2) : $this->resizeH;
+            $ih->load(Yii::getAlias('@frontend/web/images/tepm').'/'.$nameImg)
+                ->resize($this->resizeW, $this->resizeH)
+                ->save($imgDirName);
+        }else{
+            $ih->load(Yii::getAlias('@frontend/web/images/tepm').'/'.$nameImg)
+                ->save($imgDirName);
+        }
+        @unlink(Yii::getAlias('@frontend/web/images/tepm').'/'.$nameImg);
+        return $nameImg;
+
     }
 
     public function deleteImage($dir = false){
         @unlink(Yii::getAlias('@frontend/web/images/element/').$this->id.'/' . $this->photo);
+        @unlink(Yii::getAlias('@frontend/web/images/element/').$this->id.'/mini_' . $this->photo);
         if($dir){
             @rmdir(Yii::getAlias('@frontend/web/images/element/').$this->id.'/');
         }
     }
 
-    public function getImageLink(){
-        return str_replace('/admin/', '', UrlHelper::home(true)).'images/element/'.$this->id.'/'.$this->photo;
+    public function getImageLink($mini = false){
+        return str_replace('/admin/', '', UrlHelper::home(true)).'images/element/'.$this->id.'/'.($mini ? 'mini_' : '').$this->photo;
     }
 }

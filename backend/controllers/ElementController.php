@@ -55,20 +55,25 @@ class ElementController extends BaseController
         $model = new Element();
         $fashion = new Fashion();
         $fashion->price = 0;
+        $fashion->name = '-';
         $model->home = 2;
         $model->stock = 1;
         $model->toppx = 150;
         $model->leftpx = 140;
         $model->price = 0;
         $model->increase = 0;
+        $model->resizeW = 0;
+        $model->resizeH = 0;
         if ($model->load(Yii::$app->request->post())) {
             if ($fashion->load(Yii::$app->request->post())) {
                 if(!$fashion->price){
                     $fashion->price = 0;
                 }
-                if($fashion->validate()){
-                    $fashion->save();
-                    $model->fashion = $fashion->id;
+                if($fashion->name != '-') {
+                    if ($fashion->validate()) {
+                        $fashion->save();
+                        $model->fashion = $fashion->id;
+                    }
                 }
             }
             if($model->validate()){
@@ -110,16 +115,21 @@ class ElementController extends BaseController
         $model = $this->findModel($id);
         $fashion = new Fashion();
         $fashion->price = 0;
+        $fashion->name = '-';
         $oldSizes = ArrayHelper::map($model->sizes, 'size', 'size');
         $model->size = $oldSizes;
+        $model->resizeW = 0;
+        $model->resizeH = 0;
         if ($model->load(Yii::$app->request->post())) {
             if ($fashion->load(Yii::$app->request->post())) {
                 if(!$fashion->price){
                     $fashion->price = 0;
                 }
-                if($fashion->validate()){
-                    $fashion->save();
-                    $model->fashion = $fashion->id;
+                if($fashion->name != '-'){
+                    if($fashion->validate()){
+                        $fashion->save();
+                        $model->fashion = $fashion->id;
+                    }
                 }
             }
             if($model->validate()){
@@ -137,7 +147,6 @@ class ElementController extends BaseController
                 }
                 $model->image = UploadedFile::getInstance($model, 'image');
                 if($model->image){
-                    $model->deleteImage();
                     $model->photo = $model->upload();
                     $model->image = null;
                     $model->save();
