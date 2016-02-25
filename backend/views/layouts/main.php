@@ -49,6 +49,9 @@ AppAsset::register($this);
             ['label' => Yii::t('app', 'Подкатегории'), 'url' => ['/podcategory/index']],
             ['label' => Yii::t('app', 'Метки'), 'url' => ['/marker/index']],
         ]];
+        $menuItems[] = ['label' => Yii::t('app', 'Товары'), 'items' => [
+            ['label' => Yii::t('app', 'Фасоны'), 'url' => ['/fashion/index']],
+        ]];
         $menuItems[] = ['label' => Yii::t('app', 'Заказы'), 'items' => [
             ['label' => Yii::t('app', 'Индивидуальные заказы'), 'url' => ['/individual/index']],
         ]];
