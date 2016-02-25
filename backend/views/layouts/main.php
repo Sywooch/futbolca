@@ -51,11 +51,13 @@ AppAsset::register($this);
         ]];
         $menuItems[] = ['label' => Yii::t('app', 'Товары'), 'items' => [
             ['label' => Yii::t('app', 'Фасоны'), 'url' => ['/fashion/index']],
+            ['label' => Yii::t('app', 'Основы'), 'url' => ['/element/index']],
         ]];
         $menuItems[] = ['label' => Yii::t('app', 'Заказы'), 'items' => [
             ['label' => Yii::t('app', 'Индивидуальные заказы'), 'url' => ['/individual/index']],
         ]];
         $menuItems[] = ['label' => Yii::t('app', 'Тексты'), 'items' => [
+            ['label' => Yii::t('app', 'Размеры'), 'url' => ['/proportion/index']],
             ['label' => Yii::t('app', 'Доставка'), 'url' => ['/delivery/index']],
             ['label' => Yii::t('app', 'Способы оплаты'), 'url' => ['/paying/index']],
             ['label' => Yii::t('app', 'Стат страницы'), 'url' => ['/page/index']],

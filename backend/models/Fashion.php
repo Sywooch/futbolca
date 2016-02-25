@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%fashion}}".
@@ -60,5 +61,9 @@ class Fashion extends \yii\db\ActiveRecord
             'price' => Yii::t('app', 'Price'),
             'active' => Yii::t('app', 'Active'),
         ];
+    }
+
+    public static function getToList(){
+        return ArrayHelper::map(self::find()->orderBy('id asc')->all(), 'id', 'name');
     }
 }

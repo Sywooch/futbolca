@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use common\UrlHelper;
 use Yii;
 use yii\helpers\Url;
 
@@ -106,8 +107,8 @@ class Individual extends \yii\db\ActiveRecord
         $nameList = [];
         if ($this->validate()) {
             foreach ($this->image AS $file) {
-                $file->saveAs($imageIdDir . $file->baseName . '.' . $file->extension);
-                $nameList[] = $file->baseName . '.' . $file->extension;
+                $file->saveAs($imageIdDir . UrlHelper::translateUrl($file->baseName) . '.' . $file->extension);
+                $nameList[] = UrlHelper::translateUrl($file->baseName) . '.' . $file->extension;
             }
             return $nameList;
         } else {

@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use common\UrlHelper;
 use Yii;
 use yii\helpers\Url;
 
@@ -59,8 +60,8 @@ class Paying extends \yii\db\ActiveRecord
     public function upload()
     {
         if ($this->validate()) {
-            $this->image->saveAs(Yii::getAlias('@frontend/web/paying').'/' . $this->image->baseName . '.' . $this->image->extension);
-            return $this->image->baseName . '.' . $this->image->extension;
+            $this->image->saveAs(Yii::getAlias('@frontend/web/paying').'/' . UrlHelper::translateUrl($this->image->baseName) . '.' . $this->image->extension);
+            return UrlHelper::translateUrl($this->image->baseName) . '.' . $this->image->extension;
         }
         return false;
     }
