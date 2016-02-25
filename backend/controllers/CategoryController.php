@@ -83,6 +83,16 @@ class CategoryController extends BaseController
         ]);
     }
 
+    public function actionStatus()
+    {
+        $model = Category::find()->where("id = :id", [':id' => (int)Yii::$app->request->post('pk')])->one();
+        if(!$model){
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        }
+        $model->position = (int)Yii::$app->request->post('value');
+        $model->save();
+    }
+
     /**
      * Deletes an existing Category model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

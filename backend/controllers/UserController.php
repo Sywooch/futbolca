@@ -29,6 +29,31 @@ class UserController extends BaseController
         ]);
     }
 
+    public function actionRole()
+    {
+        $model = User::find()->where("id = :id", [':id' => (int)Yii::$app->request->post('pk')])->one();
+        if(!$model){
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        }
+        $model->role = Yii::$app->request->post('value');
+        if($model->validate()){
+            $model->save();
+            echo 'OK';
+            Yii::$app->end();
+        }
+        throw new NotFoundHttpException(Yii::t('app', 'Invalid value'));
+    }
+
+    public function actionStatus()
+    {
+        $model = User::find()->where("id = :id", [':id' => (int)Yii::$app->request->post('pk')])->one();
+        if(!$model){
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        }
+        $model->status = (int)Yii::$app->request->post('value');
+        $model->save();
+    }
+
     /**
      * Displays a single User model.
      * @param integer $id

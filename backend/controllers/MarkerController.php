@@ -41,6 +41,16 @@ class MarkerController extends BaseController
         ]);
     }
 
+    public function actionStatus()
+    {
+        $model = Marker::find()->where("id = :id", [':id' => (int)Yii::$app->request->post('pk')])->one();
+        if(!$model){
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        }
+        $model->position = (int)Yii::$app->request->post('value');
+        $model->save();
+    }
+
     /**
      * Creates a new Marker model.
      * If creation is successful, the browser will be redirected to the 'view' page.

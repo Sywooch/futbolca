@@ -61,7 +61,7 @@ $idEdit = [];
 </div>
 <?php
 
-$idEdit = join('\', \'', $idEdit);
+$idEdit = join(', ', $idEdit);
 $js = <<<JS
 $(document).ready(function() {
     var ListDesc = '{$idEdit}';

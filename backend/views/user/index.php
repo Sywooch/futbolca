@@ -10,6 +10,8 @@ use backend\models\User;
 
 $this->title = Yii::t('app', 'Users');
 $this->params['breadcrumbs'][] = $this->title;
+$idEdit = [];
+$idEditStatus = [];
 ?>
 <div class="user-index">
     <h1><?= Html::encode($this->title) ?></h1>
@@ -26,16 +28,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'username',
             [
                 'attribute' => 'role',
-                'value'=> function ($model) {
-                    return User::getRoleName($model->role);
+                'format' => 'raw',
+                'value'=> function ($model) use (& $idEdit) {
+                    $idEdit[] = '#status_edit_'.$model->id;
+                    return '<a title="Редактировать" href="javascript:void(0);" data-name="role" data-source=\''.\yii\helpers\Json::encode(User::listRole()).'\' data-value="'.$model->role.'" data-pk="'.$model->id.'" data-url="'.\yii\helpers\Url::toRoute('user/role').'" id="status_edit_'.$model->id.'" data-type="select" data-title="Редактировать">'.User::getRoleName($model->role).'</a>';
                 },
                 'filter' =>  User::listRole(),
             ],
              'email:email',
             [
                 'attribute' => 'status',
-                'value'=> function ($model) {
-                    return User::getStatusName($model->status);
+                'format' => 'raw',
+                'value'=> function ($model) use (& $idEditStatus) {
+                    $idEditStatus[] = '#ss_edit_'.$model->id;
+                    return '<a title="Редактировать" href="javascript:void(0);" data-name="status" data-source=\''.\yii\helpers\Json::encode(User::listStatus()).'\' data-value="'.$model->status.'" data-pk="'.$model->id.'" data-url="'.\yii\helpers\Url::toRoute('user/status').'" id="status_edit_'.$model->id.'" data-type="select" data-title="Редактировать">'.User::getStatusName($model->status).'</a>';
                 },
                 'filter' =>  User::listStatus(),
             ],
@@ -52,3 +58,20 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
 </div>
+<?php
+
+$idEdit = join(', ', $idEdit);
+$idEditStatus = join(', ', $idEditStatus);
+$js = <<<JS
+$(document).ready(function() {
+    var ListDesc = '{$idEdit}';
+    var ListStatusEdit = '{$idEditStatus}';
+    if(ListDesc){
+        $(ListDesc).editable();
+    }
+    if(ListStatusEdit){
+        $(ListStatusEdit).editable();
+    }
+});
+JS;
+$this->registerJs($js, $this::POS_END, 'my-edit-statur');

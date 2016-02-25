@@ -10,6 +10,7 @@ use yii\grid\GridView;
 
 $this->title = Yii::t('app', 'Mетки');
 $this->params['breadcrumbs'][] = $this->title;
+$idEdit = [];
 ?>
 <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -30,7 +31,14 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'position',
+            [
+                'attribute' => 'position',
+                'format' => 'raw',
+                'value'=> function ($model) use (& $idEdit) {
+                    $idEdit[] = '#status_edit_'.$model->id;
+                    return '<a title="Редактировать" href="javascript:void(0);" data-name="status" data-pk="'.$model->id.'" data-url="'.\yii\helpers\Url::toRoute('marker/status').'" id="status_edit_'.$model->id.'" data-type="text" data-title="Редактировать">'.$model->position.'</a>';
+                },
+            ],
             'name',
             'url',
 //            'description',
@@ -51,3 +59,13 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
 </div>
+<?php
+
+$idEdit = join(', ', $idEdit);
+$js = <<<JS
+$(document).ready(function() {
+    var ListDesc = '{$idEdit}';
+    $(ListDesc).editable();
+});
+JS;
+$this->registerJs($js, $this::POS_END, 'my-edit-statur');

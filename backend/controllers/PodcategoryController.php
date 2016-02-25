@@ -29,6 +29,17 @@ class PodcategoryController extends BaseController
         ]);
     }
 
+    public function actionStatus()
+    {
+        $model = Podcategory::find()->where("id = :id", [':id' => (int)Yii::$app->request->post('pk')])->one();
+        if(!$model){
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        }
+        $model->position = (int)Yii::$app->request->post('value');
+        $model->save();
+    }
+
+
     /**
      * Displays a single Podcategory model.
      * @param string $id
