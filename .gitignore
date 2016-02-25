@@ -3,6 +3,9 @@
 
 /frontend/web/assets
 /frontend/runtime
+/frontend/web/images
+/frontend/web/paying
+/frontend/web/thumbs
 
 /backend/web/assets
 /backend/runtime

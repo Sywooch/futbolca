@@ -22,6 +22,24 @@ return [
         ],
     ],
     'components' => [
+        'assetManager' => [
+            'bundles' => [
+//                'yii\web\JqueryAsset' => [
+//                    'sourcePath' => null,
+//                    'js' => ['js/jquery00.js']
+//                ],
+                'yii\bootstrap\BootstrapPluginAsset' => [
+                    'js'=>[]
+                ],
+                'yii\bootstrap\BootstrapAsset' => [
+                    'sourcePath' => null,
+                    'css' => ['admin/css/bootstrap/bootstrap.min.css'],
+                    'js' => ['admin/tinymce/bootstrap.min.js'],
+                ],
+
+            ],
+
+        ],
         'authManager' => [
             'class' => 'yii\rbac\PhpManager',
         ],
