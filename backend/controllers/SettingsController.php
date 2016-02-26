@@ -30,6 +30,16 @@ class SettingsController extends Controller
         ]);
     }
 
+    public function actionEdit()
+    {
+        $model = Settings::find()->where("id = :id", [':id' => (int)Yii::$app->request->post('pk')])->one();
+        if(!$model){
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        }
+        $model->{Yii::$app->request->post('name')} = Yii::$app->request->post('value');
+        $model->save();
+    }
+
     /**
      * Displays a single Settings model.
      * @param string $id
