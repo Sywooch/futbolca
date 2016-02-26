@@ -2,7 +2,7 @@
 
 namespace backend\models;
 
-use app\models\ItemWatermark;
+use backend\models\ItemWatermark;
 use common\CImageHandler;
 use common\UrlHelper;
 use Yii;

@@ -69,7 +69,7 @@ return [
             'baseUrl' => '/admin/',
             'suffix' => '/',
             'rules' => [
-                '/' => 'site/index',
+                '/' => 'settings/index',
                 '<controller:\w+>/<id:\d+>/<action:(create|update|delete)>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 '<controller:\w+>' => '<controller>/index',

@@ -2,28 +2,26 @@
 
 namespace backend\controllers;
 
-use backend\models\ItemWatermark;
 use Yii;
-use backend\models\Item;
-use backend\models\ItemSearch;
-use backend\ext\BaseController;
+use backend\models\Settings;
+use backend\models\SettingsSearch;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\web\UploadedFile;
 
 
 /**
- * ItemController implements the CRUD actions for Item model.
+ * SettingsController implements the CRUD actions for Settings model.
  */
-class ItemController extends BaseController
+class SettingsController extends Controller
 {
 
     /**
-     * Lists all Item models.
+     * Lists all Settings models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ItemSearch();
+        $searchModel = new SettingsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -33,50 +31,29 @@ class ItemController extends BaseController
     }
 
     /**
-     * Displays a single Item model.
+     * Displays a single Settings model.
      * @param string $id
      * @return mixed
      */
     public function actionView($id)
     {
-        return $this->renderPartial('view', [
+        return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Item model.
+     * Creates a new Settings model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Item();
-        $model->position = 0;
-        $model->price = 0;
-        $model->toppx = 0;
-        $model->leftpx = 0;
-        $model->resizeH = 0;
-        $model->resizeW = 0;
-        $model->active = 1;
-        $model->home = 2;
+        $model = new Settings();
+
         if ($model->load(Yii::$app->request->post())) {
             if($model->validate()){
                 $model->save();
-                $model->image = UploadedFile::getInstances($model, 'image');
-                if($model->image){
-                    $imageList = $model->upload();
-                    if($imageList){
-                        foreach($imageList AS $iName){
-                            $watermark = new ItemWatermark();
-                            $watermark->item = $model->id;
-                            $watermark->name = $iName;
-                            if($watermark->validate()){
-                                $watermark->save();
-                            }
-                        }
-                    }
-                }
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }
@@ -86,7 +63,7 @@ class ItemController extends BaseController
     }
 
     /**
-     * Updates an existing Item model.
+     * Updates an existing Settings model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
@@ -107,7 +84,7 @@ class ItemController extends BaseController
     }
 
     /**
-     * Deletes an existing Item model.
+     * Deletes an existing Settings model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
@@ -120,15 +97,15 @@ class ItemController extends BaseController
     }
 
     /**
-     * Finds the Item model based on its primary key value.
+     * Finds the Settings model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param string $id
-     * @return Item the loaded model
+     * @return Settings the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Item::findOne($id)) !== null) {
+        if (($model = Settings::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
