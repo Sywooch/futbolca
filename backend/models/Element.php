@@ -5,6 +5,7 @@ namespace backend\models;
 use common\CImageHandler;
 use common\UrlHelper;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%element}}".
@@ -149,5 +150,9 @@ class Element extends \yii\db\ActiveRecord
 
     public function getImageLink($mini = false){
         return str_replace('/admin/', '', UrlHelper::home(true)).'images/element/'.$this->id.'/'.($mini ? 'mini_' : '').$this->photo;
+    }
+
+    public static function getCatForList(){
+        return ArrayHelper::map(self::find()->orderBy("name asc")->all(), 'id', 'name');
     }
 }

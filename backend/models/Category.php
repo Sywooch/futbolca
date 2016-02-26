@@ -32,6 +32,9 @@ class Category extends \yii\db\ActiveRecord
     {
         if($this->isNewRecord){
             $this->url = UrlHelper::translateUrl($this->name);
+            if(!$this->description){
+                $this->description = $this->name;
+            }
         }else{
             $this->url = UrlHelper::translateUrl($this->url);
         }

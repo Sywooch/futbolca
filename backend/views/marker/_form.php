@@ -13,7 +13,7 @@ use backend\widgets\TinyMce;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'position')->textInput()->hint(Yii::t('app', 'По умолчанию = 0')) ?>
+    <?= $form->field($model, 'position')->textInput()->hint(Yii::t('app', 'По умолчанию = 0. В самом низу = 0')) ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 

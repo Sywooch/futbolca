@@ -59,7 +59,8 @@ return [
             ],
         ],
         'request' => [
-            'baseUrl' => '/admin/'
+            'baseUrl' => '/admin/',
+            'cookieValidationKey' => '0npz9bGwqKJdh6n8OAvYvCdOwuS36ovg',
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -76,9 +77,9 @@ return [
         ],
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=base',
-            'username' => '',
-            'password' => '',
+            'dsn' => 'mysql:host=localhost;dbname=fl',
+            'username' => 'fl',
+            'password' => '123fl123',
             'charset' => 'utf8',
             'tablePrefix' => 'fl_',
         ],

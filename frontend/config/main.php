@@ -50,9 +50,9 @@ return [
         ],
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=futbolca',
-            'username' => 'root',
-            'password' => '',
+            'dsn' => 'mysql:host=localhost;dbname=fl',
+            'username' => 'fl',
+            'password' => '123fl123',
             'charset' => 'utf8',
             'tablePrefix' => 'fl_',
         ],

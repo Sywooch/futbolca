@@ -16,7 +16,7 @@ use backend\models\Category;
 
     <?= $form->field($model, 'category')->dropDownList(Category::getCatForList(), ['prompt' => Yii::t('app', '-- Выберите категою --')]) ?>
 
-    <?= $form->field($model, 'position')->textInput()->hint(Yii::t('app', 'По умолчанию = 0')) ?>
+    <?= $form->field($model, 'position')->textInput()->hint(Yii::t('app', 'По умолчанию = 0. В самом низу = 0')) ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
