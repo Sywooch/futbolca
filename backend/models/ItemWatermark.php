@@ -27,6 +27,8 @@ class ItemWatermark extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['name'], 'filter', 'filter' => 'trim', 'skipOnArray' => true],
+            [['name'], 'filter', 'filter' => 'strip_tags', 'skipOnArray' => true],
             [['item', 'name'], 'required'],
             [['item'], 'integer'],
             [['name'], 'string', 'max' => 255]
@@ -43,5 +45,11 @@ class ItemWatermark extends \yii\db\ActiveRecord
             'item' => Yii::t('app', 'Item'),
             'name' => Yii::t('app', 'Name'),
         ];
+    }
+
+    public function delOneImg($imgName){
+        $imageIdDir = Yii::getAlias('@frontend/web/images/item').'/'.$this->id.'/';
+        @unlink("$imageIdDir/$imgName");
+        return true;
     }
 }

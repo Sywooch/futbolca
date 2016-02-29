@@ -60,9 +60,13 @@ class ItemController extends BaseController
         $model->resizeW = 0;
         $model->active = 1;
         $model->home = 2;
+        $model->getMarkers();
+        $model->getСategories();
         if ($model->load(Yii::$app->request->post())) {
             if($model->validate()){
                 $model->save();
+                $model->setMarkers();
+                $model->setСategories();
                 $model->image = UploadedFile::getInstances($model, 'image');
                 if($model->image){
                     $imageList = $model->upload();
@@ -77,7 +81,7 @@ class ItemController extends BaseController
                         }
                     }
                 }
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['index']);
             }
         }
         return $this->render('create', [
@@ -94,11 +98,33 @@ class ItemController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $model->resizeH = 0;
+        $model->resizeW = 0;
+        $model->getMarkers();
+        $model->getСategories();
         if ($model->load(Yii::$app->request->post())) {
             if($model->validate()){
                 $model->save();
-                return $this->redirect(['view', 'id' => $model->id]);
+                $model->deleteMarkers();
+                $model->setMarkers();
+                $model->deleteСategories();
+                $model->setСategories();
+                $model->image = UploadedFile::getInstances($model, 'image');
+                if($model->image){
+                    $imageList = $model->upload();
+                    if($imageList){
+                        foreach($imageList AS $iName){
+                            $watermark = new ItemWatermark();
+                            $watermark->item = $model->id;
+                            $watermark->name = $iName;
+                            if($watermark->validate()){
+                                $watermark->save();
+                            }
+                        }
+                    }
+                }
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Успешно сохраненно!'));
+                return $this->refresh();
             }
         }
         return $this->render('update', [
@@ -117,6 +143,17 @@ class ItemController extends BaseController
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionDeleteimg($model, $watermark)
+    {
+        $watermark = ItemWatermark::find()->where("id = :id AND item = :item", [':id' => $model, ':item' => $watermark])->one();
+        if(!$watermark){
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        }
+        $watermark->delOneImg($watermark->name);
+        $watermark->delete();
+//        return $this->redirect(['index']);
     }
 
     /**

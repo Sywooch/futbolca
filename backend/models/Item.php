@@ -6,6 +6,7 @@ use backend\models\ItemWatermark;
 use common\CImageHandler;
 use common\UrlHelper;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
 /**
@@ -29,10 +30,15 @@ use yii\helpers\Url;
  * @property integer $resizeH
  * @property integer $resizeW
  *
+ * @property [] $markers
+ * @property [] $categories
+ *
  * @property Element $element0
  * @property ItemElement[] $itemElements
  * @property ItemMarker[] $itemMarkers
  * @property ItemPodcategory[] $itemPodcategories
+ * @property ItemWatermark[]  $watermarks
+ * @property ItemCategory[] $itemCategories
  */
 class Item extends \yii\db\ActiveRecord
 {
@@ -40,12 +46,67 @@ class Item extends \yii\db\ActiveRecord
     public $image;
     public $resizeW;
     public $resizeH;
+    public $markers = [];
+    public $categories = [];
+
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return '{{%item}}';
+    }
+
+    public function setСategories(){
+        if(is_array($this->categories) && sizeof($this->categories) > 0){
+            foreach($this->categories AS $category){
+                $category = (int)$category;
+                if(!$category){
+                    continue;
+                }
+                $current = new ItemCategory();
+                $current->item = $this->id;
+                $current->category = $category;
+                if($current->validate()){
+                    $current->save();
+                }
+            }
+        }
+    }
+
+    public function deleteСategories(){
+        ItemCategory::deleteAll("item = :item", [':item' => $this->id]);
+    }
+
+    public function getСategories(){
+        $this->categories = [];
+        $this->categories = ArrayHelper::map($this->itemCategories, 'category', 'category');
+    }
+
+    public function setMarkers(){
+        if(is_array($this->markers) && sizeof($this->markers) > 0){
+            foreach($this->markers AS $marker){
+                $marker = (int)$marker;
+                if(!$marker){
+                    continue;
+                }
+                $current = new ItemMarker();
+                $current->item = $this->id;
+                $current->marker = $marker;
+                if($current->validate()){
+                    $current->save();
+                }
+            }
+        }
+    }
+
+    public function deleteMarkers(){
+        ItemMarker::deleteAll("item = :item", [':item' => $this->id]);
+    }
+
+    public function getMarkers(){
+        $this->markers = [];
+        $this->markers = ArrayHelper::map($this->itemMarkers, 'marker', 'marker');
     }
 
     public function beforeValidate()
@@ -77,6 +138,8 @@ class Item extends \yii\db\ActiveRecord
             [['name'], 'unique'],
             [['code'], 'unique'],
             [['image'], 'file', 'extensions' => 'png, jpg, gif, jpeg', 'skipOnEmpty' => true],
+            [['markers'], 'each', 'rule' => ['integer']],
+            [['categories'], 'each', 'rule' => ['integer']],
         ];
     }
 
@@ -94,7 +157,7 @@ class Item extends \yii\db\ActiveRecord
             'code' => Yii::t('app', 'Code'),
             'description' => Yii::t('app', 'Description'),
             'keywords' => Yii::t('app', 'Keywords'),
-            'price' => Yii::t('app', 'Price'),
+            'price' => Yii::t('app', 'Наценка'),
             'active' => Yii::t('app', 'Active'),
             'home' => Yii::t('app', 'Home'),
             'toppx' => Yii::t('app', 'Toppx'),
@@ -103,6 +166,8 @@ class Item extends \yii\db\ActiveRecord
             'image' => Yii::t('app', 'Wotemark'),
             'resizeW' => Yii::t('app', 'Размер наложения высота'),
             'resizeH' => Yii::t('app', 'Размер наложения ширина'),
+            'markers' => Yii::t('app', 'Метки'),
+            'categories' => Yii::t('app', 'Категории'),
         ];
     }
 
@@ -120,6 +185,13 @@ class Item extends \yii\db\ActiveRecord
     public function getItemElements()
     {
         return $this->hasMany(ItemElement::className(), ['item' => 'id']);
+    }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getItemCategories()
+    {
+        return $this->hasMany(ItemCategory::className(), ['item' => 'id']);
     }
 
     /**
@@ -202,6 +274,12 @@ class Item extends \yii\db\ActiveRecord
             (is_dir("$imageIdDir/$file")) ? $this->delAllImg("$imageIdDir/$file") : @unlink("$imageIdDir/$file");
         }
         return @rmdir($imageIdDir);
+    }
+
+    public function delOneImg($imgName){
+        $imageIdDir = Yii::getAlias('@frontend/web/images/item').'/'.$this->id.'/';
+        @unlink("$imageIdDir/$imgName");
+        return true;
     }
 
     public function getImageLink($id = 0){
