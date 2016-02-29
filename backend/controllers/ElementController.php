@@ -81,7 +81,7 @@ class ElementController extends BaseController
                 $model->size = null;
                 $model->save();
                 ElementSize::deleteAll("element = :element", [':element' => $model->id]);
-                if(sizeof($sizes) > 0){
+                if(is_array($sizes) && sizeof($sizes) > 0){
                     foreach($sizes AS $size){
                         $elementSize = new ElementSize();
                         $elementSize->element = $model->id;
@@ -136,7 +136,7 @@ class ElementController extends BaseController
                 $sizes = $model->size;
                 $model->size = null;
                 $model->save();
-                if(sizeof($sizes) > 0 && array_diff($sizes, $oldSizes)){
+                if(is_array($sizes) && sizeof($sizes) > 0 && array_diff($sizes, $oldSizes)){
                     ElementSize::deleteAll("element = :element", [':element' => $model->id]);
                     foreach($sizes AS $size){
                         $elementSize = new ElementSize();

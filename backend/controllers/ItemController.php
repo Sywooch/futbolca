@@ -2,11 +2,16 @@
 
 namespace backend\controllers;
 
+use backend\models\Element;
 use backend\models\ItemWatermark;
+use backend\models\Podcategory;
 use Yii;
 use backend\models\Item;
 use backend\models\ItemSearch;
 use backend\ext\BaseController;
+use yii\console\Request;
+use yii\console\Response;
+use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
@@ -30,6 +35,32 @@ class ItemController extends BaseController
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionElement()
+    {
+        Yii::$app->response->format = 'json';
+//        return Yii::$app->request->post('data');
+//        $data = explode(',', Yii::$app->request->post('data'));
+        if(!Yii::$app->request->post('data')){
+            throw new NotFoundHttpException(Yii::t('app', 'неверные параметры'));
+        }
+        $models = Element::getCatForListForItem(Yii::$app->request->post('data'));
+        if(!$models){
+            return [];
+        }
+        return $models;
+    }
+
+    public function actionPodcat()
+    {
+        Yii::$app->response->format = 'json';
+//        return Yii::$app->request->post('data');
+//        $data = explode(',', Yii::$app->request->post('data'));
+        if(!Yii::$app->request->post('data')){
+            throw new NotFoundHttpException(Yii::t('app', 'неверные параметры'));
+        }
+        return ArrayHelper::map(Podcategory::find()->where(['in', 'category', Yii::$app->request->post('data')])->all(), 'id', 'name');
     }
 
     /**
@@ -62,11 +93,15 @@ class ItemController extends BaseController
         $model->home = 2;
         $model->getMarkers();
         $model->getСategories();
+        $model->getPodcategories();
+        $model->getElements();
         if ($model->load(Yii::$app->request->post())) {
             if($model->validate()){
                 $model->save();
                 $model->setMarkers();
                 $model->setСategories();
+                $model->setPodcategories();
+                $model->setElements();
                 $model->image = UploadedFile::getInstances($model, 'image');
                 if($model->image){
                     $imageList = $model->upload();
@@ -102,6 +137,8 @@ class ItemController extends BaseController
         $model->resizeW = 0;
         $model->getMarkers();
         $model->getСategories();
+        $model->getPodcategories();
+        $model->getElements();
         if ($model->load(Yii::$app->request->post())) {
             if($model->validate()){
                 $model->save();
@@ -109,6 +146,10 @@ class ItemController extends BaseController
                 $model->setMarkers();
                 $model->deleteСategories();
                 $model->setСategories();
+                $model->deletePodcategories();
+                $model->setPodcategories();
+                $model->deleteElements();
+                $model->setElements();
                 $model->image = UploadedFile::getInstances($model, 'image');
                 if($model->image){
                     $imageList = $model->upload();

@@ -32,6 +32,9 @@ use yii\helpers\Url;
  *
  * @property [] $markers
  * @property [] $categories
+ * @property [] $podcategories
+ * @property [] $elements
+ * @property [] $elementsFilter
  *
  * @property Element $element0
  * @property ItemElement[] $itemElements
@@ -48,6 +51,9 @@ class Item extends \yii\db\ActiveRecord
     public $resizeH;
     public $markers = [];
     public $categories = [];
+    public $podcategories = [];
+    public $elements = [];
+    public $elementsFilter = [];
 
     /**
      * @inheritdoc
@@ -55,6 +61,58 @@ class Item extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{%item}}';
+    }
+
+    public function setElements(){
+        if(is_array($this->elements) && sizeof($this->elements) > 0){
+            foreach($this->elements AS $elements){
+                $elements = (int)$elements;
+                if(!$elements){
+                    continue;
+                }
+                $current = new ItemElement();
+                $current->item = $this->id;
+                $current->element = $elements;
+                if($current->validate()){
+                    $current->save();
+                }
+            }
+        }
+    }
+
+    public function deleteElements(){
+        ItemElement::deleteAll("item = :item", [':item' => $this->id]);
+    }
+
+    public function getElements(){
+        $this->elements = [];
+        $this->elements = ArrayHelper::map($this->itemElements, 'element', 'element');
+    }
+
+    public function setPodcategories(){
+        if(is_array($this->podcategories) && sizeof($this->podcategories) > 0){
+            foreach($this->podcategories AS $podcategories){
+                $podcategories = (int)$podcategories;
+                if(!$podcategories){
+                    continue;
+                }
+                $current = new ItemPodcategory();
+                $current->item = $this->id;
+                $current->podcategory = $podcategories;
+                if($current->validate()){
+                    $current->save();
+                }
+            }
+        }
+    }
+
+    public function deletePodcategories(){
+        ItemPodcategory::deleteAll("item = :item", [':item' => $this->id]);
+    }
+
+    public function getPodcategories(){
+        $this->podcategories = [];
+        $this->podcategories = ArrayHelper::map($this->itemPodcategories, 'podcategory', 'podcategory');
     }
 
     public function setСategories(){
@@ -139,7 +197,7 @@ class Item extends \yii\db\ActiveRecord
             [['code'], 'unique'],
             [['image'], 'file', 'extensions' => 'png, jpg, gif, jpeg', 'skipOnEmpty' => true],
             [['markers'], 'each', 'rule' => ['integer']],
-            [['categories'], 'each', 'rule' => ['integer']],
+            [['categories', 'podcategories', 'elements', 'elementsFilter'], 'each', 'rule' => ['integer']],
         ];
     }
 
@@ -168,6 +226,9 @@ class Item extends \yii\db\ActiveRecord
             'resizeH' => Yii::t('app', 'Размер наложения ширина'),
             'markers' => Yii::t('app', 'Метки'),
             'categories' => Yii::t('app', 'Категории'),
+            'podcategories' => Yii::t('app', 'Подкатегории'),
+            'elements' => Yii::t('app', 'Основы'),
+            'elementsFilter' => Yii::t('app', 'Фильтр основ по фасонам'),
         ];
     }
 

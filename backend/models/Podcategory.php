@@ -4,6 +4,7 @@ namespace backend\models;
 
 use Yii;
 use common\UrlHelper;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%podcategory}}".
@@ -85,5 +86,13 @@ class Podcategory extends \yii\db\ActiveRecord
     public function getCategory0()
     {
         return $this->hasOne(Category::className(), ['id' => 'category']);
+    }
+
+    public static function getCatForList($cat = []){
+        if(is_array($cat) && sizeof($cat) > 0){
+//            $cat = join('\', \'', $cat);
+            return ArrayHelper::map(self::find()->where(['in', "category", $cat])->orderBy("name asc")->all(), 'id', 'name');
+        }
+        return ArrayHelper::map(self::find()->orderBy("name asc")->all(), 'id', 'name');
     }
 }

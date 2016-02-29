@@ -6,6 +6,7 @@ use common\CImageHandler;
 use common\UrlHelper;
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 /**
  * This is the model class for table "{{%element}}".
@@ -148,11 +149,33 @@ class Element extends \yii\db\ActiveRecord
         }
     }
 
-    public function getImageLink($mini = false){
-        return str_replace('/admin/', '', UrlHelper::home(true)).'images/element/'.$this->id.'/'.($mini ? 'mini_' : '').$this->photo;
+    public function getImageLink(){
+        return str_replace('/admin/', '', UrlHelper::home(true)).'images/element/'.$this->id.'/'.$this->photo;
     }
 
     public static function getCatForList(){
         return ArrayHelper::map(self::find()->orderBy("name asc")->all(), 'id', 'name');
+    }
+
+    public static function getCatForListForBase(){
+        $r = [];
+        $models = self::find()->with('fashion0')->orderBy("name asc")->all();
+        foreach($models AS $model){
+            $r[$model->id] = $model->name. ' (' .$model->fashion0->name.')';
+        }
+        return $r;
+    }
+
+    public static function getCatForListForItem($fashions = []){
+        $r = [];
+        if($fashions){
+            $models = self::find()->with('fashion0')->where(['in', 'fashion', $fashions])->orderBy("name asc")->all();
+        }else{
+            $models = self::find()->with('fashion0')->orderBy("name asc")->all();
+        }
+        foreach($models AS $model){
+            $r[$model->id] = $model->name.' ('.$model->fashion0->name.') '.Html::img($model->getImageLink(), ['class' => 'img-responsive', 'style' => 'max-width: 60px;']);
+        }
+        return $r;
     }
 }

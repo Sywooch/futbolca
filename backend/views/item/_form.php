@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use backend\widgets\TinyMce;
 use backend\models\Element;
@@ -23,7 +24,7 @@ use backend\models\Item;
             <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
         </div>
         <div class="col-sm-3 col-xs-12">
-            <?= $form->field($model, 'element')->dropDownList(Element::getCatForList(), ['prompt' => Yii::t('app', '-- Выберите основу -- ')])
+            <?= $form->field($model, 'element')->dropDownList(Element::getCatForListForBase(), ['prompt' => Yii::t('app', '-- Выберите основу -- ')])
             ->hint(Yii::t('app', 'Эта основа будет базовой')) ?>
         </div>
         <div class="col-sm-3 col-xs-12">
@@ -62,6 +63,24 @@ use backend\models\Item;
             <?= $form->field($model, 'resizeW')->textInput() ?>
         </div>
     </div>
+    <?= $form->field($model, 'elementsFilter')->checkboxList(\backend\models\Fashion::getToList(), ['encode' => false]) ?>
+
+    <?= $form->field($model, 'elements')->checkboxList(Element::getCatForListForItem(), ['encode' => false]) ?>
+
+    <?= $form->field($model, 'categories')->listBox(\backend\models\Category::getCatForList(), [
+        'prompt' => Yii::t('app', '-- Выберите категории -- '),
+        'multiple' => true,
+        'size' => 7,
+    ]) ?>
+
+    <?= $form->field($model, 'podcategories')->listBox(\backend\models\Podcategory::getCatForList($model->categories), [
+        'prompt' => Yii::t('app', '-- Выберите подкатегории -- '),
+        'multiple' => true,
+        'size' => 7,
+    ]) ?>
+
+    <?= $form->field($model, 'markers')->checkboxList(\backend\models\Marker::getCatForList()) ?>
+
     <div class="row">
         <div class="col-sm-6 col-xs-12">
             <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
@@ -90,24 +109,79 @@ use backend\models\Item;
         </div>
     <?php } ?>
 
-    <?= $form->field($model, 'categories')->checkboxList(\backend\models\Category::getCatForList()) ?>
-    <?= $form->field($model, 'markers')->checkboxList(\backend\models\Marker::getCatForList()) ?>
-
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
 
-    <?=TinyMce::widget()?>
+    <?=TinyMce::widget() ?>
 
 </div>
 <?php
+$urlPodcat = Url::toRoute('item/podcat');
+$urlFindElement = Url::toRoute('item/element');
+$podcatPrompt = Yii::t('app', '-- Выберите подкатегории -- ');
+$podcatList = '[\''.join('\', \'', $model->podcategories).'\']';
+$elementsList = '[\''.join('\', \'', $model->elements).'\']';
 $js = <<<JS
+
+$('#item-elementsfilter input').click(function(){
+    var data = $('#item-elementsfilter input');
+    var ids = [];
+    var elementsList = {$elementsList};
+    $.each(data, function(i, item){
+        if($(data[i]).prop('checked')){
+            ids.push($(data[i]).val());
+        }
+    });
+    $.ajax({
+            type: "POST",
+            cache : false,
+            url: "{$urlFindElement}",
+            data: ({data: ids}),
+            dataType: 'json',
+            success: function(msg){
+            $('#item-elements').html('');
+            if(msg.length < 1){
+                $('#item-elements').html('<p>Нет данных</p>');
+            }
+                $.each(msg, function(i, item){
+                    if(jQuery.inArray(i, elementsList) >= 0){
+                        $('#item-elements').append(' <label><input type="checkbox" name="Item[elements][]" value="' + i + '" checked> ' + item + '</label> ');
+                    }else{
+                        $('#item-elements').append(' <label><input type="checkbox" name="Item[elements][]" value="' + i + '"> ' + item + '</label> ');
+                    }
+                });
+            }
+        });
+});
     function deleteItemImg(id, model, watermark){
         $.get("/admin/item/deleteimg/", {model: model, watermark : watermark}, function(){
             $('#forimg' + id).hide();
         });
     };
+    $('#item-categories').change(function(){
+        var data = $(this).val();
+        var podcat = {$podcatList};
+        $.ajax({
+            type: "POST",
+            cache : false,
+            url: "{$urlPodcat}",
+            data: ({data: data}),
+            dataType: 'json',
+            success: function(msg){
+            $('#item-podcategories').html('');
+            $('#item-podcategories').append('<option value="">{$podcatPrompt}</option>');
+                $.each(msg, function(i, item){
+                    if(jQuery.inArray(i, podcat) >= 0){
+                        $('#item-podcategories').append('<option value="' + i + '" selected="selected">' + item + '</option>');
+                    }else{
+                        $('#item-podcategories').append('<option value="' + i + '">' + item + '</option>');
+                    }
+                });
+            }
+        });
+    });
 JS;
 $this->registerJs($js, $this::POS_END, 'my-img-delete-item');
