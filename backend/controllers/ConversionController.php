@@ -50,10 +50,14 @@ class ConversionController extends \backend\ext\BaseController
         return $this->render('index');
     }
 
-    public function actionItem()
+    public function actionItem($offset = 0)
     {
+        $offset = (int)$offset;
+        if($offset < 0){
+            $offset = 0;
+        }
         ob_start();
-        $models = Prodact::find()->orderBy('pr_id asc')->all();
+        $models = Prodact::find()->orderBy('pr_id asc')->offset(6384)->all();
         echo 'Start ====== <br>'.PHP_EOL;
         ob_flush();
         flush();
@@ -131,7 +135,7 @@ class ConversionController extends \backend\ext\BaseController
                     ->where("mg_podcat_link.pl_pid = :id", [':id' => $model->pr_id])->all();
                 if($podcats){
                     foreach($podcats AS $podcat){
-                        $currentPodCat = \backend\models\Category::find()->where("name = :name", [':name' => $podcat->p_name])->one();
+                        $currentPodCat = Podcategory::find()->where("name = :name", [':name' => $podcat->p_name])->one();
                         if(!$currentPodCat){
                             continue;
                         }
