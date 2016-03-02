@@ -109,6 +109,21 @@ class Element extends \yii\db\ActiveRecord
         return $this->hasMany(ElementSize::className(), ['element' => 'id']);
     }
 
+    public function uploadByConver($img, $mini = false){ // _mini
+        if(!is_dir(Yii::getAlias('@frontend/web/images/element'))){
+            mkdir(Yii::getAlias('@frontend/web/images/element'), 0777);
+        }
+        if(!is_dir(Yii::getAlias('@frontend/web/images/element/').$this->id)){
+            mkdir(Yii::getAlias('@frontend/web/images/element/').$this->id, 0777);
+        }
+        $imgDirName = Yii::getAlias('@frontend/web/images/element/').$this->id.'/';
+        if($mini){
+            @copy(str_replace('.jpg', '_mini.jpg', $img), $imgDirName.'mini_'.$this->photo);
+        }else{
+            @copy($img, $imgDirName.$this->photo);
+        }
+    }
+
     public function upload()
     {
         if(!is_dir(Yii::getAlias('@frontend/web/images/element'))){

@@ -29,7 +29,9 @@ class Page extends \yii\db\ActiveRecord
     public function beforeValidate()
     {
         if($this->isNewRecord){
-            $this->url = UrlHelper::translateUrl($this->name);
+            if(!$this->url){
+                $this->url = UrlHelper::translateUrl($this->name);
+            }
             if(!$this->description){
                 $this->description = $this->name;
             }

@@ -170,7 +170,9 @@ class Item extends \yii\db\ActiveRecord
     public function beforeValidate()
     {
         if($this->isNewRecord){
-            $this->url = UrlHelper::translateUrl($this->name);
+            if(!$this->url){
+                $this->url = UrlHelper::translateUrl($this->name);
+            }
             if(!$this->description){
                 $this->description = $this->name;
             }
@@ -188,13 +190,12 @@ class Item extends \yii\db\ActiveRecord
         return [
             [['name', 'url', 'code', 'description', 'keywords', 'text'], 'filter', 'filter' => 'trim', 'skipOnArray' => true],
             [['name', 'url', 'code', 'description', 'keywords'], 'filter', 'filter' => 'strip_tags', 'skipOnArray' => true],
-            [['name', 'url', 'element', 'code'], 'required'],
+            [['name', 'url', 'element'], 'required'],
             [['position', 'element', 'price', 'active', 'home', 'toppx', 'leftpx', 'resizeW', 'resizeH'], 'integer'],
             [['text'], 'string'],
             [['name', 'url', 'code', 'description', 'keywords'], 'string', 'max' => 255],
             [['url'], 'unique'],
             [['name'], 'unique'],
-            [['code'], 'unique'],
             [['image'], 'file', 'extensions' => 'png, jpg, gif, jpeg', 'skipOnEmpty' => true],
             [['markers'], 'each', 'rule' => ['integer']],
             [['categories', 'podcategories', 'elements', 'elementsFilter'], 'each', 'rule' => ['integer']],
@@ -287,6 +288,23 @@ class Item extends \yii\db\ActiveRecord
 
     public static function listHomeName($id){
         return isset(self::listHome()[$id]) ? self::listHome()[$id] : null;
+    }
+
+    public function uploadByConver($img, $photoName, $mini = false){
+        $imgDir = Yii::getAlias('@frontend/web/images');
+        $imgDirImage = $imgDir.'/item/';
+        if(!is_dir($imgDirImage)){
+            mkdir($imgDirImage, 0777);
+        }
+        $imageIdDir = $imgDirImage.'/'.$this->id.'/';
+        if(!is_dir($imageIdDir)){
+            mkdir($imageIdDir, 0777);
+        }
+        if($mini){
+            @copy(str_replace('.png', '_mini.png', $img), $imageIdDir.'mini_'.$photoName);
+        }else{
+            @copy($img, $imageIdDir.$photoName);
+        }
     }
 
     public function upload()

@@ -15,6 +15,7 @@ use yii\helpers\Url;
  * @property string $phone
  * @property string $email
  * @property string $comment
+ * @property string $admintext
  * @property string $img1
  * @property string $img2
  * @property string $img3
@@ -41,10 +42,10 @@ class Individual extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'phone', 'email', 'img1', 'img2', 'img3', 'img4', 'comment'], 'filter', 'filter' => 'trim', 'skipOnArray' => true],
-            [['name', 'phone', 'email', 'img1', 'img2', 'img3', 'img4', 'comment'], 'filter', 'filter' => 'strip_tags', 'skipOnArray' => true],
+            [['name', 'phone', 'email', 'img1', 'img2', 'img3', 'img4', 'comment', 'admintext'], 'filter', 'filter' => 'trim', 'skipOnArray' => true],
+            [['name', 'phone', 'email', 'img1', 'img2', 'img3', 'img4', 'comment', 'admintext'], 'filter', 'filter' => 'strip_tags', 'skipOnArray' => true],
             [['name', 'phone', 'email'], 'required'],
-            [['comment'], 'string'],
+            [['comment', 'admintext'], 'string'],
             [['status'], 'integer'],
             [['created'], 'safe'],
             [['name', 'phone', 'email', 'img1', 'img2', 'img3', 'img4'], 'string', 'max' => 255],
@@ -65,6 +66,7 @@ class Individual extends \yii\db\ActiveRecord
             'phone' => Yii::t('app', 'Phone'),
             'email' => Yii::t('app', 'Email'),
             'comment' => Yii::t('app', 'Comment'),
+            'admintext' => Yii::t('app', 'Коментарий админа'),
             'img1' => Yii::t('app', 'Img1'),
             'img2' => Yii::t('app', 'Img2'),
             'img3' => Yii::t('app', 'Img3'),
@@ -114,6 +116,20 @@ class Individual extends \yii\db\ActiveRecord
         } else {
             return false;
         }
+    }
+
+    public function uploadForConvert($url, $name)
+    {
+        $imgDir = Yii::getAlias('@frontend/web/images');
+        $imgDirImage = $imgDir.'/individual/';
+        if(!is_dir($imgDirImage)){
+            mkdir($imgDirImage, 0777);
+        }
+        $imageIdDir = $imgDirImage.'/'.$this->id.'/';
+        if(!is_dir($imageIdDir)){
+            mkdir($imageIdDir, 0777);
+        }
+        @copy($url, $imageIdDir.$name);
     }
 
     public function delAllImg($imageIdDir = null){
