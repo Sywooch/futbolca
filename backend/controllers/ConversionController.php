@@ -28,9 +28,12 @@ use backend\models\old\Dostavka;
 use backend\models\old\IndividualOrder;
 use backend\models\old\LinkBasics;
 use backend\models\old\Metky;
+use backend\models\old\Order;
 use backend\models\old\Podcat;
+use backend\models\old\PodcatLink;
 use backend\models\old\Prodact;
 use backend\models\old\Sp;
+use backend\models\OrderItem;
 use backend\models\Page;
 use backend\models\Paying;
 use backend\models\Podcategory;
@@ -50,6 +53,79 @@ class ConversionController extends \backend\ext\BaseController
         return $this->render('index');
     }
 
+    // [0] id item
+    // [1] id count
+    // [2] id price
+    // [3] id price
+
+    // [4] id basics
+    // [5] id img
+    // [6] id size
+
+
+//SET foreign_key_checks = 0;
+//TRUNCATE `fl_order`;
+//TRUNCATE `fl_order_item`;
+//SET foreign_key_checks = 1;
+    public function actionOrder() // or_nabor_tovara 1157/%/1/%/125/%/125.00/%/11/%/0300037001358876779/%/XL||1158/%/1/%/125/%/125.00/%/24/%/0491108001358877035/%/S
+    {
+        $models = Order::find()->orderBy('or_id asc')->all();
+        foreach($models AS $key => $model){
+            $order = new \backend\models\Order();
+            $order->name = $model->or_u_name ? $model->or_u_name : '-';
+            $order->data_start = date("Y-m-d H:i:s", $model->or_data_start);
+            $order->data_finish = date("Y-m-d H:i:s", $model->or_data_finish);
+            $order->user = $model->or_u_id;
+            $order->code = $model->or_u_index;
+            $order->soname = $model->or_u_soname;
+            $order->email = $model->or_u_email ? $model->or_u_email : 'not@email.com';
+            $order->phone = $model->or_u_phone ? $model->or_u_phone : 'нет телефона';
+            $order->adress = $model->or_u_adress ? $model->or_u_adress : '-';
+            $order->city = $model->or_u_city;
+            $order->country = $model->or_u_country;
+            $order->payment = (int)$model->or_payment;
+            $order->delivery = (int)$model->or_dostavkainajax;
+            $order->agent = $model->or_u_agent;
+            $order->region = $model->or_u_region;
+            $order->fax = $model->or_u_fax;
+            $order->icq = $model->or_u_icq;
+            $order->skape = $model->or_u_skape;
+            $order->status = (int)$model->or_status;
+            $order->coment_admin = $model->or_coment_admin;
+            if($order->validate()){
+                $order->save();
+                $images = explode('||', $model->or_nabor_tovara);
+                if(sizeof($images) > 0){
+                    foreach($images AS $image){
+                        $image = explode('/%/', $image);
+                        $sizeCurrent = Proportion::find()->where("name = :name", [':name' => $image[6]])->one();
+                        $oldElement = Basics::find()->where("bs_id = :id", [':id' => (int)$image[4]])->one();
+                        if(!$oldElement){
+                            continue;
+                        }
+                        $newElement = Element::find()->where("name = :name", [':name' => $oldElement->bs_name])->one();
+                        if(!$newElement){
+                            continue;
+                        }
+                        $orderItem = new OrderItem();
+                        $orderItem->orders = $order->id;
+                        $orderItem->element = $newElement->id;
+                        $orderItem->item = (int)$image[0];
+                        $orderItem->counts = (int)$image[1];
+                        $orderItem->price = (int)$image[2];
+                        $orderItem->size = !isset($sizeCurrent->id) ? 0 : $sizeCurrent->id;
+                        if($orderItem->validate()) {
+                            $orderItem->save();
+                        }
+                    }
+                }
+            }
+//            if($key > 2){
+//                break;
+//            }
+        }
+    }
+
     public function actionItem($offset = 0)
     {
         $offset = (int)$offset;
@@ -57,7 +133,7 @@ class ConversionController extends \backend\ext\BaseController
             $offset = 0;
         }
         ob_start();
-        $models = Prodact::find()->orderBy('pr_id asc')->offset(6384)->all();
+        $models = Prodact::find()->orderBy('pr_id asc')->offset(8788)->all();
         echo 'Start ====== <br>'.PHP_EOL;
         ob_flush();
         flush();
