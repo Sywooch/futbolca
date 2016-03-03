@@ -69,7 +69,7 @@ class ConversionController extends \backend\ext\BaseController
 //SET foreign_key_checks = 1;
     public function actionOrder() // or_nabor_tovara 1157/%/1/%/125/%/125.00/%/11/%/0300037001358876779/%/XL||1158/%/1/%/125/%/125.00/%/24/%/0491108001358877035/%/S
     {
-        $models = Order::find()->orderBy('or_id asc')->all();
+        $models = Order::find()->orderBy('or_id asc')->offset(0)->all();
         foreach($models AS $key => $model){
             $order = new \backend\models\Order();
             $order->name = $model->or_u_name ? $model->or_u_name : '-';
@@ -99,6 +99,9 @@ class ConversionController extends \backend\ext\BaseController
                     foreach($images AS $image){
                         $image = explode('/%/', $image);
                         $sizeCurrent = Proportion::find()->where("name = :name", [':name' => $image[6]])->one();
+                        if(!$sizeCurrent){
+                            continue;
+                        }
                         $oldElement = Basics::find()->where("bs_id = :id", [':id' => (int)$image[4]])->one();
                         if(!$oldElement){
                             continue;
@@ -113,7 +116,7 @@ class ConversionController extends \backend\ext\BaseController
                         $orderItem->item = (int)$image[0];
                         $orderItem->counts = (int)$image[1];
                         $orderItem->price = (int)$image[2];
-                        $orderItem->size = !isset($sizeCurrent->id) ? 0 : $sizeCurrent->id;
+                        $orderItem->size = $sizeCurrent->id;
                         if($orderItem->validate()) {
                             $orderItem->save();
                         }
@@ -133,7 +136,7 @@ class ConversionController extends \backend\ext\BaseController
             $offset = 0;
         }
         ob_start();
-        $models = Prodact::find()->orderBy('pr_id asc')->offset(8788)->all();
+        $models = Prodact::find()->orderBy('pr_id asc')->offset(0)->all();
         echo 'Start ====== <br>'.PHP_EOL;
         ob_flush();
         flush();

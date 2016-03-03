@@ -1,7 +1,12 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
+use backend\models\Element;
+use backend\models\Item;
+use yii\helpers\Json;
 use yii\widgets\DetailView;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\Item */
@@ -10,12 +15,14 @@ $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Items'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h4 class="modal-title" id="myModalLabel"><?=Yii::t('app', 'Category')?>: "<?= Html::encode($this->title) ?>"</h4>
-</div>
-<div class="modal-body">
-
+<h3 class="modal-title" id="myModalLabel"><?=Yii::t('app', 'Item')?>: "<?= Html::encode($this->title) ?>"</h3>
+<p class="pull-right">
+    <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+    <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
+        'class' => 'btn btn-danger',
+        'onclick' => 'return confirm(\''.Yii::t('app', 'Уверенны, что нужно удалить?').'\');',
+    ]) ?>
+</p>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -23,20 +30,40 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'position',
             'url',
-            'element',
+            [
+                'attribute' => 'element',
+                'value'=> $model->element0->name.' ('.$model->element0->fashion0->name.')',
+            ],
             'code',
             'description',
             'keywords',
             'price',
-            'active',
-            'home',
+            [
+                'attribute' => 'active',
+                'value'=> Item::listHomeName($model->active),
+            ],
+            [
+                'attribute' => 'home',
+                'value'=> Item::listHomeName($model->home),
+            ],
             'toppx',
             'leftpx',
             'text:ntext',
+            [
+                'label' => Yii::t('app', 'Дополнительные основы'),
+                'format' => 'raw',
+                'value'=> join('<br>', $model->listElements()),
+            ],
+            [
+                'label' => Yii::t('app', 'Категории'),
+                'format' => 'raw',
+                'value'=> join('<br>', $model->listCat()),
+            ],
+            [
+                'label' => Yii::t('app', 'Метки'),
+                'format' => 'raw',
+                'value'=> join('<br>', $model->listM()),
+            ],
         ],
     ]) ?>
-</div>
-<div class="modal-footer">
-    <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-    <button type="button" class="btn btn-warning" data-dismiss="modal"><?=Yii::t('app', 'Закрыть')?></button>
-</div>
+

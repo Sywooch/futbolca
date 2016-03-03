@@ -248,6 +248,31 @@ class Item extends \yii\db\ActiveRecord
     {
         return $this->hasMany(ItemElement::className(), ['item' => 'id']);
     }
+
+    public function listElements(){
+        $r = [];
+        foreach($this->itemElements AS $el){
+            $r[] = $el->element0->name.' ('.$el->element0->fashion0->name.')';
+        }
+        return $r;
+    }
+
+    public function listCat(){
+        $r = [];
+        foreach($this->itemCategories AS $el){
+            $r[] = $el->category0->name;
+        }
+        return $r;
+    }
+
+    public function listM(){
+        $r = [];
+        foreach($this->itemMarkers AS $el){
+            $r[] = $el->marker0->name;
+        }
+        return $r;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */

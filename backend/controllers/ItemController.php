@@ -70,9 +70,20 @@ class ItemController extends BaseController
      */
     public function actionView($id)
     {
-        return $this->renderPartial('view', [
+        return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
+    }
+
+
+    public function actionEdit()
+    {
+        $model = Item::find()->where("id = :id", [':id' => (int)Yii::$app->request->post('pk')])->one();
+        if(!$model){
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        }
+        $model->{Yii::$app->request->post('name')} = trim(Yii::$app->request->post('value'));
+        $model->save();
     }
 
     /**

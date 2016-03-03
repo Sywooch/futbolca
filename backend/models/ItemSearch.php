@@ -18,7 +18,7 @@ class ItemSearch extends Item
     public function rules()
     {
         return [
-            [['id', 'position', 'element', 'price', 'active', 'home', 'toppx', 'leftpx'], 'integer'],
+            [['id', 'position', 'element', 'price', 'active', 'home', 'toppx', 'leftpx', 'categories'], 'integer'],
             [['name', 'url', 'code', 'description', 'keywords', 'text'], 'safe'],
         ];
     }
@@ -43,9 +43,18 @@ class ItemSearch extends Item
     {
         $query = Item::find();
 
+        $query->joinWith(['itemCategories']);
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $dataProvider->sort->attributes['categories'] = [
+            // The tables are the ones our relation are configured to
+            // in my case they are prefixed with "tbl_"
+            'asc' => ['{{%item_category}}.category' => SORT_ASC],
+            'desc' => ['{{%item_category}}.category' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -64,6 +73,7 @@ class ItemSearch extends Item
             'home' => $this->home,
             'toppx' => $this->toppx,
             'leftpx' => $this->leftpx,
+            '{{%item_category}}.category' => $this->categories,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
