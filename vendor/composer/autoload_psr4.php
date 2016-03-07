@@ -14,6 +14,9 @@ return array(
     'yii\\codeception\\' => array($vendorDir . '/yiisoft/yii2-codeception'),
     'yii\\bootstrap\\' => array($vendorDir . '/yiisoft/yii2-bootstrap'),
     'yii\\' => array($vendorDir . '/yiisoft/yii2'),
+    'curl\\' => array($vendorDir . '/alex-salt/yii2-curl/src'),
     'cebe\\markdown\\' => array($vendorDir . '/cebe/markdown'),
+    'arogachev\\excel\\' => array($vendorDir . '/arogachev/yii2-excel/src'),
+    'akryll\\datetimepicker\\' => array($vendorDir . '/akryll/yii2-datetimepicker'),
     'Faker\\' => array($vendorDir . '/fzaninotto/faker/src/Faker'),
 );

@@ -57,4 +57,22 @@ return array (
       '@yii/faker' => $vendorDir . '/yiisoft/yii2-faker',
     ),
   ),
+  'arogachev/yii2-excel' => 
+  array (
+    'name' => 'arogachev/yii2-excel',
+    'version' => '0.1.0.0',
+    'alias' => 
+    array (
+      '@arogachev/excel' => $vendorDir . '/arogachev/yii2-excel/src',
+    ),
+  ),
+  'akryll/yii2-datetimepicker' => 
+  array (
+    'name' => 'akryll/yii2-datetimepicker',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@akryll/datetimepicker' => $vendorDir . '/akryll/yii2-datetimepicker',
+    ),
+  ),
 );
