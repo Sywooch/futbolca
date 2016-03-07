@@ -66,7 +66,7 @@ class User extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'username' => Yii::t('app', 'Ф.И.О.'),
+            'username' => Yii::t('app', 'Логин'),
             'role' => Yii::t('app', 'Роль'),
             'auth_key' => Yii::t('app', 'Auth Key'),
             'password_hash' => Yii::t('app', 'Пароль'),

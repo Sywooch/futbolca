@@ -43,7 +43,7 @@ return [
     'Create Individual' => 'Создать индивидуальный заказ',
     'Phone' => 'Телефон',
     'Comment' => 'Комментарий',
-    'Username' => 'Ф.И.О.',
+    'Username' => 'Логин',
     'Status' => 'Статус',
     'Fashions' => 'Фасоны',
     'Fashion' => 'Фасон',

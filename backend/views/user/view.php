@@ -44,6 +44,54 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'created_at',
                 'value'=> date("d/m/Y", $model->created_at),
             ],
+            [
+                'label' => Yii::t('app', 'Имя'),
+                'value'=> $model->description0->name,
+            ],
+            [
+                'label' => Yii::t('app', 'Фамилия'),
+                'value'=> $model->description0->soname,
+            ],
+            [
+                'label' => Yii::t('app', 'Телефон'),
+                'value'=> $model->description0->phone,
+            ],
+            [
+                'label' => Yii::t('app', 'Факс'),
+                'value'=> $model->description0->fax,
+            ],            [
+                'label' => Yii::t('app', 'Адресс'),
+                'value'=> $model->description0->adress,
+            ],            [
+                'label' => Yii::t('app', 'Город'),
+                'value'=> $model->description0->city,
+            ],            [
+                'label' => Yii::t('app', 'Регион'),
+                'value'=> $model->description0->region,
+            ],            [
+                'label' => Yii::t('app', 'Область'),
+                'value'=> $model->description0->country,
+            ],
+            [
+                'label' => Yii::t('app', 'Индекс'),
+                'value'=> $model->description0->code,
+            ],
+            [
+                'label' => Yii::t('app', 'Скайп'),
+                'value'=> $model->description0->skape,
+            ],
+            [
+                'label' => Yii::t('app', 'ICQ'),
+                'value'=> $model->description0->icq,
+            ],
+            [
+                'label' => Yii::t('app', 'IP'),
+                'value'=> $model->description0->ip,
+            ],
+            [
+                'label' => Yii::t('app', 'Разное'),
+                'value'=> $model->description0->agent,
+            ],
         ],
     ]) ?>
 

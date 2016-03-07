@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\UserDescription;
 use Yii;
 use backend\models\User;
 use backend\models\UserSearch;
@@ -74,7 +75,7 @@ class UserController extends BaseController
     public function actionCreate()
     {
         $model = new User();
-
+        $description = new UserDescription();
         if ($model->load(Yii::$app->request->post())) {
             $model->created_at = time();
             $model->updated_at = time();
@@ -84,11 +85,17 @@ class UserController extends BaseController
             if($model->validate()){
                 $model->password_hash = Yii::$app->security->generatePasswordHash($model->password_hash);
                 $model->save();
+                if($description->load(Yii::$app->request->post())){
+                    if($description->validate()){
+                        $description->save();
+                    }
+                }
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }
         return $this->render('create', [
             'model' => $model,
+            'description' => $description,
         ]);
     }
 
@@ -101,6 +108,7 @@ class UserController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $description = $model->description0;
         $oldPass = $model->password_hash;
         if ($model->load(Yii::$app->request->post())) {
             if(!$model->password_hash){
@@ -112,11 +120,18 @@ class UserController extends BaseController
                     $model->password_hash = Yii::$app->security->generatePasswordHash($model->password_hash);
                 }
                 $model->save();
-                return $this->redirect(['view', 'id' => $model->id]);
+                if($description->load(Yii::$app->request->post())){
+                    if($description->validate()){
+                        $description->save();
+                    }
+                }
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Успешно сохраненно!'));
+                return $this->refresh();
             }
         }
         return $this->render('update', [
             'model' => $model,
+            'description' => $description,
         ]);
     }
 
