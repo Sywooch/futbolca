@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use backend\models\City;
+use backend\models\Region;
 use backend\models\UserDescription;
 use Yii;
 use backend\models\User;
@@ -43,6 +45,20 @@ class UserController extends BaseController
             Yii::$app->end();
         }
         throw new NotFoundHttpException(Yii::t('app', 'Invalid value'));
+    }
+
+    public function actionCity()
+    {
+        Yii::$app->response->format = 'json';
+        $name = Yii::$app->request->get('term');
+        return City::listDrop($name);
+    }
+
+    public function actionRegion()
+    {
+        Yii::$app->response->format = 'json';
+        $name = Yii::$app->request->get('term');
+        return Region::listDrop(0, $name);
     }
 
     public function actionStatus()

@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use backend\models\User;
 
+
 /* @var $this yii\web\View */
 /* @var $model backend\models\User */
 /* @var $description backend\models\UserDescription */
@@ -83,3 +84,21 @@ use backend\models\User;
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+
+$this->registerCssFile('//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css');
+$this->registerJsFile('//code.jquery.com/ui/1.11.4/jquery-ui.js', ['depends' => [\yii\web\JqueryAsset::className()]]);
+$url = \yii\helpers\Url::toRoute('user/city');
+$urlRegion = \yii\helpers\Url::toRoute('user/region');
+$js = <<<JS
+$("#userdescription-city").autocomplete({
+  source: "{$url}",
+  minLength: 2
+});
+$("#userdescription-country").autocomplete({
+  source: "{$urlRegion}",
+  minLength: 2
+});
+JS;
+$this->registerJs($js, $this::POS_END, 'my-edit-statur');
+

@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%city}}".
@@ -65,5 +66,15 @@ class City extends \yii\db\ActiveRecord
     public function getCountry0()
     {
         return $this->hasOne(Country::className(), ['id' => 'country']);
+    }
+
+    public static function listDrop($name = null){
+        if($name){
+            $name = $name.'%';
+            $model = self::find()->where("name LIKE :name", [':name' => $name])->orderBy('name asc')->all();
+        }else{
+            $model = self::find()->orderBy('name asc')->all();
+        }
+        return ArrayHelper::map($model, 'id', 'name');
     }
 }

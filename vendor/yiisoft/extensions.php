@@ -75,4 +75,13 @@ return array (
       '@akryll/datetimepicker' => $vendorDir . '/akryll/yii2-datetimepicker',
     ),
   ),
+  'anmaslov/yii2-autocomplete-widget' => 
+  array (
+    'name' => 'anmaslov/yii2-autocomplete-widget',
+    'version' => '1.1.0.0',
+    'alias' => 
+    array (
+      '@anmaslov/autocomplete' => $vendorDir . '/anmaslov/yii2-autocomplete-widget/src',
+    ),
+  ),
 );

@@ -14,9 +14,11 @@ return array(
     'yii\\codeception\\' => array($vendorDir . '/yiisoft/yii2-codeception'),
     'yii\\bootstrap\\' => array($vendorDir . '/yiisoft/yii2-bootstrap'),
     'yii\\' => array($vendorDir . '/yiisoft/yii2'),
+    'iiifx\\Yii2\\Autocomplete\\' => array($vendorDir . '/iiifx-production/yii2-autocomplete-helper/source'),
     'curl\\' => array($vendorDir . '/alex-salt/yii2-curl/src'),
     'cebe\\markdown\\' => array($vendorDir . '/cebe/markdown'),
     'arogachev\\excel\\' => array($vendorDir . '/arogachev/yii2-excel/src'),
+    'anmaslov\\autocomplete\\' => array($vendorDir . '/anmaslov/yii2-autocomplete-widget/src'),
     'akryll\\datetimepicker\\' => array($vendorDir . '/akryll/yii2-datetimepicker'),
     'Faker\\' => array($vendorDir . '/fzaninotto/faker/src/Faker'),
 );

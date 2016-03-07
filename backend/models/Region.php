@@ -66,9 +66,13 @@ class Region extends \yii\db\ActiveRecord
         return $this->hasOne(Country::className(), ['id' => 'country']);
     }
 
-    public static function listDrop($country = 0){
+    public static function listDrop($country = 0, $name = null){
         if($country > 0){
             return ArrayHelper::map(self::find()->where("country = :country", [':country' => $country])->orderBy('name asc')->all(), 'id', 'name');
+        }
+        if($name){
+            $name = $name.'%';
+            return ArrayHelper::map(self::find()->where("name LIKE :name", [':name' => $name])->orderBy('name asc')->all(), 'id', 'name');
         }
         return ArrayHelper::map(self::find()->orderBy('name asc')->all(), 'id', 'name');
     }

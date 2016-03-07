@@ -1201,5 +1201,151 @@
         ],
         "description": "curl client for yii2",
         "homepage": "http://github.com/holycheater/yii2-curl"
+    },
+    {
+        "name": "bower-asset/devbridge-autocomplete",
+        "version": "v1.2.24",
+        "version_normalized": "1.2.24.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/devbridge/jQuery-Autocomplete.git",
+            "reference": "dfbca90052e83682233a2bcc67c668c644630b6b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/devbridge/jQuery-Autocomplete/zipball/dfbca90052e83682233a2bcc67c668c644630b6b",
+            "reference": "dfbca90052e83682233a2bcc67c668c644630b6b",
+            "shasum": ""
+        },
+        "require": {
+            "bower-asset/jquery": ">=1.7"
+        },
+        "type": "bower-asset-library",
+        "extra": {
+            "bower-asset-main": "dist/jquery.autocomplete.js",
+            "bower-asset-ignore": [
+                "**/.*",
+                "node_modules",
+                "bower_components",
+                "spec",
+                "scripts",
+                "content"
+            ]
+        },
+        "installation-source": "dist",
+        "license": [
+            "MIT"
+        ],
+        "description": "Autocomplete provides suggestions while you type into the text field.",
+        "keywords": [
+            "ajax",
+            "autocomplete"
+        ]
+    },
+    {
+        "name": "anmaslov/yii2-autocomplete-widget",
+        "version": "v1.1",
+        "version_normalized": "1.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/anmaslov/yii2-autocomplete-widget.git",
+            "reference": "08beb72c0fa554b91979b2a0ff0307268a4ebbb2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/anmaslov/yii2-autocomplete-widget/zipball/08beb72c0fa554b91979b2a0ff0307268a4ebbb2",
+            "reference": "08beb72c0fa554b91979b2a0ff0307268a4ebbb2",
+            "shasum": ""
+        },
+        "require": {
+            "bower-asset/devbridge-autocomplete": "*",
+            "yiisoft/yii2": "*",
+            "yiisoft/yii2-bootstrap": "*"
+        },
+        "time": "2015-06-29 20:56:52",
+        "type": "yii2-extension",
+        "extra": {
+            "asset-installer-paths": {
+                "bower-asset-library": "vendor/bower"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "anmaslov\\autocomplete\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Maslov Alexey",
+                "email": "lelick29@gmail.com",
+                "role": "Developer"
+            }
+        ],
+        "description": "Ajax AutoComplete widget for Yii2",
+        "keywords": [
+            "autocomplete",
+            "extension",
+            "jquery",
+            "widget",
+            "yii",
+            "yii 2",
+            "yii2"
+        ]
+    },
+    {
+        "name": "iiifx-production/yii2-autocomplete-helper",
+        "version": "v0.3.1",
+        "version_normalized": "0.3.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/iiifx-production/yii2-autocomplete-helper.git",
+            "reference": "219159bd4f560daa5c9ffbcd0a7262ad49f6c2e3"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/iiifx-production/yii2-autocomplete-helper/zipball/219159bd4f560daa5c9ffbcd0a7262ad49f6c2e3",
+            "reference": "219159bd4f560daa5c9ffbcd0a7262ad49f6c2e3",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4",
+            "yiisoft/yii2": "*"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "@stable"
+        },
+        "time": "2016-02-04 14:33:31",
+        "bin": [
+            "autocomplete"
+        ],
+        "type": "extension",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "iiifx\\Yii2\\Autocomplete\\": "source/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT License"
+        ],
+        "authors": [
+            {
+                "name": "Vitaliy IIIFX Khomenko",
+                "email": "iiifx@yandex.com"
+            }
+        ],
+        "description": "Yii2 Autocomplete Helper",
+        "homepage": "https://github.com/iiifx-production/yii2-autocomplete-helper",
+        "keywords": [
+            "autocomplete",
+            "helper",
+            "ide"
+        ]
     }
 ]
