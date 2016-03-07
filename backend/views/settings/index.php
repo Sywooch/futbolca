@@ -29,7 +29,7 @@ $idEdit = [];
                 'format' => 'raw',
                 'value'=> function ($model) use (& $idEdit) {
                     $idEdit[] = '#value_edit_'.$model->id;
-                    return '<a title="Редактировать" href="javascript:void(0);" data-name="value" data-pk="'.$model->id.'" data-url="'.\yii\helpers\Url::toRoute('settings/edit').'" id="value_edit_'.$model->id.'" data-type="text" data-title="Редактировать">'.$model->value.'</a>';
+                    return '<a title="Редактировать" href="javascript:void(0);" data-name="value" data-pk="'.$model->id.'" data-url="'.\yii\helpers\Url::toRoute('settings/edit').'" id="value_edit_'.$model->id.'" data-type="text" data-title="Редактировать">'.Html::encode($model->value).'</a>';
                 },
             ],
             [

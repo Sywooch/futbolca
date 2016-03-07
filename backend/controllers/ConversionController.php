@@ -33,14 +33,17 @@ use backend\models\old\Podcat;
 use backend\models\old\PodcatLink;
 use backend\models\old\Prodact;
 use backend\models\old\Sp;
+use backend\models\old\User;
 use backend\models\OrderItem;
 use backend\models\Page;
 use backend\models\Paying;
 use backend\models\Podcategory;
 use backend\models\Proportion;
 use backend\models\Settings;
+use backend\models\UserDescription;
 use common\UrlHelper;
 use yii\widgets\Block;
+use Yii;
 
 class ConversionController extends \backend\ext\BaseController
 {
@@ -50,6 +53,52 @@ class ConversionController extends \backend\ext\BaseController
     public function actionIndex()
     {
 
+        return $this->render('index');
+    }
+
+
+    public function actionUsers()
+    {
+        $models = User::find()->orderBy('u_id asc')->offset(1)->all();
+        foreach($models AS $model){
+            $user = \backend\models\User::find()->where("username = :username", [':username' => $model->u_login])->one();
+            if(!$user){
+                $user = new \backend\models\User();
+                $user->username = $model->u_login;
+                $user->role = 'user';
+                $user->password_hash = Yii::$app->security->generatePasswordHash($model->u_login.'123456');
+                $user->email = $model->u_email;
+                $user->status = 10;
+                $user->created_at = time();
+                $user->updated_at = time();
+                if($user->validate()){
+                    $user->save();
+                    $order = \backend\models\Order::find()->where("user = :user", [':user' => $model->u_id])->one();
+                    if($order){
+                        $order->user = $user->id;
+                        $order->save();
+                    }
+                    $userDescription = new UserDescription();
+                    $userDescription->user = $user->id;
+                    $userDescription->name =  $model->u_name;
+                    $userDescription->soname =  $model->u_soname;
+                    $userDescription->adress =  $model->u_adress;
+                    $userDescription->code =  $model->u_index;
+                    $userDescription->city =  $model->u_city;
+                    $userDescription->region =  $model->u_region;
+                    $userDescription->country =  $model->u_country;
+                    $userDescription->phone =  $model->u_phone;
+                    $userDescription->fax =  $model->u_fax;
+                    $userDescription->icq =  $model->u_icq;
+                    $userDescription->skape =  $model->u_skape;
+                    $userDescription->agent =  $model->u_agent;
+                    $userDescription->ip = $model->u_ip;
+                    if($userDescription->validate()) {
+                        $userDescription->save();
+                    }
+                }
+            }
+        }
         return $this->render('index');
     }
 

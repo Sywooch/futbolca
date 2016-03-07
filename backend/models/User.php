@@ -17,6 +17,8 @@ use Yii;
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
+ *
+ * @property UserDescription $description0
  */
 
 // $2y$13$zMx1jhNbJ1h9To0g9FJM2.5AkOFnMkaUIf8mmbr2jFe0A/4sb9a3W = 111111
@@ -97,5 +99,13 @@ class User extends \yii\db\ActiveRecord
 
     public static function getRoleName($id){
         return isset(self::listRole()[$id]) ? self::listRole()[$id] : null;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDescription0()
+    {
+        return $this->hasOne(UserDescription::className(), ['user' => 'id']);
     }
 }

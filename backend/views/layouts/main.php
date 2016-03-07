@@ -57,6 +57,7 @@ AppAsset::register($this);
         ]];
         $menuItems[] = ['label' => Yii::t('app', 'Заказы'), 'items' => [
             ['label' => Yii::t('app', 'Индивидуальные заказы'), 'url' => ['/individual/index']],
+            ['label' => Yii::t('app', 'Список заказов'), 'url' => ['/order/index']],
         ]];
         $menuItems[] = ['label' => Yii::t('app', 'Тексты'), 'items' => [
             ['label' => Yii::t('app', 'Тексты на главную'), 'url' => ['/home/index']],
