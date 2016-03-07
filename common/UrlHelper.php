@@ -27,6 +27,10 @@ class UrlHelper extends Url
         return $str;
     }
 
+    public static function ItemUrlForAdmin($url){
+        return str_replace('/admin', '', self::toRoute(['/item/view', 'url' => $url]));
+    }
+
     /**
      * @param $str
      *

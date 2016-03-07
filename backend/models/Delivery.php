@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%delivery}}".
@@ -53,5 +54,9 @@ class Delivery extends \yii\db\ActiveRecord
             'min' => Yii::t('app', 'Заказ на скидку'),
             'discount' => Yii::t('app', 'Скидка'),
         ];
+    }
+
+    public static function listDelivery(){
+        return ArrayHelper::map(self::find()->orderBy('id')->all(), 'id', 'name');
     }
 }

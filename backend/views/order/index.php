@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use backend\models\Order;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\OrderSearch */
@@ -9,46 +10,75 @@ use yii\grid\GridView;
 
 $this->title = Yii::t('app', 'Orders');
 $this->params['breadcrumbs'][] = $this->title;
+$idEdit = [];
 ?>
+
 <div class="order-index">
-
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <p>
         <?= Html::a(Yii::t('app', 'Create Order'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'data_start',
-            'data_finish',
-            'user',
-            'name',
-            // 'soname',
-            // 'email:email',
-            // 'phone',
-            // 'adress',
-            // 'code',
-            // 'city',
-            // 'country',
-            // 'payment',
-            // 'delivery',
-            // 'agent:ntext',
-            // 'region',
-            // 'fax',
-            // 'icq',
-            // 'skape',
-            // 'status',
-            // 'coment_admin:ntext',
+//            'id',
+            [
+                'attribute' => 'status',
+                'format' => 'raw',
+                'value'=> function ($model) use (& $idEdit) {
+                    $id = 'status_edit_'.$model->id;
+                    $idEdit[] = '#'.$id;
+                    return '<a title="Редактировать" href="javascript:void(0);" data-source=\''.\yii\helpers\Json::encode(Order::statusList()).'\' data-value="'.$model->status.'" data-name="name" data-pk="'.$model->id.'" data-url="'.\yii\helpers\Url::toRoute('order/edit').'" id="'.$id.'" data-type="select" data-title="Редактировать">'.$model->nameStatus().'</a>';
+                },
+                'filter' =>  Order::statusList(),
+            ],
+            [
+                'attribute' => 'data_start',
+                'format' => 'raw',
+                'value'=> function ($model) {
+                    return date("d/m/Y H:i:s", strtotime($model->data_start));
+                },
+            ],
+            [
+                'attribute' => 'data_finish',
+                'format' => 'raw',
+                'value'=> function ($model) {
+                    return date("d/m/Y H:i:s", strtotime($model->data_finish));
+                },
+            ],
+            [
+                'attribute' => 'name',
+                'format' => 'raw',
+                'value'=> function ($model) {
+                    return $model->name.'<br>'.$model->soname;
+                },
+            ],
+             'email:email',
+             'phone',
+            [
+                'label' => Yii::t('app', 'Товары'),
+                'format' => 'raw',
+                'value'=> function ($model) {
+                    return join('<br>', $model->getListItemsMini());
+                },
+                'filter' =>  false,
+            ],
+
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 
 </div>
+<?php
+$idEdit = join(', ', $idEdit);
+$js = <<<JS
+$(document).ready(function() {
+    var ListDesc = '{$idEdit}';
+    $(ListDesc).editable();
+});
+JS;
+$this->registerJs($js, $this::POS_END, 'my-edit-statur');

@@ -4,6 +4,7 @@ namespace backend\models;
 
 use common\UrlHelper;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
 /**
@@ -72,5 +73,9 @@ class Paying extends \yii\db\ActiveRecord
 
     public function getImageLink(){
         return str_replace('/admin/', '', Url::home(true)).'paying/'.$this->img;
+    }
+
+    public static function listPay(){
+        return ArrayHelper::map(self::find()->orderBy('id')->all(), 'id', 'name');
     }
 }

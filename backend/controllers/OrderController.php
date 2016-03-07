@@ -7,24 +7,13 @@ use backend\models\Order;
 use backend\models\OrderSearch;
 use backend\ext\BaseController;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+
 
 /**
  * OrderController implements the CRUD actions for Order model.
  */
 class OrderController extends BaseController
 {
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ],
-            ],
-        ];
-    }
 
     /**
      * Lists all Order models.
@@ -82,16 +71,33 @@ class OrderController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $oldStatus = $model->status;
         if ($model->load(Yii::$app->request->post())) {
             if($model->validate()){
+                if($model->status == 9 && $oldStatus != $model->status){
+                    $model->data_finish = date("Y-m-d H:i:s");
+                }
                 $model->save();
-                return $this->redirect(['view', 'id' => $model->id]);
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Успешно сохраненно!'));
+                return $this->refresh();
             }
         }
         return $this->render('update', [
             'model' => $model,
         ]);
+    }
+
+    public function actionEdit()
+    {
+        $model = Order::find()->where("id = :id", [':id' => (int)Yii::$app->request->post('pk')])->one();
+        if(!$model){
+            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        }
+        $model->{Yii::$app->request->post('name')} = trim(Yii::$app->request->post('value'));
+        if(Yii::$app->request->post('name') == 'status' && Yii::$app->request->post('value') == 9){
+            $model->data_finish = date("Y-m-d H:i:s");
+        }
+        $model->save();
     }
 
     /**

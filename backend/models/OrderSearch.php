@@ -42,12 +42,16 @@ class OrderSearch extends Order
     public function search($params)
     {
         $query = Order::find();
+        if(!Yii::$app->request->get('sort')){
+            $query->orderBy('id desc');
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
         $this->load($params);
+
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
@@ -57,8 +61,6 @@ class OrderSearch extends Order
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'data_start' => $this->data_start,
-            'data_finish' => $this->data_finish,
             'user' => $this->user,
             'payment' => $this->payment,
             'delivery' => $this->delivery,
@@ -66,6 +68,8 @@ class OrderSearch extends Order
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'data_start', $this->data_start])
+            ->andFilterWhere(['like', 'data_finish', $this->data_finish])
             ->andFilterWhere(['like', 'soname', $this->soname])
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'phone', $this->phone])
