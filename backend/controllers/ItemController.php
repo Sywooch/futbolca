@@ -5,6 +5,7 @@ namespace backend\controllers;
 use backend\models\Element;
 use backend\models\ItemWatermark;
 use backend\models\Podcategory;
+use common\UrlHelper;
 use Yii;
 use backend\models\Item;
 use backend\models\ItemSearch;
@@ -35,6 +36,113 @@ class ItemController extends BaseController
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionImport()
+    {
+        if(isset($_FILES['excel']['tmp_name'])){
+            $fl = Yii::getAlias('@backend/runtime/').$_FILES['excel']['name'];
+            copy($_FILES['excel']['tmp_name'], $fl);
+            $inputFileType = \PHPExcel_IOFactory::identify($fl);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($fl);
+            $sheet = $objPHPExcel->getSheet(0);
+            $highestRow = $sheet->getHighestRow();
+            $highestColumn = $sheet->getHighestColumn();
+            for ($row = 1; $row <= $highestRow; $row++) {
+                $data = [];
+                $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
+                $data['id'] = (int)$rowData[0][0];
+                $data['name'] = $rowData[0][1];
+                $data['position'] = $rowData[0][2];
+                $data['url'] = (int)$rowData[0][3];
+                $data['code'] = $rowData[0][4];
+                $data['price'] = (int)$rowData[0][5];
+                $data['active'] = $rowData[0][6];
+
+                $model = Item::findOne($data['id']);
+                if($model){
+                    $model->price = $data['price'];
+                    $model->save();
+                }
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Успешно обновленно!'));
+                return $this->refresh();
+            }
+            @unlink($fl);
+        }
+        return $this->render('import', [
+
+        ]);
+    }
+
+    public function actionExcel()
+    {
+        $models = Item::find();
+        $newOrder = new Item();
+        $models->where("name IS NOT NULL");
+        $sort = isset(Yii::$app->request->get(1)['sort']) ? Yii::$app->request->get(1)['sort'] : null;
+        if($sort){
+            $sort = mb_substr($sort, 0, 1, Yii::$app->charset) == '-' ? [ltrim($sort, '-') => 'desc'] : [$sort => 'asc'];
+        }
+        $data = isset(Yii::$app->request->get(1)['ItemSearch']) ? Yii::$app->request->get(1)['ItemSearch'] : [];
+        foreach($data AS $k => $v){
+            $v = trim($v);
+            if($v){
+
+                if(is_numeric($v)){
+                    $models->andWhere("$k = :$k", [':'.$k => $v]);
+                }else{
+                    $v = '%'.$v.'%';
+                    $models->andWhere("$k LIKE :$k", [':'.$k => $v]);
+                }
+            }
+        }
+        if($sort){
+            $models->orderBy($sort);
+        }
+        $models = $models->all();
+        if(!$models){
+            return Yii::t('app', 'Нет данных');
+        }
+        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel->getProperties()->setCreator("Futbolki ".UrlHelper::home(true))
+            ->setLastModifiedBy("Futbolki ".UrlHelper::home(true))
+            ->setTitle("Office 2007 XLSX Document")
+            ->setSubject("Office 2007 XLSX Document")
+            ->setDescription("Document for Office 2007 XLSX.")
+            ->setKeywords("Document for Office 2007 XLSX.")
+            ->setCategory("Futbolki ".UrlHelper::home(true));
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', $newOrder->getAttributeLabel('id'))
+            ->setCellValue('B1', $newOrder->getAttributeLabel('name'))
+            ->setCellValue('C1', $newOrder->getAttributeLabel('position'))
+            ->setCellValue('D1', $newOrder->getAttributeLabel('url'))
+            ->setCellValue('E1', $newOrder->getAttributeLabel('code'))
+            ->setCellValue('F1', $newOrder->getAttributeLabel('price'))
+            ->setCellValue('G1', $newOrder->getAttributeLabel('active'));
+
+        foreach($models AS $k => $model) {
+            $index = ($k + 2);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$index, $model->id)
+                ->setCellValue('B'.$index, $model->name)
+                ->setCellValue('C'.$index, $model->position)
+                ->setCellValue('D'.$index, $model->url)
+                ->setCellValue('E'.$index, $model->code)
+                ->setCellValue('F'.$index, $model->price)
+                ->setCellValue('G'.$index, Item::listHomeName($model->active));
+        }
+        $objPHPExcel->setActiveSheetIndex(0);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="prodacts.xlsx"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+        header ('Cache-Control: cache, must-revalidate');
+        header ('Pragma: public');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
     }
 
     public function actionElement()

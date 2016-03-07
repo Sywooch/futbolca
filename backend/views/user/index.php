@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use backend\models\User;
 
+
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -17,6 +18,7 @@ $idEditStatus = [];
     <h1><?= Html::encode($this->title) ?></h1>
     <p>
         <?= Html::a(Yii::t('app', 'Create User'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('<i class="glyphicon glyphicon-share"></i> '.Yii::t('app', 'Экспорт в Excel'), ['excel', Yii::$app->request->get()], ['class' => 'btn btn-warning', 'target' => '_blank']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

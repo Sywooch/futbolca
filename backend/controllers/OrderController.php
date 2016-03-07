@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\UrlHelper;
 use Yii;
 use backend\models\Order;
 use backend\models\OrderSearch;
@@ -28,6 +29,88 @@ class OrderController extends BaseController
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionExcel()
+    {
+        $models = Order::find();
+        $models->where("name IS NOT NULL");
+        $sort = isset(Yii::$app->request->get(1)['sort']) ? Yii::$app->request->get(1)['sort'] : null;
+        if($sort){
+            $sort = mb_substr($sort, 0, 1, Yii::$app->charset) == '-' ? [ltrim($sort, '-') => 'desc'] : [$sort => 'asc'];
+        }
+        $data = isset(Yii::$app->request->get(1)['OrderSearch']) ? Yii::$app->request->get(1)['OrderSearch'] : [];
+        foreach($data AS $k => $v){
+            $v = trim($v);
+            if($v){
+
+                if(is_numeric($v)){
+                    $models->andWhere("$k = :$k", [':'.$k => $v]);
+                }else{
+                    $v = '%'.$v.'%';
+                    $models->andWhere("$k LIKE :$k", [':'.$k => $v]);
+                }
+            }
+        }
+        if($sort){
+            $models->orderBy($sort);
+        }
+        $models = $models->all();
+        if(!$models){
+            return Yii::t('app', 'Нет данных');
+        }
+        $newOrder = new Order();
+        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel->getProperties()->setCreator("Futbolki ".UrlHelper::home(true))
+            ->setLastModifiedBy("Futbolki ".UrlHelper::home(true))
+            ->setTitle("Office 2007 XLSX Document")
+            ->setSubject("Office 2007 XLSX Document")
+            ->setDescription("Document for Office 2007 XLSX.")
+            ->setKeywords("Document for Office 2007 XLSX.")
+            ->setCategory("Futbolki ".UrlHelper::home(true));
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'ID')
+            ->setCellValue('B1', $newOrder->getAttributeLabel('data_start'))
+            ->setCellValue('C1', $newOrder->getAttributeLabel('data_finish'))
+            ->setCellValue('D1', $newOrder->getAttributeLabel('name'))
+            ->setCellValue('E1', $newOrder->getAttributeLabel('soname'))
+            ->setCellValue('F1', $newOrder->getAttributeLabel('email'))
+            ->setCellValue('G1', $newOrder->getAttributeLabel('phone'))
+            ->setCellValue('H1', $newOrder->getAttributeLabel('status'))
+            ->setCellValue('I1', $newOrder->getAttributeLabel('adress'))
+            ->setCellValue('J1', $newOrder->getAttributeLabel('city'))
+            ->setCellValue('K1', $newOrder->getAttributeLabel('country'))
+            ->setCellValue('L1', $newOrder->getAttributeLabel('agent'))
+            ->setCellValue('M1', 'Товары');
+
+        foreach($models AS $k => $model) {
+            $index = ($k + 2);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$index, $model->id)
+                ->setCellValue('B'.$index, $model->data_start)
+                ->setCellValue('C'.$index, $model->data_finish)
+                ->setCellValue('D'.$index, $model->name)
+                ->setCellValue('E'.$index, $model->soname)
+                ->setCellValue('F'.$index, $model->email)
+                ->setCellValue('G'.$index, $model->phone)
+                ->setCellValue('H'.$index, Order::getStatusName($model->status))
+                ->setCellValue('I'.$index, $model->adress)
+                ->setCellValue('J'.$index, $model->city)
+                ->setCellValue('K'.$index, $model->country)
+                ->setCellValue('L'.$index, $model->agent)
+                ->setCellValue('M'.$index, join("\n\t ", $model->getListItemsForExcel()));
+        }
+        $objPHPExcel->setActiveSheetIndex(0);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="orders.xlsx"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+        header ('Cache-Control: cache, must-revalidate');
+        header ('Pragma: public');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
     }
 
     /**

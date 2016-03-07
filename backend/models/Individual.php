@@ -142,6 +142,9 @@ class Individual extends \yii\db\ActiveRecord
     }
 
     public function getImageLink($id){
+        if(!$this->{'img'.$id}){
+            return null;
+        }
         return str_replace('/admin/', '', Url::home(true)).'images/individual/'.$this->id.'/'.$this->{'img'.$id};
     }
 }

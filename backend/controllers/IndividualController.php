@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\UrlHelper;
 use Yii;
 use backend\models\Individual;
 use backend\models\IndividualSearch;
@@ -28,6 +29,85 @@ class IndividualController extends BaseController
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionExcel()
+    {
+        $models = Individual::find();
+        $models->where("name IS NOT NULL");
+        $sort = isset(Yii::$app->request->get(1)['sort']) ? Yii::$app->request->get(1)['sort'] : null;
+        if($sort){
+            $sort = mb_substr($sort, 0, 1, Yii::$app->charset) == '-' ? [ltrim($sort, '-') => 'desc'] : [$sort => 'asc'];
+        }
+        $data = isset(Yii::$app->request->get(1)['IndividualSearch']) ? Yii::$app->request->get(1)['IndividualSearch'] : [];
+        foreach($data AS $k => $v){
+            $v = trim($v);
+            if($v){
+
+                if(is_numeric($v)){
+                    $models->andWhere("$k = :$k", [':'.$k => $v]);
+                }else{
+                    $v = '%'.$v.'%';
+                    $models->andWhere("$k LIKE :$k", [':'.$k => $v]);
+                }
+            }
+        }
+        if($sort){
+            $models->orderBy($sort);
+        }
+        $models = $models->all();
+        if(!$models){
+            return Yii::t('app', 'Нет данных');
+        }
+        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel->getProperties()->setCreator("Futbolki ".UrlHelper::home(true))
+            ->setLastModifiedBy("Futbolki ".UrlHelper::home(true))
+            ->setTitle("Office 2007 XLSX Document")
+            ->setSubject("Office 2007 XLSX Document")
+            ->setDescription("Document for Office 2007 XLSX.")
+            ->setKeywords("Document for Office 2007 XLSX.")
+            ->setCategory("Futbolki ".UrlHelper::home(true));
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'ID')
+            ->setCellValue('B1', 'Имя')
+            ->setCellValue('C1', 'Статус')
+            ->setCellValue('D1', 'Телефон')
+            ->setCellValue('E1', 'Email')
+            ->setCellValue('F1', 'Image 1')
+            ->setCellValue('G1', 'Image 2')
+            ->setCellValue('H1', 'Image 3')
+            ->setCellValue('I1', 'Image 4')
+            ->setCellValue('J1', 'Комментарий')
+            ->setCellValue('K1', 'Комментарий админа')
+            ->setCellValue('L1', 'Создан');
+
+        foreach($models AS $k => $model) {
+            $index = ($k + 2);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$index, $model->id)
+                ->setCellValue('B'.$index, $model->name)
+                ->setCellValue('C'.$index, Individual::getStatusName($model->status))
+                ->setCellValue('D'.$index, $model->phone)
+                ->setCellValue('E'.$index, $model->email)
+                ->setCellValue('F'.$index, $model->getImageLink(1))
+                ->setCellValue('G'.$index, $model->getImageLink(2))
+                ->setCellValue('H'.$index, $model->getImageLink(3))
+                ->setCellValue('I'.$index, $model->getImageLink(4))
+                ->setCellValue('J'.$index, $model->comment)
+                ->setCellValue('K'.$index, $model->admintext)
+                ->setCellValue('L'.$index, $model->created);
+        }
+        $objPHPExcel->setActiveSheetIndex(0);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="individual_order.xlsx"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+        header ('Cache-Control: cache, must-revalidate');
+        header ('Pragma: public');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
     }
 
     /**

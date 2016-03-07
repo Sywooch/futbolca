@@ -77,9 +77,9 @@ return [
         ],
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=fl',
-            'username' => 'fl',
-            'password' => '123fl123',
+            'dsn' => 'mysql:host=localhost;dbname=futbolend',
+            'username' => 'futbolend',
+            'password' => 'fdgfg546DHBGScz',
             'charset' => 'utf8',
             'tablePrefix' => 'fl_',
         ],

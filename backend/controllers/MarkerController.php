@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\UrlHelper;
 use Yii;
 use backend\models\Marker;
 use backend\models\MarkerSearch;
@@ -27,6 +28,69 @@ class MarkerController extends BaseController
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionExcel()
+    {
+        $models = Marker::find();
+        $models->where("url IS NOT NULL");
+        $sort = isset(Yii::$app->request->get(1)['sort']) ? Yii::$app->request->get(1)['sort'] : null;
+        if($sort){
+            $sort = mb_substr($sort, 0, 1, Yii::$app->charset) == '-' ? [ltrim($sort, '-') => 'desc'] : [$sort => 'asc'];
+        }
+        $data = isset(Yii::$app->request->get(1)['CategorySearch']) ? Yii::$app->request->get(1)['CategorySearch'] : [];
+        foreach($data AS $k => $v){
+            $v = trim($v);
+            if($v){
+
+                if(is_numeric($v)){
+                    $models->andWhere("$k = :$k", [':'.$k => $v]);
+                }else{
+                    $v = '%'.$v.'%';
+                    $models->andWhere("$k LIKE :$k", [':'.$k => $v]);
+                }
+            }
+        }
+        if($sort){
+            $models->orderBy($sort);
+        }
+        $models = $models->all();
+        if(!$models){
+            return Yii::t('app', 'Нет данных');
+        }
+        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel->getProperties()->setCreator("Futbolki ".UrlHelper::home(true))
+            ->setLastModifiedBy("Futbolki ".UrlHelper::home(true))
+            ->setTitle("Office 2007 XLSX Document")
+            ->setSubject("Office 2007 XLSX Document")
+            ->setDescription("Document for Office 2007 XLSX.")
+            ->setKeywords("Document for Office 2007 XLSX.")
+            ->setCategory("Futbolki ".UrlHelper::home(true));
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'ID')
+            ->setCellValue('B1', 'Position')
+            ->setCellValue('C1', 'Name')
+            ->setCellValue('D1', 'Url');
+
+        foreach($models AS $k => $model) {
+            $index = ($k + 2);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$index, $model->id)
+                ->setCellValue('B'.$index, $model->position)
+                ->setCellValue('C'.$index, $model->name)
+                ->setCellValue('D'.$index, $model->url);
+        }
+        $objPHPExcel->setActiveSheetIndex(0);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="metky.xlsx"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+        header ('Cache-Control: cache, must-revalidate');
+        header ('Pragma: public');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
     }
 
     /**

@@ -170,4 +170,17 @@ class Order extends \yii\db\ActiveRecord
         }
         return $r;
     }
+
+    public function getListItemsForExcel(){
+        $r = [];
+        $ollPrice = 0;
+        if($this->orderItems){
+            foreach($this->orderItems AS $orderItems){
+                $ollPrice += ($orderItems->counts * $orderItems->price);
+                $r[] = ''.UrlHelper::ItemUrlForAdmin($orderItems->item0->url).' | '.$orderItems->orders0->name.' ('.$orderItems->element0->fashion0->name.' '.$orderItems->element0->name.') | '.$orderItems->counts.' | '.$orderItems->price.' | '.$orderItems->size0->name.' | '.($orderItems->counts * $orderItems->price);
+            }
+            $r[] = "\n\t ".Yii::t('app', 'Полная сумма').': '.Yii::$app->formatter->asCurrency($ollPrice, 'UAH').'';
+        }
+        return $r;
+    }
 }

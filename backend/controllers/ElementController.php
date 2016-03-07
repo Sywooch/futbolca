@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\models\ElementSize;
 use backend\models\Fashion;
+use common\UrlHelper;
 use Yii;
 use backend\models\Element;
 use backend\models\ElementSearch;
@@ -31,6 +32,115 @@ class ElementController extends BaseController
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionImport()
+    {
+        if(isset($_FILES['excel']['tmp_name'])){
+            $fl = Yii::getAlias('@backend/runtime/').$_FILES['excel']['name'];
+            copy($_FILES['excel']['tmp_name'], $fl);
+            $inputFileType = \PHPExcel_IOFactory::identify($fl);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($fl);
+            $sheet = $objPHPExcel->getSheet(0);
+            $highestRow = $sheet->getHighestRow();
+            $highestColumn = $sheet->getHighestColumn();
+            for ($row = 1; $row <= $highestRow; $row++) {
+                $data = [];
+                $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
+                $data['id'] = (int)$rowData[0][0];
+                $data['fashion'] = $rowData[0][1];
+                $data['name'] = $rowData[0][2];
+                $data['price'] = (int)$rowData[0][3];
+                $data['increase'] = $rowData[0][4];
+                $data['stock'] = (int)$rowData[0][5];
+                $data['photo'] = $rowData[0][6];
+
+                $model = Element::findOne($data['id']);
+                if($model){
+                    $model->price = $data['price'];
+                    $model->increase = $data['price'];
+                    $model->stock = $data['stock'];
+                    $model->save();
+                }
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Успешно обновленно!'));
+                return $this->refresh();
+            }
+            @unlink($fl);
+        }
+        return $this->render('import', [
+
+        ]);
+    }
+
+    public function actionExcel()
+    {
+        $models = Element::find();
+        $newOrder = new Element();
+        $models->where("name IS NOT NULL");
+        $sort = isset(Yii::$app->request->get(1)['sort']) ? Yii::$app->request->get(1)['sort'] : null;
+        if($sort){
+            $sort = mb_substr($sort, 0, 1, Yii::$app->charset) == '-' ? [ltrim($sort, '-') => 'desc'] : [$sort => 'asc'];
+        }
+        $data = isset(Yii::$app->request->get(1)['ElementSearch']) ? Yii::$app->request->get(1)['ElementSearch'] : [];
+        foreach($data AS $k => $v){
+            $v = trim($v);
+            if($v){
+
+                if(is_numeric($v)){
+                    $models->andWhere("$k = :$k", [':'.$k => $v]);
+                }else{
+                    $v = '%'.$v.'%';
+                    $models->andWhere("$k LIKE :$k", [':'.$k => $v]);
+                }
+            }
+        }
+        if($sort){
+            $models->orderBy($sort);
+        }
+        $models = $models->all();
+        if(!$models){
+            return Yii::t('app', 'Нет данных');
+        }
+        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel->getProperties()->setCreator("Futbolki ".UrlHelper::home(true))
+            ->setLastModifiedBy("Futbolki ".UrlHelper::home(true))
+            ->setTitle("Office 2007 XLSX Document")
+            ->setSubject("Office 2007 XLSX Document")
+            ->setDescription("Document for Office 2007 XLSX.")
+            ->setKeywords("Document for Office 2007 XLSX.")
+            ->setCategory("Futbolki ".UrlHelper::home(true));
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', $newOrder->getAttributeLabel('id'))
+            ->setCellValue('B1', $newOrder->getAttributeLabel('fashion'))
+            ->setCellValue('C1', $newOrder->getAttributeLabel('name'))
+            ->setCellValue('D1', $newOrder->getAttributeLabel('price'))
+            ->setCellValue('E1', $newOrder->getAttributeLabel('increase'))
+            ->setCellValue('F1', $newOrder->getAttributeLabel('stock'))
+            ->setCellValue('G1', $newOrder->getAttributeLabel('photo'));
+
+        foreach($models AS $k => $model) {
+            $index = ($k + 2);
+            $objPHPExcel->setActiveSheetIndex(0)
+                ->setCellValue('A'.$index, $model->id)
+                ->setCellValue('B'.$index, $model->fashion0->name)
+                ->setCellValue('C'.$index, $model->name)
+                ->setCellValue('D'.$index, $model->price)
+                ->setCellValue('E'.$index, $model->increase)
+                ->setCellValue('F'.$index, $model->stock)
+                ->setCellValue('G'.$index, $model->getImageLink());
+        }
+        $objPHPExcel->setActiveSheetIndex(0);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="osnovi.xlsx"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+        header ('Cache-Control: cache, must-revalidate');
+        header ('Pragma: public');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
     }
 
     /**

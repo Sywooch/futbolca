@@ -29,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'phone',
             'email:email',
             'comment:ntext',
+            'admintext:ntext',
             [
                 'attribute' => 'img1',
                 'format' => 'raw',
