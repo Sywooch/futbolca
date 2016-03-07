@@ -44,7 +44,13 @@ AppAsset::register($this);
         $menuItems = [
             ['label' => Yii::t('app', 'Настройки'), 'url' => ['/settings/index']],
         ];
-        $menuItems[] = ['label' => Yii::t('app', 'Пользователи'), 'url' => ['/user/index']];
+//        $menuItems[] = ['label' => Yii::t('app', 'Пользователи'), 'url' => ['/user/index']];
+        $menuItems[] = ['label' => Yii::t('app', 'Пользователи'), 'items' => [
+            ['label' => Yii::t('app', 'Список пользователей'), 'url' => ['/user/index']],
+            ['label' => Yii::t('app', 'Страны'), 'url' => ['/country/index']],
+            ['label' => Yii::t('app', 'Области'), 'url' => ['/region/index']],
+            ['label' => Yii::t('app', 'Города'), 'url' => ['/city/index']],
+        ]];
         $menuItems[] = ['label' => Yii::t('app', 'Категории'), 'items' => [
             ['label' => Yii::t('app', 'Категории'), 'url' => ['/category/index']],
             ['label' => Yii::t('app', 'Подкатегории'), 'url' => ['/podcategory/index']],

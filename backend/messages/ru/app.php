@@ -75,5 +75,14 @@ return [
     'Create Settings' => 'Создать настройку',
     'Value' => 'Значение',
     'Title' => 'Описание',
+    'Regions' => 'Области',
+    'Region' => 'Область',
+    'Create Region' => 'Создать область',
+    'Country' => 'Страна',
+    'Countries' => 'Страны',
+    'Create Country' => 'Создать страну',
+    'Cities' => 'Города',
+    'City' => 'Город',
+    'Create City' => 'Создать город',
 
 ];
