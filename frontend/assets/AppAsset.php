@@ -19,13 +19,13 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/jquery-ui/jquery-ui.min.css',
-        'js/lightgallery/skins/default/style.min.css',
-        'css/site.css',
+        'css/style.css',
+//        'css/site.css',
     ];
     public $js = [
         'js/jquery-ui.min.js',
         'js/datepicker-ru.js',
-        'js/lightgallery/lightgallery.min.js',
+//        'js/lightgallery/lightgallery.min.js',
         'js/home.js',
     ];
     public $depends = [

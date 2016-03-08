@@ -23,6 +23,24 @@ return [
         ],
     ],
     'components' => [
+        'assetManager' => [
+            'bundles' => [
+//                'yii\web\JqueryAsset' => [
+//                    'sourcePath' => null,
+//                    'js' => ['js/jquery00.js']
+//                ],
+                'yii\bootstrap\BootstrapPluginAsset' => [
+                    'js'=>[]
+                ],
+                'yii\bootstrap\BootstrapAsset' => [
+                    'sourcePath' => null,
+                    'css' => [],
+                    'js' => [],
+                ],
+
+            ],
+
+        ],
         'mail' => [
             'class' => 'yii\swiftmailer\Mailer',
             'viewPath' => '@common/mail',
@@ -61,16 +79,31 @@ return [
             'showScriptName' => false,
             'enableStrictParsing' => true,
             'baseUrl' => '/',
-            'suffix' => '/',
+            'suffix' => '.html',
             'rules' => [
                 '' => 'site/index',
                 'about' => 'site/about',
                 'contact' => 'site/contact',
-                'signup' => 'site/signup',
+                'user/registry' => 'site/signup',
                 'login' => 'site/login',
                 'site/requestpasswordreset' => 'site/requestpasswordreset',
                 'site/reset-password' => 'site/resetpassword',
 
+                't/<url:.*>' => 'item/view',
+                't' => 'item/index',
+
+                'blog/<url:.*>' => 'news/view',
+                'blog' => 'news/index',
+
+                'page/<url:.*>' => 'page/view',
+                'page' => 'page/index',
+
+                'tags/<url:.*>' => 'tags/view',
+                'tags' => 'tags/index',
+                'c/<url:.*>' => 'category/view',
+                'c' => 'category/index',
+
+                'seach' => 'search/index',
 
                 '<controller:\w+>/<id:\d+>/<action:(create|update|delete)>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
@@ -96,14 +129,6 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
-        ],
-        */
     ],
     'params' => $params,
 ];

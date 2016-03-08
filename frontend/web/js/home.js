@@ -1,21 +1,17 @@
-
-lightgallery.init();
-
 $.datepicker.setDefaults( $.datepicker.regional[ "ru" ] );
 
-$( "#book-date" ).datepicker({
-    dateFormat : "yy-mm-dd"
-});
-
-$('input[name=BookSearch\\[date\\]], input[name=BookSearch\\[created_at\\]]').datepicker({
-    dateFormat : "yy-mm-dd"
-});
-
-$('#book-author').change(function(){
-    var current = $('#book-author').val();
-    if($.isNumeric(current) && current == 0){
-        $('#newAuthor').css('display', 'block');
-    }else{
-        $('#newAuthor').css('display', 'none');
-    }
+$(function(){
+    $("#seach_text_id").autocomplete({
+        source: function(request, response) {
+            $.ajax({ url: CURRENT_DOMEN + 'ajax.html',
+                data: { term: request.term, seach_text_go: 1 },
+                dataType: "json",
+                type: "POST",
+                success: function(data){
+                    response(data);
+                }
+            });
+        },
+        minLength: 2
+    });
 });

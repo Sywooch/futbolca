@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\models\Item;
 use Yii;
 use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
@@ -73,10 +74,13 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        if (!\Yii::$app->user->isGuest) {
-            return $this->redirect(Url::toRoute('book/index'));
-        }
-        return $this->render('index');
+        $models = Item::find()->with(['element0', 'itemWatermarks'])->where("home = :home AND active = :active", [
+            ':home' => 1,
+            ':active' => 1
+        ])->orderBy('position desc, id desc')->limit(12)->all();
+        return $this->render('index', [
+            'models' => $models
+        ]);
     }
 
     /**
@@ -86,10 +90,6 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!\Yii::$app->user->isGuest) {
-            return $this->redirect(Url::toRoute('book/index'));
-        }
-
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
@@ -171,7 +171,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionRequestPasswordReset()
+    public function actionRequestpasswordreset()
     {
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -196,7 +196,7 @@ class SiteController extends Controller
      * @return mixed
      * @throws BadRequestHttpException
      */
-    public function actionResetPassword($token)
+    public function actionResetpassword($token)
     {
         try {
             $model = new ResetPasswordForm($token);

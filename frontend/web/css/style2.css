@@ -1,0 +1,96 @@
+html, body, div, p, span, ul, ol, li, dl, dt, dd, table, tr, td, img, a, h1, h2, h3, h4, h5, h6, form, fieldset{
+margin: 0;
+padding: 0;
+border: 0;
+font-weight: normal;
+vertical-align: baseline;
+}
+html, body{
+height:100%;
+}
+body{
+background: #fff;
+color: #323435;
+font: 12px/18px Tahoma, "Geneva CY", sans-serif;
+}
+a{
+color: #3b5191;
+}
+a:hover{
+text-decoration: none;
+}
+
+.holder{
+width:736px;
+margin: 0 auto;
+padding:48px 0 0;
+}
+.holder .logo{
+display:block;
+width:427px;
+margin: 0 auto 23px
+}
+.title-upper{
+text-transform:uppercase;
+color: #941e8d;
+font-size:18px;
+display:block;
+text-align:center;
+margin: 0 0 40px;
+}
+h1{
+display:block;
+color: #1177b7;
+font: bold 16px/18px Tahoma;
+margin: 0 0 8px;
+}
+.holder p{
+margin: 0 0 16px;
+text-align:justify;
+}
+.subtitle{
+display:block;
+color: #767879;
+font-weight:bold;
+margin: 0 0 6px;
+}
+.inline-list{
+margin:0 0 10px;
+}
+.inline-list li{
+display:inline;
+list-style: none;
+margin: 0 5px 0 0;
+}
+
+.foot{
+padding:5px 0 0 ;
+}
+.foot .nav{
+margin: 0 0 16px;
+overflow:hidden;
+zoom:1
+}
+.foot .nav li{
+display:inline;
+float:left;
+padding: 0 0 0 19px;
+}
+.foot .nav li:first-child, .foot .nav li.first-child{
+padding-left: 0;
+}
+* html .nav li {
+z-index: expression(  runtimeStyle.zIndex = 1,this == parentNode.firstChild ? (className += " first-child") : 0 )
+}
+.foot .nav a{
+color: #3b5191;
+font:bold 14px Tahoma;
+}
+.foot .copy{
+color: #7f8183;
+font-weight:bold;
+}
+
+
+
+

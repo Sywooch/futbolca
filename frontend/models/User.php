@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace frontend\models;
 
 use Yii;
 
@@ -9,14 +9,16 @@ use Yii;
  *
  * @property string $id
  * @property string $username
+ * @property string $role
  * @property string $auth_key
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $email
  * @property integer $status
- * @property string $role
  * @property integer $created_at
  * @property integer $updated_at
+ *
+ * @property UserDescription $userDescription
  */
 class User extends \yii\db\ActiveRecord
 {
@@ -35,12 +37,12 @@ class User extends \yii\db\ActiveRecord
     {
         return [
             [['username', 'password_hash', 'email', 'created_at', 'updated_at'], 'required'],
-            [['status', 'created_at', 'updated_at'], 'integer'],
             [['role'], 'string'],
-            [['username'], 'string', 'max' => 30],
+            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
-            [['password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
             [['username'], 'unique'],
+            [['email'], 'unique'],
             [['password_reset_token'], 'unique']
         ];
     }
@@ -53,14 +55,22 @@ class User extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'username' => Yii::t('app', 'Username'),
+            'role' => Yii::t('app', 'Role'),
             'auth_key' => Yii::t('app', 'Auth Key'),
             'password_hash' => Yii::t('app', 'Password Hash'),
             'password_reset_token' => Yii::t('app', 'Password Reset Token'),
             'email' => Yii::t('app', 'Email'),
             'status' => Yii::t('app', 'Status'),
-            'role' => Yii::t('app', 'Role'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserDescription()
+    {
+        return $this->hasOne(UserDescription::className(), ['user' => 'id']);
     }
 }
