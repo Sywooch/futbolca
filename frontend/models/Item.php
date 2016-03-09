@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "{{%item}}".
@@ -147,7 +148,16 @@ class Item extends \yii\db\ActiveRecord
         }
         $element = explode('.', $element);
         $element = $element[0];
-
+        $url = Url::toRoute([
+            'image/create',
+            'type' => 'full',
+            'element' => $element,
+            'water' => $watemark,
+            'top' => ($this->element0->toppx + $this->toppx),
+            'left' => ($this->element0->leftpx  + $this->leftpx),
+        ]);
+//        $url = Url::home(true).'img/full/'.$element.'/'.$watemark.'/'.($this->element0->toppx + $this->toppx).'/'.($this->element0->leftpx  + $this->leftpx).'.jpg';
+        return $url;
     }
 
     public function getAllPrice(){

@@ -167,8 +167,11 @@ class Pagination extends Object implements Linkable
      */
     public function getPage($recalculate = false)
     {
+
         if ($this->_page === null || $recalculate) {
+
             $page = (int) $this->getQueryParam($this->pageParam, 1) - 1;
+
             $this->setPage($page, true);
         }
 
@@ -183,6 +186,7 @@ class Pagination extends Object implements Linkable
      */
     public function setPage($value, $validatePage = false)
     {
+
         if ($value === null) {
             $this->_page = null;
         } else {

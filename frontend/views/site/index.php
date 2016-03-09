@@ -23,7 +23,7 @@ Yii::$app->view->registerMetaTag([
     <?php foreach($models AS $model){ ?>
     <div class="prod-box fl">
         <a href="<?=Url::toRoute(['item/view', 'url' => $model->url])?>" class="prod-title" title="<?=Html::encode($model->name)?>"><?=$model->name?></a>
-        <div class="img-wrap"><a href="<?=Url::toRoute(['item/view', 'url' => $model->url])?>"><img src="http://futboland.com.ua/img/full/0033301001324245234/0549110001336255277/55/97.jpg" width="260" alt="<?=Html::encode($model->name)?>"></a></div>
+        <div class="img-wrap"><a href="<?=Url::toRoute(['item/view', 'url' => $model->url])?>" title="<?=Html::encode($model->name)?>"><img src="<?=$model->getImageFromItem()?>" alt="<?=Html::encode($model->name)?>"></a></div>
         <div class="prod-info">
             <a href="<?=Url::toRoute(['item/view', 'url' => $model->url])?>" class="prod-select" title="<?=Html::encode(Yii::t('app', 'Выбрать цвет и размер'))?>"><?=Yii::t('app', 'Выбрать цвет и размер')?></a>
             <span class="price"><?=$model->getAllPrice()?> грн.</span>

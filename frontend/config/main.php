@@ -23,6 +23,11 @@ return [
         ],
     ],
     'components' => [
+        'cache' => [
+            'class' => 'yii\caching\DbCache',
+            // 'db' => 'mydb',
+            // 'cacheTable' => 'my_cache',
+        ],
         'assetManager' => [
             'bundles' => [
 //                'yii\web\JqueryAsset' => [
@@ -98,12 +103,26 @@ return [
                 'page/<url:.*>' => 'page/view',
                 'page' => 'page/index',
 
+                'tags/<url:.*>/<page:\d+>' => 'tags/view',
                 'tags/<url:.*>' => 'tags/view',
                 'tags' => 'tags/index',
+
+                'c/<url:.*>/<page:\d+>' => 'category/view',
                 'c/<url:.*>' => 'category/view',
                 'c' => 'category/index',
 
+                'p/<url:.*>/<page:\d+>' => 'podcat/view',
+                'p/<url:.*>' => 'podcat/view',
+                'p' => 'podcat/index',
+
                 'seach' => 'search/index',
+
+//                'img/full/<element:\w+>/<water:\w+>/<top:\d+>/<left:\d+>' => 'search/index',
+                [
+                    'pattern' => 'img/<type:(full|mini)>/<element:\w+>/<water:\w+>/<top:\d+>/<left:\d+>',
+                    'route' => 'image/create',
+                    'suffix' => '.jpg',
+                ],
 
                 '<controller:\w+>/<id:\d+>/<action:(create|update|delete)>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',

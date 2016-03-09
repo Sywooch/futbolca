@@ -5,14 +5,14 @@ namespace backend\controllers;
 use Yii;
 use backend\models\Settings;
 use backend\models\SettingsSearch;
-use yii\web\Controller;
+use backend\ext\BaseController;
 use yii\web\NotFoundHttpException;
 
 
 /**
  * SettingsController implements the CRUD actions for Settings model.
  */
-class SettingsController extends Controller
+class SettingsController extends BaseController
 {
 
     /**

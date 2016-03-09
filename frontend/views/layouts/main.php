@@ -5,11 +5,7 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
-use common\widgets\Alert;
 use frontend\models\HomePage;
 use frontend\models\Settings;
 
@@ -27,6 +23,7 @@ AppAsset::register($this);
     <meta name="revisit-after" content="1 days">
     <meta name="generator" content="php-shaman">
     <link rel="alternate" type="application/rss+xml" title="rss лента" href="<?=Url::home(true)?>rss.xml">
+    <link rel="canonical" href="<?=str_replace('/0', '', Url::canonical())?>">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) .($this->title ? ' | ' : ''). Html::encode(Yii::$app->name) ?></title>
     <?php $this->head() ?>
@@ -46,7 +43,7 @@ AppAsset::register($this);
 </head>
 <body>
 <?php $this->beginBody() ?>
-<noscript><!--noindex-->Для правильной работы магазина нужно включить JavaScript<!--/noindex--></noscript>
+<!--noindex--><noscript><strong style="text-align: center; display: block; color: red; font-size: 18px;">Для правильной работы магазина нужно включить JavaScript</strong></noscript><!--/noindex-->
 <div id="wrapper">
     <div id="header">
         <div class="logo">

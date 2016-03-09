@@ -8,6 +8,7 @@
 namespace common;
 
 use Yii;
+use yii\helpers\Html;
 use yii\helpers\Url;
 
 class UrlHelper extends Url
@@ -61,5 +62,13 @@ class UrlHelper extends Url
         $str = mb_strtolower($str, 'UTF-8');
         $str = self::reduceMultiples($str, '-', true);
         return trim(stripslashes($str));
+    }
+
+    public static function podcatList($podcats){
+        $r = [];
+        foreach($podcats AS $podcat){
+            $r[] = Html::a($podcat->name, ['podcat/view', 'url' => $podcat->url], ['title' => Html::encode($podcat->name)]);
+        }
+        return $r;
     }
 }
