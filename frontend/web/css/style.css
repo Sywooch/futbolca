@@ -884,3 +884,7 @@ background: url(images/bottom-bg.png) repeat-x;
     float: none;
     clear: both;
 }
+
+.help-block-error{
+    color: red !important;
+}

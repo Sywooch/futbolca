@@ -116,6 +116,7 @@ return [
                 'p' => 'podcat/index',
 
                 'seach' => 'search/index',
+                'individual-order' => 'individual/index',
 
 //                'img/full/<element:\w+>/<water:\w+>/<top:\d+>/<left:\d+>' => 'search/index',
                 [
