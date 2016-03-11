@@ -30,6 +30,37 @@ $(function(){
         minLength: 2
     });
 });
+$(function(){
+    jQuery("#signupform-country").autocomplete({
+        source: function(request, response) {
+            jQuery.ajax({ url: RegData.ajaxUrlRegion,
+                data: { term: request.term },
+                dataType: "json",
+                type: "POST",
+                success: function(data){
+                    response(data);
+                }
+            });
+        },
+        minLength: 2
+    });
+});
+$(function(){
+    jQuery("#signupform-city").autocomplete({
+        source: function(request, response) {
+            var region = jQuery("#signupform-country").val();
+            jQuery.ajax({ url: RegData.ajaxUrlCity,
+                data: { term: request.term, region:region },
+                dataType: "json",
+                type: "POST",
+                success: function(data){
+                    response(data);
+                }
+            });
+        },
+        minLength: 2
+    });
+});
 
 var changes = {
 

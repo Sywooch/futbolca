@@ -52,14 +52,14 @@ return [
         'mail' => [
             'class' => 'yii\swiftmailer\Mailer',
             'viewPath' => '@common/mail',
-//            'transport' => [
-//                'class' => 'Swift_SmtpTransport',
-//                'host' => 'smtp.yandex.ru',
-//                'username' => 'php-shaman',
-//                'password' => '12microsoft12',
-//                'port' => '465',
-//                'encryption' => 'ssl',
-//            ],
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.yandex.ru',
+                'username' => 'shop@futboland.com.ua',
+                'password' => '88kuropatka34',
+                'port' => '465',
+                'encryption' => 'ssl',
+            ],
         ],
         'formatter' => [
             'timeZone' => 'Europe/Moscow',
@@ -95,7 +95,7 @@ return [
             'suffix' => '.html',
             'rules' => [
                 '' => 'site/index',
-                'about' => 'site/about',
+//                'about' => 'site/about',
                 'contact' => 'site/contact',
                 'user/registry' => 'site/signup',
                 'login' => 'site/login',

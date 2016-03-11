@@ -885,7 +885,7 @@ background: url(images/bottom-bg.png) repeat-x;
     clear: both;
 }
 
-.help-block-error{
+.help-block-error, .toRec{
     color: red !important;
 }
 

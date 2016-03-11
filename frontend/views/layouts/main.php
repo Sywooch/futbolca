@@ -41,6 +41,10 @@ AppAsset::register($this);
         var SearchData = {
             ajaxUrl: '<?=Url::toRoute(['search/autocomplete'])?>'
         };
+        var RegData = {
+            ajaxUrlRegion: '<?=Url::toRoute(['site/autoregion'])?>',
+            ajaxUrlCity: '<?=Url::toRoute(['site/autocity'])?>',
+        };
         /*]]>*/
     </script>
 </head>

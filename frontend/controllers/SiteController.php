@@ -1,7 +1,10 @@
 <?php
 namespace frontend\controllers;
 
+use backend\models\Country;
+use frontend\models\City;
 use frontend\models\Item;
+use frontend\models\Region;
 use Yii;
 use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
@@ -9,6 +12,7 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use yii\base\InvalidParamException;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -112,6 +116,16 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
+    public function actionTest()
+    {
+//        Yii::$app->mail->compose()
+//            ->setTo('php-shaman@yandex.ru')
+//            ->setFrom([Yii::$app->params['siteEmail'] => Yii::$app->params['siteNameForEmail']])
+//            ->setSubject('Test')
+//            ->setTextBody('тестовая отправка мыла')
+//            ->send();
+    }
+
     /**
      * Displays contact page.
      *
@@ -136,16 +150,6 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
-
-    /**
      * Signs user up.
      *
      * @return mixed
@@ -164,6 +168,54 @@ class SiteController extends Controller
         return $this->render('signup', [
             'model' => $model,
         ]);
+    }
+
+    public function actionAutoregion()
+    {
+        if(!Yii::$app->request->isAjax){
+            throw new BadRequestHttpException(Yii::t('app', 'Not ajax found'));
+        }
+        $search = Yii::$app->request->post('term');
+        if(!$search){
+            throw new BadRequestHttpException(Yii::t('app', 'Not search text'));
+        }
+        $search = $search.'%';
+        Yii::$app->response->format = 'json';
+        $country = Country::find()->where("name = :name", [':name' => 'Украина'])->one();
+        $model = Region::find();
+        $model->where("name LIKE :name", [':name' => $search]);
+        if($country){
+            $model->andWhere("country = :country", [':country' => $country->id]);
+        }
+        $model->orderBy('name asc');
+        $model = $model->all();
+        return ArrayHelper::map($model, 'name', 'name');
+    }
+
+    public function actionAutocity()
+    {
+        if(!Yii::$app->request->isAjax){
+            throw new BadRequestHttpException(Yii::t('app', 'Not ajax found'));
+        }
+        $search = Yii::$app->request->post('term');
+        if(!$search){
+            throw new BadRequestHttpException(Yii::t('app', 'Not search text'));
+        }
+        $search = $search.'%';
+        Yii::$app->response->format = 'json';
+        $country = Country::find()->where("name = :name", [':name' => 'Украина'])->one();
+        $region = Region::find()->where("name = :name", [':name' => Yii::$app->request->post('region')])->one();
+        $model = City::find();
+        $model->where("name LIKE :name", [':name' => $search]);
+        if($country){
+            $model->andWhere("country = :country", [':country' => $country->id]);
+        }
+        if($region){
+            $model->andWhere("region = :region", [':region' => $region->id]);
+        }
+        $model->orderBy('name asc');
+        $model = $model->all();
+        return ArrayHelper::map($model, 'name', 'name');
     }
 
     /**
