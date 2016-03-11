@@ -28,6 +28,9 @@ return [
             // 'db' => 'mydb',
             // 'cacheTable' => 'my_cache',
         ],
+        'cacheFile' => [
+            'class' => 'yii\caching\FileCache',
+        ],
         'assetManager' => [
             'bundles' => [
 //                'yii\web\JqueryAsset' => [
@@ -78,6 +81,11 @@ return [
             'password' => 'fdgfg546DHBGScz',
             'charset' => 'utf8',
             'tablePrefix' => 'fl_',
+            'enableSchemaCache' => true,
+            // Duration of schema cache.
+            'schemaCacheDuration' => 3600,
+            // Name of the cache component used to store schema information
+            'schemaCache' => 'cacheFile',
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -93,6 +101,8 @@ return [
                 'login' => 'site/login',
                 'site/requestpasswordreset' => 'site/requestpasswordreset',
                 'site/reset-password' => 'site/resetpassword',
+
+                'item/changes' => 'item/changes',
 
                 't/<url:.*>' => 'item/view',
                 't' => 'item/index',

@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%fashion}}".
@@ -57,5 +58,14 @@ class Fashion extends \yii\db\ActiveRecord
     public function getElements()
     {
         return $this->hasMany(Element::className(), ['fashion' => 'id']);
+    }
+
+    public static function getBuItem($elementsForFashions, $model){
+        $elementsForFashions = ArrayHelper::map($elementsForFashions, 'fashion', 'fashion');
+        return Fashion::find()
+            ->where(['in', 'id', $elementsForFashions])
+            ->andWhere("id <> :id", [':id' => $model->element0->fashion])
+            ->orderBy('id asc')
+            ->all();
     }
 }

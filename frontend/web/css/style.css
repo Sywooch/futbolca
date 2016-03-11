@@ -888,3 +888,21 @@ background: url(images/bottom-bg.png) repeat-x;
 .help-block-error{
     color: red !important;
 }
+
+#fullImage{
+    width: 378px;
+    height: 400px;
+}
+
+.print_mini, .labelFashion, .imgElementn{
+    cursor: pointer;
+}
+
+.imgElementn{
+	width: 100px;
+    height: 100px;
+}
+
+.priceHide{
+    display: none;
+}

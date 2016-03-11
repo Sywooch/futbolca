@@ -38,6 +38,9 @@ AppAsset::register($this);
         /*<![CDATA[*/
         var CURRENT_DOMEN = '<?=Url::home(true)?>';
         var TV_IN_P = '40';
+        var SearchData = {
+            ajaxUrl: '<?=Url::toRoute(['search/autocomplete'])?>'
+        };
         /*]]>*/
     </script>
 </head>

@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use common\UrlHelper;
 use Yii;
 
 /**
@@ -105,5 +106,30 @@ class Element extends \yii\db\ActiveRecord
     public function getOrderItems()
     {
         return $this->hasMany(OrderItem::className(), ['element' => 'id']);
+    }
+
+    public function getImageLink(){
+        if(!$this->photo){
+            return $this->photo;
+        }
+        return UrlHelper::home(true).'images/element/'.$this->id.'/'.$this->photo;
+    }
+
+    public static function getByItem($elementId, $item = null, $currentFashion = 0){
+        $currentFashion = (int)$currentFashion;
+        $model = Element::find();
+        $model->distinct();
+        $model->where(['in', 'id', $elementId]);
+        if($item){
+            $model->with(['fashion0']);
+            if($currentFashion > 0){
+                $model->andWhere("fashion = :fashion", [':fashion' => $currentFashion]);
+            }else{
+                $model->andWhere("fashion = :fashion", [':fashion' => $item->element0->fashion]);
+            }
+            $model->andWhere("id <> :id", [':id' => $item->element]);
+            $model->orderBy('fashion asc, name asc');
+        }
+        return $model->all();
     }
 }

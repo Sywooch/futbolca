@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "{{%item_watermark}}".
@@ -53,5 +54,12 @@ class ItemWatermark extends \yii\db\ActiveRecord
     public function getItem0()
     {
         return $this->hasOne(Item::className(), ['id' => 'item']);
+    }
+
+    public function getImageUrl($small = false){
+        if(!$this->name){
+            return null;
+        }
+        return Url::home(true).'images/item/'.$this->item.'/'.($small ? 'mini_' : '').$this->name;
     }
 }

@@ -1,5 +1,7 @@
 <?php
 return [
+    'Description' => 'MetaTitle',
+    'Keywords' => 'MetaDescription',
     'The requested page does not exist.' => 'Запрашиваемая страница не существует.',
     'Create' => 'Создать',
     'Update' => 'Редактировать',

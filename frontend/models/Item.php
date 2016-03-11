@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
 /**
@@ -135,14 +136,28 @@ class Item extends \yii\db\ActiveRecord
         return $this->hasMany(OrderItem::className(), ['item' => 'id']);
     }
 
-    public function getImageFromItem(){
-        $watemark = isset($this->itemWatermarks[0]->name) ? $this->itemWatermarks[0]->name : null;
+    public function getImageFromItem($currentWatermark = 0, $elementItem = null){
+        $currentWatermark = (int)$currentWatermark;
+        if($currentWatermark > 0){
+            $watemark = null;
+            foreach($this->itemWatermarks AS $watermark){
+                if($watermark->id == $currentWatermark){
+                    $watemark = $watermark->name;
+                }
+            }
+        }else{
+            $watemark = isset($this->itemWatermarks[0]->name) ? $this->itemWatermarks[0]->name : null;
+        }
         if(!$watemark){
             return null;
         }
         $watemark = explode('.', $watemark);
         $watemark = $watemark[0];
-        $element = isset($this->element0->photo) ? $this->element0->photo : null;
+        if($elementItem){
+            $element = $elementItem->photo;
+        }else{
+            $element = isset($this->element0->photo) ? $this->element0->photo : null;
+        }
         if(!$element){
             return null;
         }
@@ -156,17 +171,50 @@ class Item extends \yii\db\ActiveRecord
             'top' => ($this->element0->toppx + $this->toppx),
             'left' => ($this->element0->leftpx  + $this->leftpx),
         ]);
-//        $url = Url::home(true).'img/full/'.$element.'/'.$watemark.'/'.($this->element0->toppx + $this->toppx).'/'.($this->element0->leftpx  + $this->leftpx).'.jpg';
         return $url;
     }
 
-    public function getAllPrice(){
-        if($this->element0->price > 0){
-            return $this->element0->price + $this->price;
+    public function getAllPrice($elementItem = null){
+        if(!$elementItem){
+            $elementItem = $this->element0;
+        }
+        if($elementItem->price > 0){
+            return $elementItem->price + $this->price;
         }
         $price = $this->price;
-        $price += $this->element0->increase;
-        $price += $this->element0->fashion0->price;
+        $price += $elementItem->increase;
+        $price += $elementItem->fashion0->price;
         return $price;
+    }
+
+    public static function getElementsForItemPage($model){
+        $minBetween = $model->id - 100;
+        if ($minBetween < 1) {
+            $minBetween = 1;
+        }
+        $maxBetween = $model->id + 100;
+        $cat = ArrayHelper::map($model->itemCategories, 'category', 'category');
+        return Item::find()
+            ->with(['element0', 'itemWatermarks'])
+            ->innerJoin('{{%item_category}}', '{{%item_category}}.item = {{%item}}.id')
+            ->where(['in', "{{%item_category}}.category", $cat])
+            ->andWhere("{{%item}}.id <> :id", [':id' => $model->id])
+            ->andWhere("{{%item}}.id BETWEEN :id2 AND :id3", [':id2' => $minBetween, ':id3' => $maxBetween])
+            ->orderBy('{{%item}}.position desc')
+            ->limit(2)
+            ->offset(rand(1, 3))
+            ->all();
+    }
+
+    public static function photoNoExp($name){
+        $name = explode('.', $name);
+        return isset($name[0]) ? $name[0] : null;
+    }
+
+    public static function toJson($model){
+        $model->description = '';
+        $model->keywords = '';
+        $model->text = '';
+        return $model;
     }
 }

@@ -44,8 +44,8 @@ use yii\widgets\InputWidget;
  */
 class ReCaptcha extends InputWidget
 {
-    const SITE_KEY = '6Lfd8gwTAAAAAASFlwpleSj4QTCpYSBqtDQWdjct';
-    const SECRET_KEY = '6Lfd8gwTAAAAALJ4QKU0sc3BkKtiAbdFHV0UVpd0';
+    const SITE_KEY = '6Ld6exoTAAAAANPQ7LPmYwAmGNe7qgmhx2pLtaAQ';
+    const SECRET_KEY = '6Ld6exoTAAAAAHKl6NfWNaCRQTlK2WtxdpkaONrj';
     const JS_API_URL = 'https://www.google.com/recaptcha/api.js';
 
     const THEME_LIGHT = 'light';
