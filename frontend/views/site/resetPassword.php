@@ -18,21 +18,21 @@ Yii::$app->view->registerMetaTag([
     'content' => $this->title
 ]);
 ?>
-<div class="products">
-    <h1 class="page-title"><?=Yii::t('app', 'Восстановление пароля')?></h1>
-    <p><?=Yii::t('app', 'Пожалуйста, выберите ваш новый пароль')?>:</p>
-    <p style="color: green;"><?=Yii::$app->session->getFlash('success')?></p>
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'reset-password-form']); ?>
 
-                <?= $form->field($model, 'password')->passwordInput(['autofocus' => true]) ?>
+<h1 class="page-title"><?=Yii::t('app', 'Восстановление пароля')?></h1>
+<p><?=Yii::t('app', 'Пожалуйста, выберите ваш новый пароль')?>:</p>
+<p style="color: green;"><?=Yii::$app->session->getFlash('success')?></p>
+<div class="row">
+    <div class="col-lg-5">
+        <?php $form = ActiveForm::begin(['id' => 'reset-password-form']); ?>
 
-                <div class="form-group">
-                    <?= Html::submitButton(Yii::t('app', 'Сохранить'), ['class' => 'btn btn-primary']) ?>
-                </div>
+            <?= $form->field($model, 'password')->passwordInput(['autofocus' => true]) ?>
 
-            <?php ActiveForm::end(); ?>
-        </div>
+            <div class="form-group">
+                <?= Html::submitButton(Yii::t('app', 'Сохранить'), ['class' => 'btn btn-primary']) ?>
+            </div>
+
+        <?php ActiveForm::end(); ?>
     </div>
 </div>
+

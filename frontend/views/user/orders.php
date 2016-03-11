@@ -24,52 +24,50 @@ Yii::$app->view->registerMetaTag([
     'content' => $this->title
 ]);
 ?>
-<div class="products">
-    <h1 class="page-title"><?=Yii::t('app', 'Заказы')?></h1>
-    <p></p>
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+<h1 class="page-title"><?=Yii::t('app', 'Заказы')?></h1>
+<p></p>
+<?= GridView::widget([
+    'dataProvider' => $dataProvider,
+    'filterModel' => $searchModel,
+    'columns' => [
+        ['class' => 'yii\grid\SerialColumn'],
 
-            [
-                'attribute' => 'status',
-                'format' => 'raw',
-                'value'=> function ($model) {
-                    return $model->nameStatus();
-                },
-                'filter' =>  Order::statusList(),
-            ],
-            [
-                'attribute' => 'data_start',
-                'format' => 'raw',
-                'value'=> function ($model) {
-                    if(!$model->data_start){
-                        return null;
-                    }
-                    return date("d/m/Y", strtotime($model->data_start));
-                },
-                'filter' =>  false,
-            ],
-            [
-                'attribute' => 'name',
-                'format' => 'raw',
-                'value'=> function ($model) {
-                    return $model->name.'<br>'.$model->soname;
-                },
-                'filter' =>  false,
-            ],
-
-            [
-                'label' => Yii::t('app', ' '),
-                'format' => 'raw',
-                'value'=> function ($model) {
-                    return Html::a(Yii::t('app', 'Подробно'), ['user/view', 'id' => $model->id]);
-                },
-                'filter' =>  false,
-            ],
+        [
+            'attribute' => 'status',
+            'format' => 'raw',
+            'value'=> function ($model) {
+                return $model->nameStatus();
+            },
+            'filter' =>  Order::statusList(),
         ],
-    ]); ?>
+        [
+            'attribute' => 'data_start',
+            'format' => 'raw',
+            'value'=> function ($model) {
+                if(!$model->data_start){
+                    return null;
+                }
+                return date("d/m/Y", strtotime($model->data_start));
+            },
+            'filter' =>  false,
+        ],
+        [
+            'attribute' => 'name',
+            'format' => 'raw',
+            'value'=> function ($model) {
+                return $model->name.'<br>'.$model->soname;
+            },
+            'filter' =>  false,
+        ],
 
-</div>
+        [
+            'label' => Yii::t('app', ' '),
+            'format' => 'raw',
+            'value'=> function ($model) {
+                return Html::a(Yii::t('app', 'Подробно'), ['user/view', 'id' => $model->id]);
+            },
+            'filter' =>  false,
+        ],
+    ],
+]); ?>
+

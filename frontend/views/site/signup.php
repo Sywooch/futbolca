@@ -25,7 +25,7 @@ $js = <<<JS
 JS;
 $this->registerJs($js, $this::POS_END, 'my-phone-ms');
 ?>
-<div class="products">
+
     <h1 class="page-title"><?=Yii::t('app', 'Регистрация')?></h1>
     <p style="text-align: center;"><?=Yii::t('app', 'Заполните следующие поля, чтобы зарегистрироваться')?>:</p>
     <p style="text-align: center; color:#FF0000;"></p>
@@ -90,5 +90,5 @@ $this->registerJs($js, $this::POS_END, 'my-phone-ms');
             </tr>
         </table>
     <?php ActiveForm::end(); ?>
-</div>
+
 

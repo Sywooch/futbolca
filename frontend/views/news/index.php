@@ -7,6 +7,8 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 
 $this->title = Yii::t('app', 'Блог');
+//$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Блог'), 'url' => ['news/index']];
+$this->params['breadcrumbs'][] = $this->title;
 Yii::$app->view->registerMetaTag([
     'name' => 'description',
     'content' => $this->title
@@ -17,16 +19,10 @@ Yii::$app->view->registerMetaTag([
 ]);
 
 ?>
-<p style="text-align: left">
-    <a href="/" title="Перейти на главную страницу">Главная</a> |
-    <a href="http://futboland.com.ua/blog.html" title="Блог">Блог</a>
-</p>
-<div class="products">
+<h1 class="page-title"><?=Yii::t('app', 'Блог')?></h1>
+<?php foreach($models AS $model){ ?>
+<h3><a href="<?=Url::toRoute(['news/view', 'url' => $model->url])?>" title="<?=Html::encode($model->name)?>"><?=$model->name?></a></h3>
+<p style="text-align: justify"><?=strip_tags($model->small)?></p>
+<p style="text-align: right"><a href="<?=Url::toRoute(['news/view', 'url' => $model->url])?>" title="<?=Html::encode($model->name)?>"><?=Yii::t('app', 'Читать польностью')?></a></p>
+<?php } ?>
 
-    <?php foreach($models AS $model){ ?>
-    <h3><a href="<?=Url::toRoute(['news/view', 'url' => $model->url])?>" title="<?=Html::encode($model->name)?>"><?=$model->name?></a></h3>
-    <p style="text-align: justify"><?=strip_tags($model->small)?></p>
-    <p style="text-align: right"><a href="<?=Url::toRoute(['news/view', 'url' => $model->url])?>" title="<?=Html::encode($model->name)?>"><?=Yii::t('app', 'Читать польностью')?></a></p>
-    <?php } ?>
-
-</div>

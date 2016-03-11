@@ -15,6 +15,11 @@ use frontend\models\Item;
 use yii\helpers\Json;
 
 $this->title = ($model->description ? $model->description : $model->name);
+if(sizeof($model->itemCategories) > 0 && isset($model->itemCategories[0])){
+    $firstCat = $model->itemCategories[0];
+    $this->params['breadcrumbs'][] = ['label' => $firstCat->category0->name, 'url' => ['category/view', 'url' => $firstCat->category0->url]];
+}
+$this->params['breadcrumbs'][] = $model->name;
 Yii::$app->view->registerMetaTag([
     'name' => 'description',
     'content' => ($model->keywords ? $model->keywords : $this->title)

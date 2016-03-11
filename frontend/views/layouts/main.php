@@ -8,6 +8,7 @@ use yii\helpers\Url;
 use frontend\assets\AppAsset;
 use frontend\models\HomePage;
 use frontend\models\Settings;
+use common\lib\Breadcrumbs;
 
 AppAsset::register($this);
 ?>
@@ -162,7 +163,12 @@ AppAsset::register($this);
             <div id="show_version" style="display:none;"></div>
         </div>
         <div class="content">
+            <div class="products">
+            <?= Breadcrumbs::widget([
+                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+            ]) ?>
             <?=$content?>
+            </div>
         </div>
         <div class="sidebar">
             <div class="side-banner">
