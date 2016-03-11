@@ -106,6 +106,14 @@ class SignupForm extends Model
             $description->city = $this->city;
             $description->adress = $this->adress;
             $description->save();
+            Yii::$app->mail->compose(
+                ['html' => 'singup-html', 'text' => 'singup-text'],
+                ['user' => $user]
+            )
+                ->setTo($user->email)
+                ->setFrom([Yii::$app->params['siteEmail'] => Yii::$app->params['siteNameForEmail']])
+                ->setSubject(Yii::t('app', 'Ргеистрация на сайте {site}', ['site' => Yii::$app->name]))
+                ->send();
             return $user;
         }
         return null;

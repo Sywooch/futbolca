@@ -11,6 +11,7 @@ use yii\base\Model;
 class PasswordResetRequestForm extends Model
 {
     public $email;
+    public $verifyCode;
 
     /**
      * @inheritdoc
@@ -24,8 +25,20 @@ class PasswordResetRequestForm extends Model
             ['email', 'exist',
                 'targetClass' => '\common\models\User',
                 'filter' => ['status' => User::STATUS_ACTIVE],
-                'message' => 'There is no user with such email.'
+                'message' => Yii::t('app', 'Нет ни одного пользователя с такой электронной почтой.')
             ],
+            ['verifyCode', \common\recaptcha\ReCaptchaValidator::className(), 'secret' => \common\recaptcha\ReCaptcha::SECRET_KEY],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'email' => Yii::t('app', 'Email'),
+            'verifyCode' => Yii::t('app', 'Я не робот'),
         ];
     }
 
@@ -55,14 +68,14 @@ class PasswordResetRequestForm extends Model
         }
 
         return Yii::$app
-            ->mailer
+            ->mail
             ->compose(
                 ['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'],
                 ['user' => $user]
             )
-            ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
+            ->setFrom([Yii::$app->params['siteEmail'] => Yii::$app->params['siteNameForEmail']])
             ->setTo($this->email)
-            ->setSubject('Password reset for ' . \Yii::$app->name)
+            ->setSubject(Yii::t('app', 'Восстановление пароля на {site}', ['site' => Yii::$app->name]))
             ->send();
     }
 }
