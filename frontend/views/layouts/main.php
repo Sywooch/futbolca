@@ -156,6 +156,9 @@ AppAsset::register($this);
             <?php if(Yii::$app->user->isGuest){ ?>
             <?=\frontend\widgets\HomeLogin::widget()?>
             <?php } ?>
+            <?php if(!Yii::$app->user->isGuest){ ?>
+                <?=\frontend\widgets\UserBlock::widget()?>
+            <?php } ?>
             <div id="show_version" style="display:none;"></div>
         </div>
         <div class="content">

@@ -125,6 +125,9 @@ return [
                 'p/<url:.*>' => 'podcat/view',
                 'p' => 'podcat/index',
 
+                'order/<id:\d+>' => 'user/view',
+                'user/orders' => 'user/orders',
+
                 'seach' => 'search/index',
                 'individual-order' => 'individual/index',
 

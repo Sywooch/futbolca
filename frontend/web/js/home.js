@@ -1,5 +1,11 @@
 jQuery.datepicker.setDefaults( jQuery.datepicker.regional[ "ru" ] );
 
+$('.logoutLink').click(function(){
+    if(confirm('Вы уверенны, что хотите выйти?')){
+        $('#logout-form').submit();
+    }
+});
+
 $(function(){
     jQuery("#seach_text_id").autocomplete({
         source: function(request, response) {
@@ -31,7 +37,7 @@ $(function(){
     });
 });
 $(function(){
-    jQuery("#signupform-country").autocomplete({
+    jQuery("#signupform-country, #userdescription-country").autocomplete({
         source: function(request, response) {
             jQuery.ajax({ url: RegData.ajaxUrlRegion,
                 data: { term: request.term },
@@ -46,7 +52,7 @@ $(function(){
     });
 });
 $(function(){
-    jQuery("#signupform-city").autocomplete({
+    jQuery("#signupform-city, #userdescription-city").autocomplete({
         source: function(request, response) {
             var region = jQuery("#signupform-country").val();
             jQuery.ajax({ url: RegData.ajaxUrlCity,

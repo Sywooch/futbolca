@@ -70,6 +70,13 @@ return [
             'suffix' => '/',
             'rules' => [
                 '/' => 'settings/index',
+
+                [
+                    'pattern' => 't/<url:.*>',
+                    'route' => 'item/view',
+                    'suffix' => '.html',
+                ],
+
                 '<controller:\w+>/<id:\d+>/<action:(create|update|delete)>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 '<controller:\w+>' => '<controller>/index',

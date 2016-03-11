@@ -906,3 +906,28 @@ background: url(images/bottom-bg.png) repeat-x;
 .priceHide{
     display: none;
 }
+
+.logoutLink{
+    color: #CC0000;
+}
+
+.table{
+    width: 100%;
+    border-left: 1px solid #e7e6e6;
+    border-right: 1px solid #e7e6e6;
+}
+
+.table tr, .table tr td{
+    border-top: 1px solid #e7e6e6;
+    padding: 3px;
+    vertical-align: middle;
+}
+
+.table tr th, .table tr th a{
+    text-align: left;
+    font-size: 14px;
+    /*font-weight: bold;*/
+    padding: 3px;
+    vertical-align: middle;
+    border-top: 1px solid #e7e6e6;
+}
