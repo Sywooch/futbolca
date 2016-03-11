@@ -60,7 +60,5 @@ use yii\helpers\Json;
     </div>
     <span class="detail-title"><?=Yii::t('app', 'Цена')?>: <strong id="price_tovar" class="price1"><?=(int)$model->getAllPrice($elementItem)?></strong> <?=Yii::t('app', 'грн')?>.</span>
     <input type="text"  value="<?=(int)$currentCount?>" onblur="changes.count(this);" onkeyup="changes.count(this);" class="text-field" name="count_tovar">
-    <input type="button" value="<?=Yii::t('app', 'КУПИТЬ')?>&nbsp;&nbsp;" class="submit-btn">
-    <br><br>
-    <input type="button" value="<?=Yii::t('app', 'В корзину')?>" class="submit-btn">
+    <input type="button" value="<?=Yii::t('app', 'В корзину')?>" class="submit-btn" id="inCartClick">
 </div>

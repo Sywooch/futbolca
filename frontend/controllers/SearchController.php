@@ -21,7 +21,7 @@ class SearchController extends \yii\web\Controller
         }
         $search = $search.'%';
         Yii::$app->response->format = 'json';
-        return ArrayHelper::map(Item::find()->where("name LIKE :name", [':name' => $search])->orderBy('name asc')->all(), 'name', 'name');
+        return ArrayHelper::map(Item::find()->where("name LIKE :name AND active = 1", [':name' => $search])->orderBy('name asc')->all(), 'name', 'name');
     }
 
     public function actionIndex($seach_text = null)

@@ -2,8 +2,10 @@
 namespace frontend\controllers;
 
 use backend\models\Country;
+use frontend\models\Category;
 use frontend\models\City;
 use frontend\models\Item;
+use frontend\models\Marker;
 use frontend\models\Region;
 use Yii;
 use common\models\LoginForm;
@@ -84,6 +86,47 @@ class SiteController extends Controller
         ])->orderBy('position desc, id desc')->limit(12)->all();
         return $this->render('index', [
             'models' => $models
+        ]);
+    }
+
+    public function actionRss()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        $headers = Yii::$app->response->headers;
+        $headers->add('Content-Type', 'text/xml');
+        $key = md5(Url::canonical());
+        $timeCache = 60;
+        $items = Yii::$app->cache->get($key);
+        if($items === false) {
+            $items = Item::find()->with([
+                'itemMarkers',
+                'itemCategories'
+            ])->where("active = 1")->orderBy('id desc')->limit(200)->all();
+            Yii::$app->cache->set($key, $items, $timeCache);
+        }
+        return $this->renderPartial('rss', [
+            'items' => $items,
+        ]);
+    }
+
+    public function actionSitemap()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+        $headers = Yii::$app->response->headers;
+        $headers->add('Content-Type', 'text/xml');
+        $categories = Category::find()->orderBy('position desc, id desc')->all();
+        $tags = Marker::find()->orderBy('position desc, id desc')->all();
+        $key = md5(Url::canonical());
+        $timeCache = 60;
+        $items = Yii::$app->cacheFile->get($key);
+        if($items === false) {
+            $items = Item::find()->where("active = 1")->orderBy('position desc, id desc')->limit(4000)->all();
+            Yii::$app->cacheFile->set($key, $items, $timeCache);
+        }
+        return $this->renderPartial('sitemap', [
+            'categories' => $categories,
+            'tags' => $tags,
+            'items' => $items,
         ]);
     }
 
