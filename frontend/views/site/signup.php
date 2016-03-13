@@ -58,7 +58,11 @@ $this->registerJs($js, $this::POS_END, 'my-phone-ms');
             </tr>
             <tr>
                 <td>Область</td>
-                <td><?= $form->field($model, 'country')->textInput(['size' => 35])->label('') ?></td>
+                <td>
+<!--                    --><?//= $form->field($model, 'country')->textInput(['size' => 35])->label('') ?>
+                    <?= $form->field($model, 'country')->dropDownList(\frontend\models\Region::getList(), ['prompt' => Yii::t('app', '-- Выберите область --'), 'style' => 'width: 240px;'])->label('') ?>
+
+                </td>
             </tr>
             <tr>
                 <td>Город</td>
