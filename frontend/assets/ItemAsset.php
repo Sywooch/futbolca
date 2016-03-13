@@ -13,11 +13,11 @@ class ItemAsset extends AppAsset
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/jquery-ui/jquery-ui.min.css',
+        '//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css',
         'css/style.css',
     ];
     public $js = [
-        'js/jquery-ui.min.js',
+        '//code.jquery.com/ui/1.11.4/jquery-ui.js',
         'js/datepicker-ru.js',
 //        'js/alight_0.12.last.min.js',
 //        'js/alight/ctrl.item.js',

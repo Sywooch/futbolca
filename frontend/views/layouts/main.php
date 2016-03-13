@@ -45,6 +45,7 @@ AppAsset::register($this);
         var RegData = {
             ajaxUrlRegion: '<?=Url::toRoute(['site/autoregion'])?>',
             ajaxUrlCity: '<?=Url::toRoute(['site/autocity'])?>',
+            ajaxCart: '<?=Url::toRoute(['cart/clear'])?>'
         };
         /*]]>*/
     </script>
@@ -68,12 +69,7 @@ AppAsset::register($this);
             <!--noindex--><a rel="nofollow" href="https://siteheart.com/webconsultation/527725?" target="siteheart_sitewindow_527725" onclick="o=window.open;o('https://siteheart.com/webconsultation/527725?', 'siteheart_sitewindow_527725', 'width=550,height=400,top=30,left=30,resizable=yes'); return false;"><b>Онлайн-консультант</b></a><!--/noindex-->
             <span class="contact-item">shop@futboland.com.ua</span>
         </div>
-        <div class="cart">
-            <span class="cart-title">Ваша корзина</span>
-            <p><strong id="tovrcount">0</strong> <span id="lengv">товаров</span></p>
-            <p>на сумму <strong id="tovarsumm">0</strong> грн.</p>
-            <a href="<?=Url::home(true)?>user/car.html">Оформить заказ</a>
-        </div>
+        <?=\frontend\widgets\HomeCart::widget()?>
     </div>
     <?=\frontend\widgets\HomeSecondMenu::widget(['urls' => [
         'Доставка и оплата' => 'dostavka',

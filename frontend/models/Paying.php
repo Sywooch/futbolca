@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%paying}}".
@@ -46,5 +47,9 @@ class Paying extends \yii\db\ActiveRecord
             'text' => Yii::t('app', 'Text'),
             'img' => Yii::t('app', 'Img'),
         ];
+    }
+
+    public static function getList(){
+        return ArrayHelper::map(self::find()->orderBy('id asc')->all(), 'id', 'name');
     }
 }

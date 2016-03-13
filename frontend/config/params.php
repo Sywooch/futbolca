@@ -4,4 +4,5 @@ return [
     'pageSize' => 12,
     'siteEmail' => 'shop@futboland.com.ua',
     'siteNameForEmail' => 'futboland.com.ua',
+    'cookieNameCart' => 'cart54309'
 ];

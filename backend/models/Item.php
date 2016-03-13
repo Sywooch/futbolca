@@ -386,6 +386,19 @@ class Item extends \yii\db\ActiveRecord
         return true;
     }
 
+    public function getImageLinkById($id = 0){
+        $id = (int)$id;
+        if(!$id){
+            return $this->getImageLink(0);
+        }
+        foreach($this->watermarks AS $watermark){
+            if($id == $watermark->id){
+                return str_replace('/admin/', '', Url::home(true)).'images/item/'.$this->id.'/'.$watermark->name;
+            }
+        }
+        return null;
+    }
+
     public function getImageLink($id = 0){
         if(!isset($this->watermarks[$id])){
             return null;

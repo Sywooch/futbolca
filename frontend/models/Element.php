@@ -108,11 +108,11 @@ class Element extends \yii\db\ActiveRecord
         return $this->hasMany(OrderItem::className(), ['element' => 'id']);
     }
 
-    public function getImageLink(){
+    public function getImageLink($mini = false){
         if(!$this->photo){
             return $this->photo;
         }
-        return UrlHelper::home(true).'images/element/'.$this->id.'/'.$this->photo;
+        return UrlHelper::home(true).'images/element/'.$this->id.'/'.($mini ? 'mini_' : '').$this->photo;
     }
 
     public static function getByItem($elementId, $item = null, $currentFashion = 0){

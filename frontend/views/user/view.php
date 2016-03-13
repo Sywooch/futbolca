@@ -26,6 +26,7 @@ Yii::$app->view->registerMetaTag([
 ?>
 
 <h1 class="page-title"><?=Yii::t('app', 'Заказ №{order}', ['order' => $model->id])?></h1>
+<p style="color: green; font-size: 16px; text-align: center;"><?=Yii::$app->session->getFlash('success')?></p>
 <p></p>
 <?= DetailView::widget([
     'model' => $model,

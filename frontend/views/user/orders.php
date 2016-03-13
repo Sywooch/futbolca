@@ -25,6 +25,7 @@ Yii::$app->view->registerMetaTag([
 ]);
 ?>
 <h1 class="page-title"><?=Yii::t('app', 'Заказы')?></h1>
+<p style="color: green; font-size: 16px; text-align: center;"><?=Yii::$app->session->getFlash('success')?></p>
 <p></p>
 <?= GridView::widget([
     'dataProvider' => $dataProvider,

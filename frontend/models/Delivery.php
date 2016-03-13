@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%delivery}}".
@@ -51,5 +52,14 @@ class Delivery extends \yii\db\ActiveRecord
             'min' => Yii::t('app', 'Min'),
             'discount' => Yii::t('app', 'Discount'),
         ];
+    }
+
+    public static function getListByOrder(){
+        $model = self::find()->orderBy('id asc')->all();
+        $r = [];
+        foreach($model AS $v){
+            $r[$v->id] = '<strong>'.$v->name.'</strong> ('.$v->text.')';
+        }
+        return $r;
     }
 }

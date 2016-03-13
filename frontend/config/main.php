@@ -131,6 +131,8 @@ return [
                 'seach' => 'search/index',
                 'individual-order' => 'individual/index',
 
+                'user/car' => 'cart/index',
+
 //                'img/full/<element:\w+>/<water:\w+>/<top:\d+>/<left:\d+>' => 'search/index',
                 [
                     'pattern' => 'img/<type:(full|mini)>/<element:\w+>/<water:\w+>/<top:\d+>/<left:\d+>',

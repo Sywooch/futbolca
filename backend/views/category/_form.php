@@ -9,7 +9,7 @@ use backend\widgets\TinyMce;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="category-form">
+<div class="category-form" style=""> <img src="">
 
     <?php $form = ActiveForm::begin(); ?>
 

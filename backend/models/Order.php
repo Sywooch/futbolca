@@ -161,10 +161,17 @@ class Order extends \yii\db\ActiveRecord
         $r = [];
         $ollPrice = 0;
         if($this->orderItems){
-            $r[] = '<strong>'.Yii::t('app', 'Название').' | '.Yii::t('app', 'Количество').' | '.Yii::t('app', 'Цена за 1').' | '.Yii::t('app', 'Размер').' | '.Yii::t('app', 'Общая цена').'</strong>';
+            $r[] = '<strong>'.Yii::t('app', 'Название').' | '.Yii::t('app', 'Количество').' | '.Yii::t('app', 'Цена за 1').' | '.Yii::t('app', 'Размер').' | '.Yii::t('app', 'Общая цена').' | '.Yii::t('app', 'Основа').' | '.Yii::t('app', 'Принт').'</strong>';
             foreach($this->orderItems AS $orderItems){
                 $ollPrice += ($orderItems->counts * $orderItems->price);
-                $r[] = '<a href="'.UrlHelper::ItemUrlForAdmin($orderItems->item0->url).'" target="_blank">'.$orderItems->orders0->name.' ('.$orderItems->element0->fashion0->name.' '.$orderItems->element0->name.')</a> | '.$orderItems->counts.' | '.$orderItems->price.' | '.$orderItems->size0->name.' | '.($orderItems->counts * $orderItems->price);
+                $r[] = '<a href="'.UrlHelper::ItemUrlForAdmin($orderItems->item0->url)
+                    .'" target="_blank">'.$orderItems->orders0->name
+                    .' ('.$orderItems->element0->fashion0->name
+                    .' '.$orderItems->element0->name.')</a> | '.$orderItems->counts
+                    .' | '.$orderItems->price.' | '.$orderItems->size0->name
+                    .' | '.($orderItems->counts * $orderItems->price)
+                    .' | <img src="'.$orderItems->element0->getImageLink().'" style="max-width: 100px; max-height: 100px;">'
+                    .' | <img src="'.$orderItems->item0->getImageLinkById($orderItems->watermark).'" style="max-width: 100px; max-height: 100px;">';
             }
             $r[] = '<strong>'.Yii::t('app', 'Полная сумма').': '.Yii::$app->formatter->asCurrency($ollPrice, 'UAH').'</strong>';
         }

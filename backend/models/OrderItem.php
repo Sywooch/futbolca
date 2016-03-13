@@ -10,12 +10,14 @@ use Yii;
  * @property string $id
  * @property string $orders
  * @property string $element
+ * @property integer $watermark
  * @property string $item
  * @property integer $counts
  * @property integer $price
  * @property string $size
  *
  * @property Proportion $size0
+ * @property ItemWatermark $watermark0
  * @property Order $orders0
  * @property Item $item0
  * @property Element $element0
@@ -36,8 +38,8 @@ class OrderItem extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['orders', 'item', 'element'], 'required'],
-            [['orders', 'item', 'counts', 'price', 'size', 'element'], 'integer']
+            [['orders', 'item', 'element', 'watermark'], 'required'],
+            [['orders', 'item', 'counts', 'price', 'size', 'element', 'watermark'], 'integer']
         ];
     }
 
@@ -51,10 +53,19 @@ class OrderItem extends \yii\db\ActiveRecord
             'orders' => Yii::t('app', 'Orders'),
             'item' => Yii::t('app', 'Item'),
             'counts' => Yii::t('app', 'Counts'),
+            'watermark' => Yii::t('app', 'Watermark'),
             'price' => Yii::t('app', 'Price'),
             'size' => Yii::t('app', 'Size'),
             'element' => Yii::t('app', 'Element'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWatermark0()
+    {
+        return $this->hasOne(ItemWatermark::className(), ['id' => 'watermark']);
     }
 
     /**

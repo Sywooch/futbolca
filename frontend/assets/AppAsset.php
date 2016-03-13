@@ -18,12 +18,12 @@ class AppAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/jquery-ui/jquery-ui.min.css',
+        '//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css',
         'css/style.css',
 //        'css/site.css',
     ];
     public $js = [
-        'js/jquery-ui.min.js',
+        '//code.jquery.com/ui/1.11.4/jquery-ui.js',
         'js/datepicker-ru.js',
 //        'js/alight.min.js',
         'js/home.js',

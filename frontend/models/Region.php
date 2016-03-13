@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%region}}".
@@ -61,5 +62,10 @@ class Region extends \yii\db\ActiveRecord
     public function getCountry0()
     {
         return $this->hasOne(Country::className(), ['id' => 'country']);
+    }
+
+    public static function getList(){
+        $country = Country::find()->where("name = :name", [':name' => 'Украина'])->one();
+        return ArrayHelper::map(self::find()->where("country = :country", [':country' => $country->id])->orderBy('id asc')->all(), 'name', 'name');
     }
 }

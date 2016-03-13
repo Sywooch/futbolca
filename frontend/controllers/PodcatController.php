@@ -13,10 +13,10 @@ use Yii;
 class PodcatController extends \yii\web\Controller
 {
 
-//    public function actionIndex()
-//    {
-//        return $this->render('index');
-//    }
+    public function afterAction($action, $result){
+        Yii::$app->getUser()->setReturnUrl(Yii::$app->request->url);
+        return parent::afterAction($action, $result);
+    }
 
     public function actionView($url, $page = 0)
     {

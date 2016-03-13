@@ -950,3 +950,8 @@ background: url(images/bottom-bg.png) repeat-x;
 .breadcrumb li a:hover{
     text-decoration: underline;
 }
+
+.maxOneHan{
+	max-width: 100px;
+    max-height:100px;
+}

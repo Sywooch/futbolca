@@ -194,7 +194,7 @@ class Item extends \yii\db\ActiveRecord
         }
         $maxBetween = $model->id + 100;
         $cat = ArrayHelper::map($model->itemCategories, 'category', 'category');
-        return Item::find()
+        return self::find()
             ->with(['element0', 'itemWatermarks'])
             ->innerJoin('{{%item_category}}', '{{%item_category}}.item = {{%item}}.id')
             ->where(['in', "{{%item_category}}.category", $cat])
@@ -216,5 +216,22 @@ class Item extends \yii\db\ActiveRecord
         $model->keywords = '';
         $model->text = '';
         return $model;
+    }
+
+    public function getImageLink($id = 0, $mini = false){
+        foreach($this->itemWatermarks AS $watermark){
+            if($watermark->id == $id){
+                return Url::home(true).'images/item/'.$this->id.'/'.($mini ? 'mini_' : '').$watermark->name;
+            }
+        }
+        return null;
+    }
+
+    public function getImageLinks(){
+        $r = [];
+        foreach($this->itemWatermarks AS $watermark){
+            $r[] = str_replace('/admin/', '', Url::home(true)).'images/item/'.$this->id.'/'.$watermark->name;
+        }
+        return $r;
     }
 }

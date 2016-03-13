@@ -12,12 +12,14 @@ use Yii;
  * @property string $element
  * @property string $item
  * @property integer $counts
+ * @property integer $watermark
  * @property integer $price
  * @property string $size
  *
  * @property Proportion $size0
  * @property Cart $cart0
  * @property Element $element0
+ * @property ItemWatermark $watermark0
  * @property Item $item0
  */
 class CartItem extends \yii\db\ActiveRecord
@@ -36,8 +38,8 @@ class CartItem extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['cart', 'element', 'item'], 'required'],
-            [['cart', 'element', 'item', 'counts', 'price', 'size'], 'integer']
+            [['cart', 'element', 'item', 'watermark'], 'required'],
+            [['cart', 'element', 'item', 'counts', 'price', 'size', 'watermark'], 'integer']
         ];
     }
 
@@ -50,11 +52,20 @@ class CartItem extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'cart' => Yii::t('app', 'Cart'),
             'element' => Yii::t('app', 'Element'),
+            'watermark' => Yii::t('app', 'Watermark'),
             'item' => Yii::t('app', 'Item'),
             'counts' => Yii::t('app', 'Counts'),
             'price' => Yii::t('app', 'Price'),
             'size' => Yii::t('app', 'Size'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWatermark0()
+    {
+        return $this->hasOne(ItemWatermark::className(), ['id' => 'watermark']);
     }
 
     /**
