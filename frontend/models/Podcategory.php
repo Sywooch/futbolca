@@ -8,6 +8,7 @@ use Yii;
  * This is the model class for table "{{%podcategory}}".
  *
  * @property string $id
+ * @property string $old
  * @property string $category
  * @property integer $position
  * @property string $name
@@ -36,8 +37,10 @@ class Podcategory extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['name', 'url', 'description', 'keywords'], 'filter', 'filter' => 'trim'],
+            [['name', 'url', 'description', 'keywords'], 'filter', 'filter' => 'strip_tags'],
             [['category', 'name', 'url'], 'required'],
-            [['category', 'position'], 'integer'],
+            [['category', 'position', 'old'], 'integer'],
             [['text', 'text2'], 'string'],
             [['name', 'url', 'description', 'keywords'], 'string', 'max' => 255],
             [['name'], 'unique'],

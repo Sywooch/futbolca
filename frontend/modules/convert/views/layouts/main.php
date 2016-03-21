@@ -43,9 +43,13 @@ ConvertAsset::register($this);
         ['label' => Yii::t('app', 'Новости (блог)'), 'url' => ['/convert/news/index']],
         ['label' => Yii::t('app', 'Страницы'), 'url' => ['/convert/page/index']],
         ['label' => Yii::t('app', 'Доставка'), 'url' => ['/convert/delivery/index']],
+        ['label' => Yii::t('app', 'Размеры'), 'url' => ['/convert/proportion/index']],
+        ['label' => Yii::t('app', 'Оплата'), 'url' => ['/convert/paying/index']],
     ]];
     $menuItems[] = ['label' => Yii::t('app', 'Товары'), 'items' => [
         ['label' => Yii::t('app', 'Категории'), 'url' => ['/convert/category/index']],
+        ['label' => Yii::t('app', 'Подкатегории'), 'url' => ['/convert/podcategory/index']],
+        ['label' => Yii::t('app', 'Метки'), 'url' => ['/convert/category/index']],
     ]];
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],

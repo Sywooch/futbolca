@@ -10,6 +10,8 @@ use frontend\models\mg\Category;
 
 class CategoryController extends \yii\web\Controller
 {
+    const URL = 'http://futboland.com.ua/';
+
     public function actionIndex()
     {
         if(Yii::$app->request->post('ok')){
@@ -22,8 +24,8 @@ class CategoryController extends \yii\web\Controller
                 $order->url = $model->c_uri;
                 $order->description = $model->c_description;
                 $order->keywords = $model->c_keywords;
-                $order->text = str_replace(['http://futboland.com.ua/', '../tags'], ['/', '/tags'], $model->c_text);
-                $order->text2 = str_replace(['http://futboland.com.ua/', '../tags'], ['/', '/tags'], $model->c_text2);
+                $order->text = str_replace([self::URL, '../tags'], ['/', '/tags'], $model->c_text);
+                $order->text2 = str_replace([self::URL, '../tags'], ['/', '/tags'], $model->c_text2);
                 if($order->validate()) {
                     $order->save();
                 }
