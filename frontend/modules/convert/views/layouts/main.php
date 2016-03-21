@@ -49,7 +49,8 @@ ConvertAsset::register($this);
     $menuItems[] = ['label' => Yii::t('app', 'Товары'), 'items' => [
         ['label' => Yii::t('app', 'Категории'), 'url' => ['/convert/category/index']],
         ['label' => Yii::t('app', 'Подкатегории'), 'url' => ['/convert/podcategory/index']],
-        ['label' => Yii::t('app', 'Метки'), 'url' => ['/convert/category/index']],
+        ['label' => Yii::t('app', 'Метки'), 'url' => ['/convert/marker/index']],
+        ['label' => Yii::t('app', 'Фасоны'), 'url' => ['/convert/fashion/index']],
     ]];
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],

@@ -9,6 +9,7 @@ use yii\helpers\ArrayHelper;
  * This is the model class for table "{{%fashion}}".
  *
  * @property string $id
+ * @property string $old
  * @property string $name
  * @property integer $price
  * @property string $active
@@ -31,8 +32,10 @@ class Fashion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['name'], 'filter', 'filter' => 'trim'],
+            [['name'], 'filter', 'filter' => 'strip_tags'],
             [['name'], 'required'],
-            [['price'], 'integer'],
+            [['price', 'old'], 'integer'],
             [['active'], 'string'],
             [['name'], 'string', 'max' => 255],
             [['name'], 'unique']
