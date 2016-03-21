@@ -52,6 +52,7 @@ ConvertAsset::register($this);
         ['label' => Yii::t('app', 'Метки'), 'url' => ['/convert/marker/index']],
         ['label' => Yii::t('app', 'Фасоны'), 'url' => ['/convert/fashion/index']],
         ['label' => Yii::t('app', 'Основы'), 'url' => ['/convert/element/index']],
+        ['label' => Yii::t('app', 'Товары'), 'url' => ['/convert/item/index']],
     ]];
     $menuItems[] = ['label' => Yii::t('app', 'Заказы'), 'items' => [
         ['label' => Yii::t('app', 'Индивидуальный заказ'), 'url' => ['/convert/individual/index']],

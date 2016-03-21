@@ -10,6 +10,7 @@ use yii\helpers\Url;
  * This is the model class for table "{{%item}}".
  *
  * @property string $id
+ * @property string $old
  * @property string $name
  * @property integer $position
  * @property string $url
@@ -48,8 +49,10 @@ class Item extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['name', 'url', 'code', 'description', 'keywords'], 'filter', 'filter' => 'trim', 'skipOnArray' => true],
+            [['name', 'url', 'code', 'description', 'keywords'], 'filter', 'filter' => 'strip_tags', 'skipOnArray' => true],
             [['name', 'url', 'element'], 'required'],
-            [['position', 'element', 'price', 'active', 'home', 'toppx', 'leftpx'], 'integer'],
+            [['position', 'element', 'price', 'active', 'home', 'toppx', 'leftpx', 'old'], 'integer'],
             [['text'], 'string'],
             [['name', 'url', 'code', 'description', 'keywords'], 'string', 'max' => 255],
             [['url'], 'unique'],
@@ -233,5 +236,32 @@ class Item extends \yii\db\ActiveRecord
             $r[] = str_replace('/admin/', '', Url::home(true)).'images/item/'.$this->id.'/'.$watermark->name;
         }
         return $r;
+    }
+
+    public function hasPhoto($photoName, $mini = false){
+        $imgDir = Yii::getAlias('@frontend/web/images/item/').$this->id.'/';
+        if($mini){
+            $imgDir .= 'mini_'.$photoName;
+        }else{
+            $imgDir .= $photoName;
+        }
+        return is_file($imgDir);
+    }
+
+    public function uploadByConver($img, $photoName, $mini = false){
+        $imgDir = Yii::getAlias('@frontend/web/images');
+        $imgDirImage = $imgDir.'/item/';
+        if(!is_dir($imgDirImage)){
+            mkdir($imgDirImage, 0777);
+        }
+        $imageIdDir = $imgDirImage.'/'.$this->id.'/';
+        if(!is_dir($imageIdDir)){
+            mkdir($imageIdDir, 0777);
+        }
+        if($mini){
+            @copy(str_replace('.png', '_mini.png', $img), $imageIdDir.'mini_'.$photoName);
+        }else{
+            @copy($img, $imageIdDir.$photoName);
+        }
     }
 }
