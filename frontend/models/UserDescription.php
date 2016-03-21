@@ -41,6 +41,8 @@ class UserDescription extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['name', 'soname', 'adress', 'code', 'city', 'region', 'country', 'phone', 'fax', 'icq', 'skape', 'agent', 'ip'], 'filter', 'filter' => 'trim'],
+            [['name', 'soname', 'adress', 'code', 'city', 'region', 'country', 'phone', 'fax', 'icq', 'skape', 'agent', 'ip'], 'filter', 'filter' => 'strip_tags'],
             [['user'], 'required'],
             [['user'], 'integer'],
             [['name', 'soname', 'adress', 'code', 'city', 'region', 'country', 'phone', 'fax', 'icq', 'skape', 'agent', 'ip'], 'string', 'max' => 255],

@@ -1,4 +1,5 @@
 # yii console command
+# SET foreign_key_checks = 0;
 /yii
 
 /frontend/web/assets

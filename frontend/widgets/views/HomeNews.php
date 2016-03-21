@@ -11,6 +11,7 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 
 ?>
+<?php if($model){ ?>
 <div class="side-box">
     <div class="side-box-title"><?=Yii::t('app', 'Последнее из блогов')?></div>
     <div class="side-box-top"></div>
@@ -23,3 +24,4 @@ use yii\helpers\Html;
     </div>
     <div class="side-box-bot"></div>
 </div>
+<?php } ?>

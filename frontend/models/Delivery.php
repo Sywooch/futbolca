@@ -9,6 +9,7 @@ use yii\helpers\ArrayHelper;
  * This is the model class for table "{{%delivery}}".
  *
  * @property string $id
+ * @property string $old
  * @property string $name
  * @property string $text
  * @property integer $ua
@@ -31,11 +32,13 @@ class Delivery extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['name'], 'filter', 'filter' => 'trim'],
+            [['name'], 'filter', 'filter' => 'strip_tags'],
             [['name'], 'required'],
             [['text'], 'string'],
-            [['ua', 'min', 'discount'], 'integer'],
+            [['ua', 'min', 'discount', 'old'], 'integer'],
             [['name'], 'string', 'max' => 255],
-            [['name'], 'unique']
+            [['name'], 'unique'],
         ];
     }
 

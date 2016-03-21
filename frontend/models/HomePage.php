@@ -28,6 +28,8 @@ class HomePage extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['name', 'value', 'title'], 'filter', 'filter' => 'trim'],
+            [['name', 'title'], 'filter', 'filter' => 'strip_tags'],
             [['name'], 'required'],
             [['value'], 'string'],
             [['name', 'title'], 'string', 'max' => 255],

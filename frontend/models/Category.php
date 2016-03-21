@@ -8,6 +8,7 @@ use Yii;
  * This is the model class for table "{{%category}}".
  *
  * @property string $id
+ * @property string $old
  * @property integer $position
  * @property string $name
  * @property string $url
@@ -35,7 +36,9 @@ class Category extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['position'], 'integer'],
+            [['name', 'url', 'description', 'keywords'], 'filter', 'filter' => 'trim'],
+            [['name', 'url', 'description', 'keywords'], 'filter', 'filter' => 'strip_tags'],
+            [['position', 'old'], 'integer'],
             [['name', 'url'], 'required'],
             [['text', 'text2'], 'string'],
             [['name', 'url', 'description', 'keywords'], 'string', 'max' => 255],

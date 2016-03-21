@@ -21,6 +21,9 @@ return [
             'class' => 'yii\gii\Module',
             'allowedIPs' => ['127.0.0.1', '::1']
         ],
+        'convert' => [
+            'class' => 'app\modules\convert\Convert',
+        ],
     ],
     'components' => [
         'cache' => [
@@ -149,6 +152,11 @@ return [
                     'route' => 'site/rss',
                     'suffix' => '.xml',
                 ],
+
+                'convert' => 'convert/home/index',
+                'convert/<controller:\w+>/<id:\d+>/<action:(create|update|delete)>' => 'convert/<controller>/<action>',
+                'convert/<controller:\w+>/<action:\w+>' => 'convert/<controller>/<action>',
+                'convert/<controller:\w+>' => 'convert/<controller>/index',
 
                 '<controller:\w+>/<id:\d+>/<action:(create|update|delete)>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
