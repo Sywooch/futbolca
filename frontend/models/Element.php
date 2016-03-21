@@ -9,6 +9,7 @@ use Yii;
  * This is the model class for table "{{%element}}".
  *
  * @property string $id
+ * @property string $old
  * @property string $name
  * @property string $size
  * @property integer $stock
@@ -42,8 +43,10 @@ class Element extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['name', 'photo'], 'filter', 'filter' => 'trim', 'skipOnArray' => true],
+            [['name', 'photo'], 'filter', 'filter' => 'strip_tags', 'skipOnArray' => true],
             [['name', 'fashion'], 'required'],
-            [['stock', 'home', 'fashion', 'toppx', 'leftpx', 'price', 'increase'], 'integer'],
+            [['stock', 'home', 'fashion', 'toppx', 'leftpx', 'price', 'increase', 'old'], 'integer'],
             [['name', 'size', 'photo'], 'string', 'max' => 255]
         ];
     }
@@ -117,7 +120,7 @@ class Element extends \yii\db\ActiveRecord
 
     public static function getByItem($elementId, $item = null, $currentFashion = 0){
         $currentFashion = (int)$currentFashion;
-        $model = Element::find();
+        $model = self::find();
         $model->distinct();
         $model->where(['in', 'id', $elementId]);
         if($item){
@@ -131,5 +134,20 @@ class Element extends \yii\db\ActiveRecord
             $model->orderBy('fashion asc, name asc');
         }
         return $model->all();
+    }
+
+    public function uploadByConver($img, $mini = false){ // _mini
+        if(!is_dir(Yii::getAlias('@frontend/web/images/element'))){
+            mkdir(Yii::getAlias('@frontend/web/images/element'), 0777);
+        }
+        if(!is_dir(Yii::getAlias('@frontend/web/images/element/').$this->id)){
+            mkdir(Yii::getAlias('@frontend/web/images/element/').$this->id, 0777);
+        }
+        $imgDirName = Yii::getAlias('@frontend/web/images/element/').$this->id.'/';
+        if($mini){
+            @copy(str_replace('.jpg', '_mini.jpg', $img), $imgDirName.'mini_'.$this->photo);
+        }else{
+            @copy($img, $imgDirName.$this->photo);
+        }
     }
 }

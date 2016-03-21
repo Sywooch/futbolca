@@ -25,7 +25,7 @@ use yii\helpers\Url;
  * @property array $image
  * @property string $verifyCode
  */
-class Individual extends \yii\db\ActiveRecord
+class IndividualConvert extends \yii\db\ActiveRecord
 {
     public $image;
     public $verifyCode;
@@ -51,9 +51,7 @@ class Individual extends \yii\db\ActiveRecord
             [['comment', 'admintext'], 'string'],
             [['created'], 'safe'],
             [['name', 'phone', 'email', 'img1', 'img2', 'img3', 'img4'], 'string', 'max' => 255],
-            [['email'], 'email'],
             [['image'], 'file', 'extensions' => 'png, jpg, gif, jpeg', 'maxFiles' => 4],
-            ['verifyCode', \common\recaptcha\ReCaptchaValidator::className(), 'secret' => \common\recaptcha\ReCaptcha::SECRET_KEY],
         ];
     }
 
