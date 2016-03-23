@@ -27,6 +27,9 @@ $idEdit = [];
         <?= Html::a(Yii::t('app', 'Create Individual'), ['create'], ['class' => 'btn btn-success']) ?>
         <?= Html::a('<i class="glyphicon glyphicon-share"></i> '.Yii::t('app', 'Экспорт в Excel'), ['excel', Yii::$app->request->get()], ['class' => 'btn btn-warning', 'target' => '_blank']) ?>
     </p>
+    <script>
+        var DATE_INPUT = 'input[name=IndividualSearch\\[created\\]]';
+    </script>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,

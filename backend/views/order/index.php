@@ -20,13 +20,17 @@ $idEdit = [];
         <?= Html::a('<i class="glyphicon glyphicon-share"></i> '.Yii::t('app', 'Экспорт в Excel'), ['excel', Yii::$app->request->get()], ['class' => 'btn btn-warning', 'target' => '_blank']) ?>
 
     </p>
+    <script>
+        var DATE_INPUT = 'input[name=OrderSearch\\[data_start\\]]';
+    </script>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-//            'id',
+            'id',
+            'old',
             [
                 'attribute' => 'status',
                 'format' => 'raw',
@@ -41,16 +45,16 @@ $idEdit = [];
                 'attribute' => 'data_start',
                 'format' => 'raw',
                 'value'=> function ($model) {
-                    return date("d/m/Y H:i:s", strtotime($model->data_start));
+                    return date("d/m/Y", strtotime($model->data_start)).'<br>'.date(" H:i:s", strtotime($model->data_start));
                 },
             ],
-            [
-                'attribute' => 'data_finish',
-                'format' => 'raw',
-                'value'=> function ($model) {
-                    return date("d/m/Y H:i:s", strtotime($model->data_finish));
-                },
-            ],
+//            [
+//                'attribute' => 'data_finish',
+//                'format' => 'raw',
+//                'value'=> function ($model) {
+//                    return date("d/m/Y H:i:s", strtotime($model->data_finish));
+//                },
+//            ],
             [
                 'attribute' => 'name',
                 'format' => 'raw',

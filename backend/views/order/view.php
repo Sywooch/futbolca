@@ -32,6 +32,7 @@ $idEdit[] = '#status_edit_'.$model->id;
         'model' => $model,
         'attributes' => [
             'id',
+            'old',
             [
                 'attribute' => 'status',
                 'format' => 'raw',

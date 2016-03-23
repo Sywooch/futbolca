@@ -9,6 +9,7 @@ use Yii;
  * This is the model class for table "{{%order}}".
  *
  * @property string $id
+ * @property string $old
  * @property string $data_start
  * @property string $data_finish
  * @property string $user
@@ -51,8 +52,10 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['name', 'soname', 'email', 'phone', 'adress', 'code', 'city', 'country', 'region', 'fax', 'icq', 'skape'], 'filter', 'filter' => 'trim', 'skipOnArray' => true],
+            [['name', 'soname', 'email', 'phone', 'adress', 'code', 'city', 'country', 'region', 'fax', 'icq', 'skape'], 'filter', 'filter' => 'strip_tags', 'skipOnArray' => true],
             [['data_start', 'data_finish'], 'safe'],
-            [['user', 'payment', 'delivery', 'status'], 'integer'],
+            [['user', 'payment', 'delivery', 'status', 'old'], 'integer'],
             [['name', 'email', 'phone', 'adress', 'payment', 'delivery'], 'required'],
             [['agent', 'coment_admin'], 'string'],
             [['name', 'soname', 'email', 'phone', 'adress', 'code', 'city', 'country', 'region', 'fax', 'icq', 'skape'], 'string', 'max' => 255]
@@ -66,6 +69,7 @@ class Order extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'old' => Yii::t('app', 'Старый ID'),
             'data_start' => Yii::t('app', 'Data Start'),
             'data_finish' => Yii::t('app', 'Data Finish'),
             'user' => Yii::t('app', 'User'),
@@ -165,7 +169,7 @@ class Order extends \yii\db\ActiveRecord
             foreach($this->orderItems AS $orderItems){
                 $ollPrice += ($orderItems->counts * $orderItems->price);
                 $r[] = '<a href="'.UrlHelper::ItemUrlForAdmin($orderItems->item0->url)
-                    .'" target="_blank">'.$orderItems->orders0->name
+                    .'" target="_blank">'.$orderItems->item0->name
                     .' ('.$orderItems->element0->fashion0->name
                     .' '.$orderItems->element0->name.')</a> | '.$orderItems->counts
                     .' | '.$orderItems->price.' | '.$orderItems->size0->name
