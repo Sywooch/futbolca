@@ -140,7 +140,11 @@ class ElementController extends BaseController
         header ('Cache-Control: cache, must-revalidate');
         header ('Pragma: public');
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $objWriter->save('php://output');
+        $fileNamePatch = Yii::getAlias('@runtime').'/osnovi.xlsx';
+        $objWriter->save($fileNamePatch);
+        $f = file_get_contents($fileNamePatch);
+        @unlink($fileNamePatch);
+        echo $f;
     }
 
     /**

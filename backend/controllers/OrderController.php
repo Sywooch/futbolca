@@ -2,6 +2,9 @@
 
 namespace backend\controllers;
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 use common\UrlHelper;
 use Yii;
 use backend\models\Order;
@@ -70,36 +73,43 @@ class OrderController extends BaseController
             ->setCategory("Futbolki ".UrlHelper::home(true));
         $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A1', 'ID')
-            ->setCellValue('B1', $newOrder->getAttributeLabel('data_start'))
-            ->setCellValue('C1', $newOrder->getAttributeLabel('data_finish'))
-            ->setCellValue('D1', $newOrder->getAttributeLabel('name'))
-            ->setCellValue('E1', $newOrder->getAttributeLabel('soname'))
-            ->setCellValue('F1', $newOrder->getAttributeLabel('email'))
-            ->setCellValue('G1', $newOrder->getAttributeLabel('phone'))
-            ->setCellValue('H1', $newOrder->getAttributeLabel('status'))
-            ->setCellValue('I1', $newOrder->getAttributeLabel('adress'))
-            ->setCellValue('J1', $newOrder->getAttributeLabel('city'))
-            ->setCellValue('K1', $newOrder->getAttributeLabel('country'))
-            ->setCellValue('L1', $newOrder->getAttributeLabel('agent'))
-            ->setCellValue('M1', 'Товары');
+            ->setCellValue('B1', 'старый ID')
+            ->setCellValue('C1', 'Магазин')
+            ->setCellValue('D1', $newOrder->getAttributeLabel('status'))
+            ->setCellValue('E1', $newOrder->getAttributeLabel('data_start'))
+            ->setCellValue('F1', $newOrder->getAttributeLabel('data_finish'))
+            ->setCellValue('G1', $newOrder->getAttributeLabel('name'))
+            ->setCellValue('H1', $newOrder->getAttributeLabel('soname'))
+            ->setCellValue('I1', $newOrder->getAttributeLabel('email'))
+            ->setCellValue('J1', $newOrder->getAttributeLabel('phone'))
+            ->setCellValue('K1', $newOrder->getAttributeLabel('adress'))
+            ->setCellValue('L1', $newOrder->getAttributeLabel('city'))
+            ->setCellValue('M1', $newOrder->getAttributeLabel('country'))
+            ->setCellValue('N1', $newOrder->getAttributeLabel('agent'))
+            ->setCellValue('O1', 'Товары (товар | принт | "имя" (фасон | основа) | количество | Размер | Цена)');
 
         foreach($models AS $k => $model) {
             $index = ($k + 2);
             $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A'.$index, $model->id)
-                ->setCellValue('B'.$index, $model->data_start)
-                ->setCellValue('C'.$index, $model->data_finish)
-                ->setCellValue('D'.$index, $model->name)
-                ->setCellValue('E'.$index, $model->soname)
-                ->setCellValue('F'.$index, $model->email)
-                ->setCellValue('G'.$index, $model->phone)
-                ->setCellValue('H'.$index, Order::getStatusName($model->status))
-                ->setCellValue('I'.$index, $model->adress)
-                ->setCellValue('J'.$index, $model->city)
-                ->setCellValue('K'.$index, $model->country)
-                ->setCellValue('L'.$index, $model->agent)
-                ->setCellValue('M'.$index, join("\n\t ", $model->getListItemsForExcel()));
+                ->setCellValue('B'.$index, $model->old)
+                ->setCellValue('C'.$index, rtrim(UrlHelper::home(true), '/'))
+                ->setCellValue('D'.$index, Order::getStatusName($model->status))
+                ->setCellValue('E'.$index, $model->data_start)
+                ->setCellValue('F'.$index, $model->data_finish)
+                ->setCellValue('G'.$index, $model->name)
+                ->setCellValue('H'.$index, $model->soname)
+                ->setCellValue('I'.$index, $model->email)
+                ->setCellValue('J'.$index, $model->phone)
+                ->setCellValue('K'.$index, $model->adress)
+                ->setCellValue('L'.$index, $model->city)
+                ->setCellValue('M'.$index, $model->country)
+                ->setCellValue('N'.$index, $model->agent)
+                ->setCellValue('O'.$index, join("\n\t ", $model->getListItemsForExcel()));
+            $objPHPExcel->setActiveSheetIndex(0)->getRowDimension($index)->setRowHeight(-1);
+            $objPHPExcel->setActiveSheetIndex(0)->getStyle('O'.$index)->getAlignment()->setWrapText(true);
         }
+        $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('O')->setWidth(170);
         $objPHPExcel->setActiveSheetIndex(0);
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="orders.xlsx"');
@@ -110,7 +120,11 @@ class OrderController extends BaseController
         header ('Cache-Control: cache, must-revalidate');
         header ('Pragma: public');
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $objWriter->save('php://output');
+        $fileNamePatch = Yii::getAlias('@runtime').'/orders.xlsx';
+        $objWriter->save($fileNamePatch);
+        $f = file_get_contents($fileNamePatch);
+        @unlink($fileNamePatch);
+        echo $f;
     }
 
     /**

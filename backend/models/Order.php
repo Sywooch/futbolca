@@ -188,7 +188,8 @@ class Order extends \yii\db\ActiveRecord
         if($this->orderItems){
             foreach($this->orderItems AS $orderItems){
                 $ollPrice += ($orderItems->counts * $orderItems->price);
-                $r[] = ''.UrlHelper::ItemUrlForAdmin($orderItems->item0->url).' | '.$orderItems->orders0->name.' ('.$orderItems->element0->fashion0->name.' '.$orderItems->element0->name.') | '.$orderItems->counts.' | '.$orderItems->price.' | '.$orderItems->size0->name.' | '.($orderItems->counts * $orderItems->price);
+                $watemark = $orderItems->item0->getImageLinkById($orderItems->watermark);
+                $r[] = ''.UrlHelper::ItemUrlForAdmin($orderItems->item0->url).' | '.$watemark.' | "'.$orderItems->item0->name.'" ('.$orderItems->element0->fashion0->name.' | '.$orderItems->element0->name.') | '.$orderItems->counts.' | '.$orderItems->size0->name.' | '.($orderItems->counts * $orderItems->price);
             }
             $r[] = "\n\t ".Yii::t('app', 'Полная сумма').': '.Yii::$app->formatter->asCurrency($ollPrice, 'UAH').'';
         }
