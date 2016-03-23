@@ -128,7 +128,7 @@ class Item extends \yii\db\ActiveRecord
      */
     public function getItemWatermarks()
     {
-        return $this->hasMany(ItemWatermark::className(), ['item' => 'id']);
+        return $this->hasMany(ItemWatermark::className(), ['item' => 'id'])->orderBy('position desc, id asc');
     }
 
     /**

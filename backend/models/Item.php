@@ -29,12 +29,14 @@ use yii\helpers\Url;
  * @property string $image
  * @property integer $resizeH
  * @property integer $resizeW
+ * @property [] $imagePosition
  *
  * @property [] $markers
  * @property [] $categories
  * @property [] $podcategories
  * @property [] $elements
  * @property [] $elementsFilter
+ * @property [] $fashions
  *
  * @property Element $element0
  * @property ItemElement[] $itemElements
@@ -53,7 +55,9 @@ class Item extends \yii\db\ActiveRecord
     public $categories = [];
     public $podcategories = [];
     public $elements = [];
+    public $fashions = [];
     public $elementsFilter = [];
+    public $imagePosition = [];
 
     /**
      * @inheritdoc
@@ -87,6 +91,13 @@ class Item extends \yii\db\ActiveRecord
     public function getElements(){
         $this->elements = [];
         $this->elements = ArrayHelper::map($this->itemElements, 'element', 'element');
+    }
+
+    public function getFashion(){
+        $this->elementsFilter = [];
+        foreach($this->itemElements AS $el){
+            $this->elementsFilter[$el->element0->fashion] = $el->element0->fashion;
+        }
     }
 
     public function setPodcategories(){
@@ -199,6 +210,7 @@ class Item extends \yii\db\ActiveRecord
             [['image'], 'file', 'extensions' => 'png, jpg, gif, jpeg', 'skipOnEmpty' => true],
             [['markers'], 'each', 'rule' => ['integer']],
             [['categories', 'podcategories', 'elements', 'elementsFilter'], 'each', 'rule' => ['integer']],
+            [['imagePosition'], 'each', 'rule' => ['integer']],
         ];
     }
 
@@ -230,6 +242,7 @@ class Item extends \yii\db\ActiveRecord
             'podcategories' => Yii::t('app', 'Подкатегории'),
             'elements' => Yii::t('app', 'Основы'),
             'elementsFilter' => Yii::t('app', 'Фильтр основ по фасонам'),
+            'imagePosition' => Yii::t('app', 'Позиция принта'),
         ];
     }
 
@@ -293,7 +306,7 @@ class Item extends \yii\db\ActiveRecord
      */
     public function getWatermarks()
     {
-        return $this->hasMany(ItemWatermark::className(), ['item' => 'id']);
+        return $this->hasMany(ItemWatermark::className(), ['item' => 'id'])->orderBy('position desc, id asc');
     }
 
     /**

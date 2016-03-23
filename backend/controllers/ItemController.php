@@ -218,9 +218,10 @@ class ItemController extends BaseController
         $model->getСategories();
         $model->getPodcategories();
         $model->getElements();
+        $model->getFashion();
         if ($model->load(Yii::$app->request->post())) {
             if($model->validate()){
-                $model->save();
+                $model->save(false);
                 $model->setMarkers();
                 $model->setСategories();
                 $model->setPodcategories();
@@ -229,12 +230,13 @@ class ItemController extends BaseController
                 if($model->image){
                     $imageList = $model->upload();
                     if($imageList){
-                        foreach($imageList AS $iName){
+                        foreach($imageList AS $keyI => $iName){
                             $watermark = new ItemWatermark();
                             $watermark->item = $model->id;
                             $watermark->name = $iName;
+                            $watermark->position = $keyI;
                             if($watermark->validate()){
-                                $watermark->save();
+                                $watermark->save(false);
                             }
                         }
                     }
@@ -262,9 +264,10 @@ class ItemController extends BaseController
         $model->getСategories();
         $model->getPodcategories();
         $model->getElements();
+        $model->getFashion();
         if ($model->load(Yii::$app->request->post())) {
             if($model->validate()){
-                $model->save();
+                $model->save(false);
                 $model->deleteMarkers();
                 $model->setMarkers();
                 $model->deleteСategories();
@@ -277,13 +280,23 @@ class ItemController extends BaseController
                 if($model->image){
                     $imageList = $model->upload();
                     if($imageList){
-                        foreach($imageList AS $iName){
+                        foreach($imageList AS $keyI => $iName){
                             $watermark = new ItemWatermark();
                             $watermark->item = $model->id;
                             $watermark->name = $iName;
+                            $watermark->position = $keyI;
                             if($watermark->validate()){
-                                $watermark->save();
+                                $watermark->save(false);
                             }
+                        }
+                    }
+                }
+                if($model->imagePosition){
+                    foreach($model->imagePosition AS $idPos => $imagePosition){
+                        $watermark = ItemWatermark::findOne((int)$idPos);
+                        if($watermark){
+                            $watermark->position = (int)$imagePosition;
+                            $watermark->save();
                         }
                     }
                 }

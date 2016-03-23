@@ -11,6 +11,7 @@ use yii\helpers\Url;
  * @property string $id
  * @property string $item
  * @property string $name
+ * @property string $position
  *
  * @property Item $item0
  */
@@ -31,7 +32,7 @@ class ItemWatermark extends \yii\db\ActiveRecord
     {
         return [
             [['item', 'name'], 'required'],
-            [['item'], 'integer'],
+            [['item', 'position'], 'integer'],
             [['name'], 'string', 'max' => 255]
         ];
     }
@@ -45,6 +46,7 @@ class ItemWatermark extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'item' => Yii::t('app', 'Item'),
             'name' => Yii::t('app', 'Name'),
+            'position' => Yii::t('app', 'Позиция'),
         ];
     }
 
