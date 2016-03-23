@@ -106,6 +106,7 @@ return [
                 'site/reset-password' => 'site/resetpassword',
 
                 'item/changes' => 'item/changes',
+                'search/cache' => 'search/cache',
 
                 't/<url:.*>' => 'item/view',
                 't' => 'item/index',

@@ -15,6 +15,7 @@ $idEdit = [];
     <h1><?= Html::encode($this->title) ?></h1>
     <p>
         <?= Html::a(Yii::t('app', 'Create Settings'), ['create'], ['class' => 'btn btn-success']) ?>
+        <a href="javascript:void(0);" class="btn btn-danger pull-right" id="cacheDelete"><?=Yii::t('app', 'Очистить кешь')?></a>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -47,12 +48,36 @@ $idEdit = [];
 
 </div>
 <?php
-
+$url = \yii\helpers\Url::toRoute(['settings/cache']);
+$url2 = str_replace('/admin/', '/',  \yii\helpers\Url::toRoute(['search/cache']));
+$url2 = rtrim($url2, '/').'.html';
 $idEdit = join(', ', $idEdit);
 $js = <<<JS
 $(document).ready(function() {
     var ListDesc = '{$idEdit}';
     $(ListDesc).editable();
 });
+$('#cacheDelete').click(function(){
+        $.ajax({
+            type: "GET",
+            cache : false,
+            url: "{$url2}",
+            data: ({e: 1}),
+            dataType: 'json',
+            success: function(msg){
+                alert('Удалено!');
+            }
+        });
+        $.ajax({
+            type: "GET",
+            cache : false,
+            url: "{$url}",
+            data: ({e: 1}),
+            dataType: 'json',
+            success: function(msg){
+                //alert('Удалено!');
+            }
+        });
+    });
 JS;
 $this->registerJs($js, $this::POS_END, 'my-edit-statur');

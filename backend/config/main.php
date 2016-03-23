@@ -22,6 +22,14 @@ return [
         ],
     ],
     'components' => [
+        'cache' => [
+            'class' => 'yii\caching\DbCache',
+            // 'db' => 'mydb',
+            // 'cacheTable' => 'my_cache',
+        ],
+        'cacheFile' => [
+            'class' => 'yii\caching\FileCache',
+        ],
         'assetManager' => [
             'bundles' => [
 //                'yii\web\JqueryAsset' => [

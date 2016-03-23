@@ -9,6 +9,13 @@ use yii\web\Controller;
 
 class BaseController extends Controller{
 
+//    public $enableCsrfValidation = false;
+
+    public function beforeAction($action) {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
+    }
+
     public function behaviors(){
         return [
             'access' => [

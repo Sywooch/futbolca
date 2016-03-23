@@ -53,6 +53,6 @@ Yii::$app->view->registerMetaTag([
     ]);
     ?>
 <?php }else{ ?>
-    <p><?=Yii::t('app', 'Ничего не найденно')?></p>
+    <p><?=Yii::t('app', 'Ничего не найдено')?></p>
 <?php } ?>
 <div class="clearfix"></div>

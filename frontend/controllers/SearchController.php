@@ -7,9 +7,22 @@ use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use common\lib\Pagination;
+use yii\web\NotFoundHttpException;
 
 class SearchController extends \yii\web\Controller
 {
+
+    public function actionCache()
+    {
+        if(!Yii::$app->request->isAjax){
+            throw new NotFoundHttpException(Yii::t('app', 'No ajax'));
+        }
+        Yii::$app->response->format = 'json';
+        Yii::$app->cache->flush();
+        Yii::$app->cacheFile->flush();
+        return ['e' => 1];
+    }
+
     public function actionAutocomplete()
     {
         if(!Yii::$app->request->isAjax){

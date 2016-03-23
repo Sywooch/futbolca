@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\Cache;
 use Yii;
 use backend\models\Settings;
 use backend\models\SettingsSearch;
@@ -15,6 +16,17 @@ use yii\web\NotFoundHttpException;
 class SettingsController extends BaseController
 {
 
+    public function actionCache()
+    {
+        if(!Yii::$app->request->isAjax){
+            throw new NotFoundHttpException(Yii::t('app', 'No ajax'));
+        }
+//        Cache::deleteAll();
+        Yii::$app->response->format = 'json';
+        Yii::$app->cache->flush();
+        Yii::$app->cacheFile->flush();
+        return ['e' => 1];
+    }
     /**
      * Lists all Settings models.
      * @return mixed
