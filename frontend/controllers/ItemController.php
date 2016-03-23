@@ -89,8 +89,12 @@ class ItemController extends \yii\web\Controller
             if (!$model) {
                 throw new BadRequestHttpException(Yii::t('app', 'Нет такой товара'));
             }
-            $elementItem = Element::find()->where("id = :id",
-                [':id' => (int)Yii::$app->request->post('element')])->one();
+            if($currentFashion == $model->element0->fashion){
+                $elementItem = $model->element0;
+            }else{
+                $elementItem = Element::find()->where("id = :id",
+                    [':id' => (int)Yii::$app->request->post('element')])->one();
+            }
             if (!$elementItem) {
                 throw new BadRequestHttpException(Yii::t('app', 'Нет такой основы'));
             }
