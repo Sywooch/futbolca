@@ -18,10 +18,8 @@ use backend\widgets\TinyMce;
     <?php if(!$model->isNewRecord){ ?>
         <?= $form->field($model, 'url')->textInput(['maxlength' => true]) ?>
     <?php } ?>
-
-    <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
-
     <?= $form->field($model, 'keywords')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'small')->textarea(['rows' => 6]) ?>
 

@@ -6,15 +6,16 @@
 
 use yii\helpers\Url;
 use yii\helpers\Html;
+use frontend\models\Settings;
 
-$this->title = Yii::t('app', 'МИР ФУТБОЛОК - УКРАИНА');
+$this->title = Settings::getSettings('sate_keywords') ? Settings::getSettings('sate_keywords') : Yii::t('app', 'МИР ФУТБОЛОК - УКРАИНА');
 Yii::$app->view->registerMetaTag([
     'name' => 'description',
-    'content' => Yii::t('app', 'Прикольные футболки на заказ - купить в интернет-магазине Futboland.com.ua. Майки с любимыми кумирами')
+    'content' => Settings::getSettings('sate_des') ? Settings::getSettings('sate_des') : Yii::t('app', 'Прикольные футболки на заказ - купить в интернет-магазине Futboland.com.ua. Майки с любимыми кумирами')
 ]);
 Yii::$app->view->registerMetaTag([
     'name' => 'keywords',
-    'content' => Yii::t('app', 'Прикольные футболки на заказ - купить в интернет-магазине Futboland.com.ua. Майки с любимыми кумирами')
+    'content' => Settings::getSettings('sate_des') ? Settings::getSettings('sate_des') : Yii::t('app', 'Прикольные футболки на заказ - купить в интернет-магазине Futboland.com.ua. Майки с любимыми кумирами')
 ]);
 ?>
 

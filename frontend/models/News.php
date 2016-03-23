@@ -32,6 +32,8 @@ class News extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['name', 'url', 'description', 'keywords'], 'filter', 'filter' => 'trim'],
+            [['name', 'url', 'description', 'keywords'], 'filter', 'filter' => 'strip_tags'],
             [['name', 'url'], 'required'],
             [['small', 'text'], 'string'],
             [['created'], 'safe'],

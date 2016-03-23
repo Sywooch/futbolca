@@ -83,10 +83,10 @@ use backend\models\Item;
 
     <div class="row">
         <div class="col-sm-6 col-xs-12">
-            <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'keywords')->textInput(['maxlength' => true]) ?>
         </div>
         <div class="col-sm-6 col-xs-12">
-            <?= $form->field($model, 'keywords')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
         </div>
     </div>
 

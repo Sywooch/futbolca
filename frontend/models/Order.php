@@ -9,6 +9,7 @@ use Yii;
  * This is the model class for table "{{%order}}".
  *
  * @property string $id
+ * @property string $old
  * @property string $data_start
  * @property string $data_finish
  * @property string $user
@@ -48,8 +49,10 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['agent', 'name', 'soname', 'email', 'phone', 'adress', 'code', 'city', 'country', 'region', 'fax', 'icq', 'skape'], 'filter', 'filter' => 'trim'],
+            [['agent', 'name', 'soname', 'email', 'phone', 'adress', 'code', 'city', 'country', 'region', 'fax', 'icq', 'skape'], 'filter', 'filter' => 'strip_tags'],
             [['data_start', 'data_finish'], 'safe'],
-            [['user', 'payment', 'delivery', 'status'], 'integer'],
+            [['user', 'payment', 'delivery', 'status', 'old'], 'integer'],
             [['name', 'email', 'phone', 'adress', 'payment', 'delivery'], 'required'],
             [['agent', 'coment_admin'], 'string'],
             [['name', 'soname', 'email', 'phone', 'adress', 'code', 'city', 'country', 'region', 'fax', 'icq', 'skape'], 'string', 'max' => 255]

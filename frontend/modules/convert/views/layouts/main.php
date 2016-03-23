@@ -56,7 +56,7 @@ ConvertAsset::register($this);
     ]];
     $menuItems[] = ['label' => Yii::t('app', 'Заказы'), 'items' => [
         ['label' => Yii::t('app', 'Индивидуальный заказ'), 'url' => ['/convert/individual/index']],
-        ['label' => Yii::t('app', 'Заказы'), 'url' => ['/convert/podcategory/index']],
+        ['label' => Yii::t('app', 'Заказы'), 'url' => ['/convert/order/index']],
     ]];
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],

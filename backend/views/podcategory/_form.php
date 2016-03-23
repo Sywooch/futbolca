@@ -23,10 +23,10 @@ use backend\models\Category;
     <?php if(!$model->isNewRecord){ ?>
         <?= $form->field($model, 'url')->textInput(['maxlength' => true]) ?>
     <?php } ?>
-
+    <?= $form->field($model, 'keywords')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'keywords')->textInput(['maxlength' => true]) ?>
+
 
     <?= $form->field($model, 'text')->textarea(['rows' => 6, 'class' => 'myTinyMce']) ?>
 

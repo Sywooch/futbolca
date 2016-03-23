@@ -6,21 +6,21 @@
  */
 
 /* @var $this yii\web\View */
-/* @var $model frontend\models\News */
+/* @var $model frontend\models\News  */
 
 use yii\helpers\Url;
 use yii\helpers\Html;
 
-$this->title = ($model->description ? $model->description : $model->name);
+$this->title = ($model->keywords ? $model->keywords : $model->name);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Блог'), 'url' => ['news/index']];
 $this->params['breadcrumbs'][] = $model->name;
 Yii::$app->view->registerMetaTag([
     'name' => 'description',
-    'content' => ($model->keywords ? $model->keywords : $this->title)
+    'content' => ($model->description ? $model->description : $this->title)
 ]);
 Yii::$app->view->registerMetaTag([
     'name' => 'keywords',
-    'content' => ($model->keywords ? $model->keywords : $this->title)
+    'content' => ($model->description ? $model->description : $this->title)
 ]);
 ?>
 <br>

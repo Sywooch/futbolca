@@ -8,6 +8,14 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
 $this->title = Yii::t('app', 'Вход');
+Yii::$app->view->registerMetaTag([
+    'name' => 'description',
+    'content' => $this->title
+]);
+Yii::$app->view->registerMetaTag([
+    'name' => 'keywords',
+    'content' => $this->title
+]);
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

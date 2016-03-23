@@ -26,7 +26,7 @@ AppAsset::register($this);
     <link rel="alternate" type="application/rss+xml" title="rss лента" href="<?=Url::home(true)?>rss.xml">
     <link rel="canonical" href="<?=str_replace('/0', '', Url::canonical())?>">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title) .($this->title ? ' | ' : ''). Html::encode(Yii::$app->name) ?></title>
+    <title><?= Html::encode($this->title) .($this->title ? ' | ' : ''). (Settings::getSettings('sate_name') ? Settings::getSettings('sate_name') :Html::encode(Yii::$app->name)) ?></title>
     <?php $this->head() ?>
     <link rel="shortcut icon" href="/css/favicon.ico">
     <!--[if lte IE 6]>

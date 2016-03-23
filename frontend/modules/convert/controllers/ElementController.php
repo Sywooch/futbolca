@@ -24,7 +24,7 @@ class ElementController extends \yii\web\Controller
                 $newF = Fashion::find()->where("old = :old", [':old' => $model->bm_id])->one();
                 $sizes = explode('|', $model->bs_size);
                 $order = new Element();
-                $order->old = $model->bm_id;
+                $order->old = $model->bs_id;
                 $order->stock = $model->bs_insclad;
                 $order->name = $model->bs_name;
                 $order->home = $model->bs_home ? 1 : 2;

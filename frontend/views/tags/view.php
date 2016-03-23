@@ -9,21 +9,21 @@
 /* @var $models frontend\models\Item */
 /* @var $model frontend\models\Item */
 /* @var $category frontend\models\Category */
-/* @var $podcat frontend\models\Podcategory */
+/* @var $podcat frontend\models\Podcategory  */
 
 use yii\helpers\Url;
 use yii\helpers\Html;
 
-$this->title = ($podcat->description ? $podcat->description : $podcat->name).(Yii::$app->request->get('page') > 0 ? ' - '.Yii::t('app', 'Страница {page}', ['page' => (int)Yii::$app->request->get('page')]) : '');
+$this->title = ($podcat->keywords ? $podcat->keywords : $podcat->name).(Yii::$app->request->get('page') > 0 ? ' - '.Yii::t('app', 'Страница {page}', ['page' => (int)Yii::$app->request->get('page')]) : '');
 //$this->params['breadcrumbs'][] = ['label' => $podcat->category0->name, 'url' => ['category/view', 'url' => $podcat->category0->url]];
 $this->params['breadcrumbs'][] = $podcat->name;
 Yii::$app->view->registerMetaTag([
     'name' => 'description',
-    'content' => ($podcat->keywords ? $podcat->keywords : $this->title).(Yii::$app->request->get('page') > 0 ? ' - '.Yii::t('app', 'Страница {page}', ['page' => (int)Yii::$app->request->get('page')]) : '')
+    'content' => ($podcat->description ? $podcat->description : $this->title).(Yii::$app->request->get('page') > 0 ? ' - '.Yii::t('app', 'Страница {page}', ['page' => (int)Yii::$app->request->get('page')]) : '')
 ]);
 Yii::$app->view->registerMetaTag([
     'name' => 'keywords',
-    'content' => ($podcat->keywords ? $podcat->keywords : $this->title).(Yii::$app->request->get('page') > 0 ? ' - '.Yii::t('app', 'Страница {page}', ['page' => (int)Yii::$app->request->get('page')]) : '')
+    'content' => ($podcat->description ? $podcat->description : $this->title).(Yii::$app->request->get('page') > 0 ? ' - '.Yii::t('app', 'Страница {page}', ['page' => (int)Yii::$app->request->get('page')]) : '')
 ]);
 ?>
 

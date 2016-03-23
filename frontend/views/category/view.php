@@ -14,16 +14,16 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 
-$this->title = ($category->description ? $category->description : $category->name).(Yii::$app->request->get('page') > 0 ? ' - '.Yii::t('app', 'Страница {page}', ['page' => (int)Yii::$app->request->get('page')]) : '');
+$this->title = ($category->keywords ? $category->keywords : $category->name).(Yii::$app->request->get('page') > 0 ? ' - '.Yii::t('app', 'Страница {page}', ['page' => (int)Yii::$app->request->get('page')]) : '');
 //$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Заказы'), 'url' => ['user/orders']];
 $this->params['breadcrumbs'][] = $category->name;
 Yii::$app->view->registerMetaTag([
     'name' => 'description',
-    'content' => ($category->keywords ? $category->keywords : $this->title).(Yii::$app->request->get('page') > 0 ? ' - '.Yii::t('app', 'Страница {page}', ['page' => (int)Yii::$app->request->get('page')]) : '')
+    'content' => ($category->description ? $category->description : $this->title).(Yii::$app->request->get('page') > 0 ? ' - '.Yii::t('app', 'Страница {page}', ['page' => (int)Yii::$app->request->get('page')]) : '')
 ]);
 Yii::$app->view->registerMetaTag([
     'name' => 'keywords',
-    'content' => ($category->keywords ? $category->keywords : $this->title).(Yii::$app->request->get('page') > 0 ? ' - '.Yii::t('app', 'Страница {page}', ['page' => (int)Yii::$app->request->get('page')]) : '')
+    'content' => ($category->description ? $category->description : $this->title).(Yii::$app->request->get('page') > 0 ? ' - '.Yii::t('app', 'Страница {page}', ['page' => (int)Yii::$app->request->get('page')]) : '')
 ]);
 ?>
 

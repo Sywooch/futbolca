@@ -62,4 +62,15 @@ class ItemWatermark extends \yii\db\ActiveRecord
         }
         return Url::home(true).'images/item/'.$this->item.'/'.($small ? 'mini_' : '').$this->name;
     }
+
+    public function hasPhoto($mini = false){
+        $photoName = $this->name;
+        $imgDir = Yii::getAlias('@frontend/web/images/item/').$this->item.'/';
+        if($mini){
+            $imgDir .= 'mini_'.$photoName;
+        }else{
+            $imgDir .= $photoName;
+        }
+        return is_file($imgDir);
+    }
 }

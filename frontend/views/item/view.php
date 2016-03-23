@@ -14,7 +14,7 @@ use yii\helpers\Html;
 use frontend\models\Item;
 use yii\helpers\Json;
 
-$this->title = ($model->description ? $model->description : $model->name);
+$this->title = ($model->keywords ? $model->keywords : $model->name);
 if(sizeof($model->itemCategories) > 0 && isset($model->itemCategories[0])){
     $firstCat = $model->itemCategories[0];
     $this->params['breadcrumbs'][] = ['label' => $firstCat->category0->name, 'url' => ['category/view', 'url' => $firstCat->category0->url]];
@@ -22,11 +22,11 @@ if(sizeof($model->itemCategories) > 0 && isset($model->itemCategories[0])){
 $this->params['breadcrumbs'][] = $model->name;
 Yii::$app->view->registerMetaTag([
     'name' => 'description',
-    'content' => ($model->keywords ? $model->keywords : $this->title)
+    'content' => ($model->description ? $model->description : $this->title)
 ]);
 Yii::$app->view->registerMetaTag([
     'name' => 'keywords',
-    'content' => ($model->keywords ? $model->keywords : $this->title)
+    'content' => ($model->description ? $model->description : $this->title)
 ]);
 $this->registerJsFile('http://userapi.com/js/api/openapi.js?47', ['position' => \yii\web\View::POS_HEAD]);
 $js = <<<JS
