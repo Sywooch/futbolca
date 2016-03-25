@@ -16,17 +16,17 @@ use backend\models\Fashion;
 <div class="item-form">
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
-
+    <?php if($model->getErrors()){ ?>
+        <?php foreach($model->getErrors() AS $e){ ?>
+        <p class="text-danger"><?=str_replace('Основа', 'Назначить основной', $e[0])?></p>
+        <?php } ?>
+    <?php } ?>
     <div class="row">
-        <div class="col-sm-3 col-xs-12">
+        <div class="col-sm-6 col-xs-12">
             <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
         </div>
         <div class="col-sm-3 col-xs-12">
             <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
-        </div>
-        <div class="col-sm-3 col-xs-12">
-            <?= $form->field($model, 'element')->dropDownList(Element::getCatForListForBase(), ['prompt' => Yii::t('app', '-- Выберите основу -- ')])
-            ->hint(Yii::t('app', 'Эта основа будет базовой')) ?>
         </div>
         <div class="col-sm-3 col-xs-12">
             <?php if(!$model->isNewRecord){ ?>
@@ -65,8 +65,23 @@ use backend\models\Fashion;
         </div>
     </div>
     <?= $form->field($model, 'elementsFilter')->checkboxList(Fashion::getToList(), ['encode' => false]) ?>
-
-    <?= $form->field($model, 'elements')->checkboxList(Element::getCatForListForItem(), ['encode' => false]) ?>
+    <label>
+        <input name="changeAll" value="1" type="checkbox" id="changeAllId">
+        <label for="changeAllId"><?=Yii::t('app', 'Выбраь все основы')?></label>
+    </label>
+<!--    --><?//= $form->field($model, 'elements')->checkboxList(Element::getCatForListForItem(), ['encode' => false]) ?>
+    <div class="form-group field-item-elements">
+        <label class="control-label" for="item-elements"><?=Yii::t('app', 'Основы')?></label>
+        <input type="hidden" name="Item[elements]" value=""><div id="item-elements">
+            <?php foreach(Element::getCatForListForItem() AS $idList => $valueList){ ?>
+                <label for="Itemelements<?=$idList?>">
+                    <input id="item-element-<?=$idList?>" type="radio" name="Item[element]" <?=$model->element == $idList ? 'checked' : ''?> value="<?=$idList?>">
+                    <label for="item-element-<?=$idList?>"><small><?=Yii::t('app', 'Назначить основной')?></small></label>
+                    <input type="checkbox" name="Item[elements][]" value="<?=$idList?>" id="Itemelements<?=$idList?>">
+                    <?=$valueList?>
+                </label>
+            <?php } ?>
+        </div>
 
     <?= $form->field($model, 'categories')->listBox(\backend\models\Category::getCatForList(), [
         'prompt' => Yii::t('app', '-- Выберите категории -- '),
@@ -129,14 +144,30 @@ use backend\models\Fashion;
 $urlPodcat = Url::toRoute('item/podcat');
 $urlFindElement = Url::toRoute('item/element');
 $podcatPrompt = Yii::t('app', '-- Выберите подкатегории -- ');
-$podcatList = '[\''.join('\', \'', $model->podcategories).'\']';
-$elementsList = '[\''.join('\', \'', $model->elements).'\']';
+$podcatList = '[]';
+if(is_array($model->podcategories)){
+    $podcatList = '[\''.join('\', \'', $model->podcategories).'\']';
+}
+$elementsList = '[]';
+if(is_array($model->elements)){
+    $elementsList = '[\''.join('\', \'', $model->elements).'\']';
+}
+$checkedelement = $model->element;
 $js = <<<JS
+
+$('#changeAllId').click(function(){
+    var props = $(this).prop('checked');
+    $.each($('#item-elements input[type=checkbox]'), function(index, value){
+        $(this).prop('checked', props);
+    });
+});
+
 
    function listr(list){
         var data = list;
         var ids = [];
         var elementsList = {$elementsList};
+        var heckedelement = '{$checkedelement}';
         $.each(data, function(i, item){
             if($(data[i]).prop('checked')){
                 ids.push($(data[i]).val());
@@ -148,17 +179,33 @@ $js = <<<JS
                 url: "{$urlFindElement}",
                 data: ({data: ids}),
                 dataType: 'json',
+                beforeSend: function(){
+                    $('#item-elements').html('Идет обновление, ждите');
+                },
+                error: function(){
+                    alert('Ошибка запроса к серверу, обновите страницу и попробуйте снова')
+                },
                 success: function(msg){
                 $('#item-elements').html('');
                 if(msg.length < 1){
                     $('#item-elements').html('<p>Нет данных</p>');
                 }
                     $.each(msg, function(i, item){
-                        if(jQuery.inArray(i, elementsList) >= 0){
-                            $('#item-elements').append(' <label><input type="checkbox" name="Item[elements][]" value="' + i + '" checked> ' + item + '</label> ');
+                    var htmls = ' <label for="Itemelements' + i + '">';
+                        if(heckedelement == i){
+                            htmls += ' <input id="item-element-' + i + '" type="radio" name="Item[element]" value="' + i + '" checked> ';
                         }else{
-                            $('#item-elements').append(' <label><input type="checkbox" name="Item[elements][]" value="' + i + '"> ' + item + '</label> ');
+                            htmls += ' <input id="item-element-' + i + '" type="radio" name="Item[element]" value="' + i + '"> ';
                         }
+                        htmls += ' <label for="item-element-' + i + '"><small>Назначить основной</small></label> ';
+                        if(jQuery.inArray(i, elementsList) >= 0){
+                            htmls += ' <input type="checkbox" name="Item[elements][]" value="' + i + '" id="Itemelements' + i + '" checked> ';
+                        }else{
+                            htmls += ' <input type="checkbox" name="Item[elements][]" value="' + i + '" id="Itemelements' + i + '"> ';
+                        }
+                        htmls += ' ' + item + ' ';
+                        htmls += ' </label> ';
+                        $('#item-elements').append(htmls);
                     });
                 }
             });
@@ -187,6 +234,12 @@ $('#item-elementsfilter input').click(function(){
             url: "{$urlPodcat}",
             data: ({data: data}),
             dataType: 'json',
+            beforeSend: function(){
+                $('#item-podcategories').html('<option value="">Идет обновление, ждите</option>');
+            },
+            error: function(){
+                alert('Ошибка запроса к серверу, обновите страницу и попробуйте снова')
+            },
             success: function(msg){
             $('#item-podcategories').html('');
             $('#item-podcategories').append('<option value="">{$podcatPrompt}</option>');

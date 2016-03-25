@@ -152,12 +152,14 @@ class ItemController extends BaseController
     public function actionElement()
     {
         Yii::$app->response->format = 'json';
-//        return Yii::$app->request->post('data');
-//        $data = explode(',', Yii::$app->request->post('data'));
-        if(!Yii::$app->request->post('data')){
-            throw new NotFoundHttpException(Yii::t('app', 'неверные параметры'));
+        $data = Yii::$app->request->post('data');
+        if(!is_array($data)){
+            $data = [];
         }
-        $models = Element::getCatForListForItem(Yii::$app->request->post('data'));
+        if(!is_array($data)){
+            throw new NotFoundHttpException(Yii::t('app', 'Неверные параметры'));
+        }
+        $models = Element::getCatForListForItem($data);
         if(!$models){
             return [];
         }
@@ -234,7 +236,7 @@ class ItemController extends BaseController
                             $watermark = new ItemWatermark();
                             $watermark->item = $model->id;
                             $watermark->name = $iName;
-                            $watermark->position = $keyI;
+                            $watermark->position = (5 - $keyI);
                             if($watermark->validate()){
                                 $watermark->save(false);
                             }
@@ -284,7 +286,7 @@ class ItemController extends BaseController
                             $watermark = new ItemWatermark();
                             $watermark->item = $model->id;
                             $watermark->name = $iName;
-                            $watermark->position = $keyI;
+                            $watermark->position = (5 - $keyI);
                             if($watermark->validate()){
                                 $watermark->save(false);
                             }
