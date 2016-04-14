@@ -273,7 +273,9 @@ class Item extends \yii\db\ActiveRecord
     public function listCat(){
         $r = [];
         foreach($this->itemCategories AS $el){
-            $r[] = $el->category0->name;
+            if(!in_array($el->category0->name, $r)){
+                $r[] = $el->category0->name;
+            }
         }
         return $r;
     }

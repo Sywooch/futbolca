@@ -10,9 +10,8 @@ use Yii;
 use backend\models\Item;
 use backend\models\ItemSearch;
 use backend\ext\BaseController;
-use yii\console\Request;
-use yii\console\Response;
 use yii\helpers\ArrayHelper;
+use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
@@ -22,6 +21,11 @@ use yii\web\UploadedFile;
  */
 class ItemController extends BaseController
 {
+
+    public function beforeAction($action) {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
+    }
 
     /**
      * Lists all Item models.
@@ -326,12 +330,12 @@ class ItemController extends BaseController
 
     public function actionDeleteimg($model, $watermark)
     {
-        $watermark = ItemWatermark::find()->where("id = :id AND item = :item", [':id' => $model, ':item' => $watermark])->one();
-        if(!$watermark){
-            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        $watermarkModel = ItemWatermark::find()->where("id = :id AND item = :item", [':id' => $watermark, ':item' => $model])->one();
+        if(!$watermarkModel){
+            throw new HttpException(404, Yii::t('app', 'Not found ItemWatermark '.$model.' '.$watermark));
         }
-        $watermark->delOneImg($watermark->name);
-        $watermark->delete();
+        $watermarkModel->delOneImg($watermarkModel->name);
+        $watermarkModel->delete();
 //        return $this->redirect(['index']);
     }
 

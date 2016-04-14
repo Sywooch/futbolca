@@ -43,6 +43,10 @@ class ItemSearch extends Item
     {
         $query = Item::find();
 
+        if(!Yii::$app->request->get('sort')){
+            $query->orderBy('id desc');
+        }
+
         $query->joinWith(['itemCategories']);
 
         $dataProvider = new ActiveDataProvider([

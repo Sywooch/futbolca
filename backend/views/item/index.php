@@ -31,10 +31,14 @@ $idEdit = [];
         <?= Html::a('<i class="glyphicon glyphicon-floppy-save"></i> '.Yii::t('app', 'Импорт из Excel'), ['import'], ['class' => 'btn btn-info']) ?>
     </p>
     <?= GridView::widget([
+        'pager' => [
+            'firstPageLabel' => Yii::t('app', 'Первая'),
+            'lastPageLabel' => Yii::t('app', 'Последняя')
+        ],
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+//            ['class' => 'yii\grid\SerialColumn'],
 
             [
                 'attribute' => 'image',
@@ -44,10 +48,11 @@ $idEdit = [];
                 },
                 'filter' =>  false,
             ],
-//            'id',
+            'id',
             [
                 'attribute' => 'name',
                 'format' => 'raw',
+                'contentOptions' => ['style' => 'width: 100px !important; white-space: pre-wrap; word-wrap: break-word;'],
                 'value'=> function ($model) use (& $idEdit) {
                     $id = 'name_edit_'.$model->id;
                     $idEdit[] = '#'.$id;
@@ -83,6 +88,7 @@ $idEdit = [];
             [
                 'attribute' => 'categories',
                 'format' => 'raw',
+                'contentOptions' => ['style' => 'width: 100px !important; white-space: pre-wrap; word-wrap: break-word;'],
                 'value'=> function ($model) {
                     return join('<br>', $model->listCat());
                 },
