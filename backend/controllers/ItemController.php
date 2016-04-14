@@ -334,8 +334,9 @@ class ItemController extends BaseController
         if(!$watermarkModel){
             throw new HttpException(404, Yii::t('app', 'Not found ItemWatermark '.$model.' '.$watermark));
         }
-        $watermarkModel->delOneImg($watermarkModel->name);
+        $dir = $watermarkModel->delOneImg($watermarkModel->name);
         $watermarkModel->delete();
+//        echo $dir;
 //        return $this->redirect(['index']);
     }
 

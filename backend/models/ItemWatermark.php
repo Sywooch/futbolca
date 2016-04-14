@@ -50,8 +50,8 @@ class ItemWatermark extends \yii\db\ActiveRecord
     }
 
     public function delOneImg($imgName){
-        $imageIdDir = Yii::getAlias('@frontend/web/images/item').'/'.$this->id.'/';
-        @unlink("$imageIdDir/$imgName");
-        return true;
+        $imageIdDir = Yii::getAlias('@frontend/web/images/item').'/'.$this->item.'/';
+        @unlink($imageIdDir.$imgName);
+        return $imageIdDir.$imgName;
     }
 }
