@@ -131,7 +131,7 @@ class Pagination extends Object implements Linkable
      */
     public $defaultPageSize = 20;
     /**
-     * @var array|boolean the page size limits. The first array element stands for the minimal page size, and the second
+     * @var array|false the page size limits. The first array element stands for the minimal page size, and the second
      * the maximal page size. If this is false, it means [[pageSize]] should always return the value of [[defaultPageSize]].
      */
     public $pageSizeLimit = [1, 50];
@@ -167,11 +167,8 @@ class Pagination extends Object implements Linkable
      */
     public function getPage($recalculate = false)
     {
-
         if ($this->_page === null || $recalculate) {
-
             $page = (int) $this->getQueryParam($this->pageParam, 1) - 1;
-
             $this->setPage($page, true);
         }
 
@@ -186,7 +183,6 @@ class Pagination extends Object implements Linkable
      */
     public function setPage($value, $validatePage = false)
     {
-
         if ($value === null) {
             $this->_page = null;
         } else {
