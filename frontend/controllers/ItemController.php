@@ -22,7 +22,7 @@ class ItemController extends \yii\web\Controller
     {
         $model = Item::find()->with(['element0', 'itemWatermarks', 'itemElements', 'itemCategories', 'itemCategories'])->where("url = :url", [':url' => $url])->one();
         if(!$model){
-            throw new BadRequestHttpException(Yii::t('app', 'Нет такой товара'));
+            throw new BadRequestHttpException(Yii::t('app', 'Нет такого товара'));
         }
         $elementItem = $model->element0;
         $elementId = ArrayHelper::map($model->itemElements, 'element', 'element');
@@ -45,6 +45,36 @@ class ItemController extends \yii\web\Controller
         return $this->render('view', [
             'model' => $model,
             'items' => $items,
+            'elements' => $elements,
+            'fashions' => $fashions,
+            'size' => $size,
+            'currentFashion' => $currentFashion,
+            'currentSize' => $currentSize,
+            'currentCount' => $currentCount,
+            'currentWatermark' => $currentWatermark,
+            'elementItem' => $elementItem,
+        ]);
+    }
+
+    public function actionPreview($url)
+    {
+        $model = Item::find()->with(['element0', 'itemWatermarks', 'itemElements', 'itemCategories', 'itemCategories'])->where("url = :url", [':url' => $url])->one();
+        if(!$model){
+            throw new BadRequestHttpException(Yii::t('app', 'Нет такого товара'));
+        }
+        $elementItem = $model->element0;
+        $elementId = ArrayHelper::map($model->itemElements, 'element', 'element');
+        $elements = Element::getByItem($elementId, $model);
+        $elementsForFashions = Element::getByItem($elementId);
+        $fashions = Fashion::getBuItem($elementsForFashions, $model);
+        $sizeId = ArrayHelper::map($elementItem->elementSizes, 'size', 'size');
+        $size = Proportion::find()->where(['in', 'id', $sizeId])->orderBy("id asc")->all();
+        $currentFashion = $elementItem->fashion;
+        $currentSize = 0;
+        $currentCount = 1;
+        $currentWatermark = 0;
+        return $this->render('preview', [
+            'model' => $model,
             'elements' => $elements,
             'fashions' => $fashions,
             'size' => $size,

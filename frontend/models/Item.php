@@ -139,7 +139,7 @@ class Item extends \yii\db\ActiveRecord
         return $this->hasMany(OrderItem::className(), ['item' => 'id']);
     }
 
-    public function getImageFromItem($currentWatermark = 0, $elementItem = null){
+    public function getImageFromItem($currentWatermark = 0, $elementItem = null, $pre = false){
         $currentWatermark = (int)$currentWatermark;
         if($currentWatermark > 0){
             $watemark = null;
@@ -166,14 +166,26 @@ class Item extends \yii\db\ActiveRecord
         }
         $element = explode('.', $element);
         $element = $element[0];
-        $url = Url::toRoute([
-            'image/create',
-            'type' => 'full',
-            'element' => $element,
-            'water' => $watemark,
-            'top' => ($this->element0->toppx + $this->toppx),
-            'left' => ($this->element0->leftpx  + $this->leftpx),
-        ]);
+        if($pre){
+            $url = Url::toRoute([
+                'image/preview',
+                'type' => 'full',
+                'element' => $element,
+                'water' => $watemark,
+                'top' => (int)($this->element0->toppx + $this->toppx),
+                'left' => (int)($this->element0->leftpx  + $this->leftpx),
+            ]);
+        }else{
+            $url = Url::toRoute([
+                'image/create',
+                'type' => 'full',
+                'element' => $element,
+                'water' => $watemark,
+                'top' => (int)($this->element0->toppx + $this->toppx),
+                'left' => (int)($this->element0->leftpx  + $this->leftpx),
+            ]);
+        }
+
         return $url;
     }
 

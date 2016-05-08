@@ -21,9 +21,6 @@ return [
             'class' => 'yii\gii\Module',
             'allowedIPs' => ['127.0.0.1', '::1']
         ],
-        'convert' => [
-            'class' => 'app\modules\convert\Convert',
-        ],
     ],
     'components' => [
         'cache' => [
@@ -106,9 +103,9 @@ return [
                 'site/reset-password' => 'site/resetpassword',
 
                 'item/changes' => 'item/changes',
-                'search/cache' => 'search/cache',
 
                 't/<url:.*>' => 'item/view',
+                'preview/<url:.*>' => 'item/preview',
                 't' => 'item/index',
 
                 'blog/<url:.*>' => 'news/view',
@@ -139,8 +136,13 @@ return [
 
 //                'img/full/<element:\w+>/<water:\w+>/<top:\d+>/<left:\d+>' => 'search/index',
                 [
-                    'pattern' => 'img/<type:(full|mini)>/<element:\w+>/<water:\w+>/<top:\d+>/<left:\d+>',
+                    'pattern' => 'img/<type:(full|mini)>/<element:[0-9a-zA-Z\-_]+>/<water:\w+>/<top:\d+>/<left:\d+>',
                     'route' => 'image/create',
+                    'suffix' => '.jpg',
+                ],
+                [
+                    'pattern' => 'imgpre/<type:(full|mini)>/<element:[0-9a-zA-Z\-_]+>/<water:\w+>/<top:\d+>/<left:\d+>',
+                    'route' => 'image/preview',
                     'suffix' => '.jpg',
                 ],
                 [
@@ -153,11 +155,6 @@ return [
                     'route' => 'site/rss',
                     'suffix' => '.xml',
                 ],
-
-                'convert' => 'convert/home/index',
-                'convert/<controller:\w+>/<id:\d+>/<action:(create|update|delete)>' => 'convert/<controller>/<action>',
-                'convert/<controller:\w+>/<action:\w+>' => 'convert/<controller>/<action>',
-                'convert/<controller:\w+>' => 'convert/<controller>/index',
 
                 '<controller:\w+>/<id:\d+>/<action:(create|update|delete)>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',

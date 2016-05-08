@@ -21,7 +21,7 @@ use backend\models\Fashion;
         <?php } ?>
     <?php } ?>
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#item" aria-controls="home" role="tab" data-toggle="tab"><?=Yii::t('app', 'Товар')?></a></li>
+        <li role="presentation" class="active"><a href="#item" aria-controls="home" role="tab" data-toggle="tab"><?=Yii::t('app', 'Описание')?></a></li>
         <li role="presentation"><a href="#categories" aria-controls="profile" role="tab" data-toggle="tab"><?=Yii::t('app', 'Категории')?></a></li>
         <li role="presentation"><a href="#metky" aria-controls="messages" role="tab" data-toggle="tab"><?=Yii::t('app', 'Метки')?></a></li>
         <li role="presentation"><a href="#osnova" aria-controls="settings" role="tab" data-toggle="tab"><?=Yii::t('app', 'Основы')?></a></li>
@@ -145,6 +145,9 @@ use backend\models\Fashion;
     </div>
         <div class="form-group">
             <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?php if(!$model->isNewRecord){ ?>
+            <a href="<?=str_replace('/admin/', '/', Url::toRoute(['item/preview', 'url' => $model->url]))?>" class="btn btn-warning" target="_blank"><?=Yii::t('app', 'Предпросмотр (сначала сохранить изменения)')?></a>
+            <?php } ?>
         </div>
     <?php ActiveForm::end(); ?>
 </div>

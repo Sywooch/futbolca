@@ -369,8 +369,8 @@ class Item extends \yii\db\ActiveRecord
                 $nameList[] = $currentName;
                 $file->saveAs(Yii::getAlias('@frontend/web/images/tepm/') . $currentName);
                 if($this->resizeH || $this->resizeW){
-                    $this->resizeW = !$this->resizeW ? ($this->resizeH * 2) : $this->resizeW;
-                    $this->resizeH = !$this->resizeH ? ($this->resizeW * 2) : $this->resizeH;
+                    $this->resizeW = !$this->resizeW ? $this->resizeH : $this->resizeW;
+                    $this->resizeH = !$this->resizeH ? $this->resizeW : $this->resizeH;
                     $ih->load(Yii::getAlias('@frontend/web/images/tepm').'/'.$currentName)
                         ->resize($this->resizeW, $this->resizeH)
                         ->save($imageIdDir.$currentName);

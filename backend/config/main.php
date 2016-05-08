@@ -84,6 +84,11 @@ return [
                     'route' => 'item/view',
                     'suffix' => '.html',
                 ],
+                [
+                    'pattern' => 'preview/<url:.*>',
+                    'route' => 'item/preview',
+                    'suffix' => '.html',
+                ],
 
                 '<controller:\w+>/<id:\d+>/<action:(create|update|delete)>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
