@@ -142,11 +142,15 @@ class Element extends \yii\db\ActiveRecord
         $this->image->saveAs(Yii::getAlias('@frontend/web/images/tepm').'/'.$nameImg);
         $ih = new CImageHandler();
         if($this->resizeH || $this->resizeW){
-            $this->resizeW = !$this->resizeW ? ($this->resizeH * 2) : $this->resizeW;
-            $this->resizeH = !$this->resizeH ? ($this->resizeW * 2) : $this->resizeH;
+            $this->resizeW = !$this->resizeW ? $this->resizeH : $this->resizeW;
+            $this->resizeH = !$this->resizeH ? $this->resizeW : $this->resizeH;
             $ih->load(Yii::getAlias('@frontend/web/images/tepm').'/'.$nameImg)
                 ->resize($this->resizeW, $this->resizeH)
-                ->save($imgDirName);
+                ->save($imgDirName)
+                ->reload()
+                ->resize(220, 220)
+                ->save($imgDirNameMini)
+            ;
         }else{
             $ih->load(Yii::getAlias('@frontend/web/images/tepm').'/'.$nameImg)
                 ->save($imgDirName);

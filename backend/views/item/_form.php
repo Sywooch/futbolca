@@ -14,132 +14,142 @@ use backend\models\Fashion;
 ?>
 
 <div class="item-form">
-
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
     <?php if($model->getErrors()){ ?>
         <?php foreach($model->getErrors() AS $e){ ?>
-        <p class="text-danger"><?=str_replace('Основа', 'Назначить основной', $e[0])?></p>
+            <p class="text-danger"><?=str_replace('Основа', 'Назначить основной', $e[0])?></p>
         <?php } ?>
     <?php } ?>
-    <div class="row">
-        <div class="col-sm-6 col-xs-12">
-            <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#item" aria-controls="home" role="tab" data-toggle="tab"><?=Yii::t('app', 'Товар')?></a></li>
+        <li role="presentation"><a href="#categories" aria-controls="profile" role="tab" data-toggle="tab"><?=Yii::t('app', 'Категории')?></a></li>
+        <li role="presentation"><a href="#metky" aria-controls="messages" role="tab" data-toggle="tab"><?=Yii::t('app', 'Метки')?></a></li>
+        <li role="presentation"><a href="#osnova" aria-controls="settings" role="tab" data-toggle="tab"><?=Yii::t('app', 'Основы')?></a></li>
+        <li role="presentation"><a href="#watermarks" aria-controls="settings" role="tab" data-toggle="tab"><?=Yii::t('app', 'Наложения')?></a></li>
+    </ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="item">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+                </div>
+                <div class="col-sm-3 col-xs-12">
+                    <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
+                </div>
+                <div class="col-sm-3 col-xs-12">
+                    <?php if(!$model->isNewRecord){ ?>
+                        <?= $form->field($model, 'url')->textInput(['maxlength' => true]) ?>
+                    <?php } ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 col-xs-12">
+                    <?= $form->field($model, 'position')->textInput()->hint(Yii::t('app', 'По умолчанию = 0. В самом низу = 0')) ?>
+                </div>
+                <div class="col-sm-3 col-xs-12">
+                    <?= $form->field($model, 'price')->textInput() ?>
+                </div>
+                <div class="col-sm-3 col-xs-12">
+                    <?= $form->field($model, 'active')->dropDownList(Item::listHome()) ?>
+                </div>
+                <div class="col-sm-3 col-xs-12">
+                    <?= $form->field($model, 'home')->dropDownList(Item::listHome()) ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <?= $form->field($model, 'keywords')->textInput(['maxlength' => true]) ?>
+                </div>
+                <div class="col-sm-6 col-xs-12">
+                    <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
+                </div>
+            </div>
+
+            <?= $form->field($model, 'text')->textarea(['rows' => 6, 'class' => 'myTinyMce']) ?>
         </div>
-        <div class="col-sm-3 col-xs-12">
-            <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
+        <div role="tabpanel" class="tab-pane" id="categories">
+            <?= $form->field($model, 'categories')->listBox(\backend\models\Category::getCatForList(), [
+                'prompt' => Yii::t('app', '-- Выберите категории -- '),
+                'multiple' => true,
+                'size' => 7,
+            ]) ?>
+
+            <?= $form->field($model, 'podcategories')->listBox(\backend\models\Podcategory::getCatForList($model->categories), [
+                'prompt' => Yii::t('app', '-- Выберите подкатегории -- '),
+                'multiple' => true,
+                'size' => 7,
+            ]) ?>
         </div>
-        <div class="col-sm-3 col-xs-12">
-            <?php if(!$model->isNewRecord){ ?>
-                <?= $form->field($model, 'url')->textInput(['maxlength' => true]) ?>
+        <div role="tabpanel" class="tab-pane" id="metky">
+            <?= $form->field($model, 'markers')->checkboxList(\backend\models\Marker::getCatForList()) ?>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="osnova">
+            <?= $form->field($model, 'elementsFilter')->checkboxList(Fashion::getToList(), ['encode' => false]) ?>
+            <label>
+                <input name="changeAll" value="1" type="checkbox" id="changeAllId">
+                <label for="changeAllId"><?=Yii::t('app', 'Выбраь все основы')?></label>
+            </label>
+            <!--    --><?//= $form->field($model, 'elements')->checkboxList(Element::getCatForListForItem(), ['encode' => false]) ?>
+            <div class="form-group field-item-elements">
+                <label class="control-label" for="item-elements"><?=Yii::t('app', 'Основы')?></label>
+                <input type="hidden" name="Item[elements]" value=""><div id="item-elements">
+                    <?php foreach(Element::getCatForListForItem() AS $idList => $valueList){ ?>
+                        <label for="Itemelements<?=$idList?>">
+                            <input id="item-element-<?=$idList?>" type="radio" name="Item[element]" <?=$model->element == $idList ? 'checked' : ''?> value="<?=$idList?>">
+                            <label for="item-element-<?=$idList?>"><small><?=Yii::t('app', 'Назначить основной')?></small></label>
+                            <input type="checkbox" name="Item[elements][]" value="<?=$idList?>" id="Itemelements<?=$idList?>">
+                            <?=$valueList?>
+                        </label>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="watermarks">
+            <div class="row">
+                <div class="col-sm-3 col-xs-12">
+                    <?= $form->field($model, 'toppx')->textInput() ?>
+                </div>
+                <div class="col-sm-3 col-xs-12">
+                    <?= $form->field($model, 'leftpx')->textInput() ?>
+                </div>
+                <div class="col-sm-3 col-xs-12">
+                    <?= $form->field($model, 'resizeH')->textInput() ?>
+                </div>
+                <div class="col-sm-3 col-xs-12">
+                    <?= $form->field($model, 'resizeW')->textInput() ?>
+                </div>
+            </div>
+            <?php for($i = 0; $i < 5; $i++){ ?>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <?= $form->field($model, 'image[]')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
+
+                    </div>
+                    <div class="col-sm-6 col-xs-12">
+                        <?php if(isset($model->watermarks[$i])){ ?>
+                            <div class="row">
+                                <div class="col-sm-4 col-xs-12">
+                                    <?= $form->field($model, 'imagePosition['.$model->watermarks[$i]->id.']')->textInput(['value' => (int)$model->watermarks[$i]->position]) ?>
+                                </div>
+                            </div>
+                            <div id="forimg<?=$i?>">
+                                <?=Html::img($model->getImageLink($i), ['class' => '', 'style' => 'max-width: 200px;'])?>
+                                <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="deleteItemImg('<?=$i?>', '<?=$model->id?>', '<?=$model->watermarks[$i]->id?>');"><?=Yii::t('app', 'Удалить')?></a>
+                                <br><br>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
             <?php } ?>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-sm-3 col-xs-12">
-            <?= $form->field($model, 'position')->textInput()->hint(Yii::t('app', 'По умолчанию = 0. В самом низу = 0')) ?>
+        <div class="form-group">
+            <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
-        <div class="col-sm-3 col-xs-12">
-            <?= $form->field($model, 'price')->textInput() ?>
-        </div>
-        <div class="col-sm-3 col-xs-12">
-            <?= $form->field($model, 'active')->dropDownList(Item::listHome()) ?>
-        </div>
-        <div class="col-sm-3 col-xs-12">
-            <?= $form->field($model, 'home')->dropDownList(Item::listHome()) ?>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-3 col-xs-12">
-            <?= $form->field($model, 'toppx')->textInput() ?>
-        </div>
-        <div class="col-sm-3 col-xs-12">
-            <?= $form->field($model, 'leftpx')->textInput() ?>
-        </div>
-        <div class="col-sm-3 col-xs-12">
-            <?= $form->field($model, 'resizeH')->textInput() ?>
-        </div>
-        <div class="col-sm-3 col-xs-12">
-            <?= $form->field($model, 'resizeW')->textInput() ?>
-        </div>
-    </div>
-    <?= $form->field($model, 'elementsFilter')->checkboxList(Fashion::getToList(), ['encode' => false]) ?>
-    <label>
-        <input name="changeAll" value="1" type="checkbox" id="changeAllId">
-        <label for="changeAllId"><?=Yii::t('app', 'Выбраь все основы')?></label>
-    </label>
-<!--    --><?//= $form->field($model, 'elements')->checkboxList(Element::getCatForListForItem(), ['encode' => false]) ?>
-    <div class="form-group field-item-elements">
-        <label class="control-label" for="item-elements"><?=Yii::t('app', 'Основы')?></label>
-        <input type="hidden" name="Item[elements]" value=""><div id="item-elements">
-            <?php foreach(Element::getCatForListForItem() AS $idList => $valueList){ ?>
-                <label for="Itemelements<?=$idList?>">
-                    <input id="item-element-<?=$idList?>" type="radio" name="Item[element]" <?=$model->element == $idList ? 'checked' : ''?> value="<?=$idList?>">
-                    <label for="item-element-<?=$idList?>"><small><?=Yii::t('app', 'Назначить основной')?></small></label>
-                    <input type="checkbox" name="Item[elements][]" value="<?=$idList?>" id="Itemelements<?=$idList?>">
-                    <?=$valueList?>
-                </label>
-            <?php } ?>
-        </div>
-
-    <?= $form->field($model, 'categories')->listBox(\backend\models\Category::getCatForList(), [
-        'prompt' => Yii::t('app', '-- Выберите категории -- '),
-        'multiple' => true,
-        'size' => 7,
-    ]) ?>
-
-    <?= $form->field($model, 'podcategories')->listBox(\backend\models\Podcategory::getCatForList($model->categories), [
-        'prompt' => Yii::t('app', '-- Выберите подкатегории -- '),
-        'multiple' => true,
-        'size' => 7,
-    ]) ?>
-
-    <?= $form->field($model, 'markers')->checkboxList(\backend\models\Marker::getCatForList()) ?>
-
-    <div class="row">
-        <div class="col-sm-6 col-xs-12">
-            <?= $form->field($model, 'keywords')->textInput(['maxlength' => true]) ?>
-        </div>
-        <div class="col-sm-6 col-xs-12">
-            <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
-        </div>
-    </div>
-
-    <?= $form->field($model, 'text')->textarea(['rows' => 6, 'class' => 'myTinyMce']) ?>
-
-    <?php for($i = 0; $i < 5; $i++){ ?>
-        <div class="row">
-            <div class="col-sm-6 col-xs-12">
-                <?= $form->field($model, 'image[]')->fileInput(['multiple' => true, 'accept' => 'image/*']) ?>
-
-            </div>
-            <div class="col-sm-6 col-xs-12">
-                <?php if(isset($model->watermarks[$i])){ ?>
-                    <div class="row">
-                        <div class="col-sm-4 col-xs-12">
-                            <?= $form->field($model, 'imagePosition['.$model->watermarks[$i]->id.']')->textInput(['value' => (int)$model->watermarks[$i]->position]) ?>
-                        </div>
-                    </div>
-                    <div id="forimg<?=$i?>">
-                        <?=Html::img($model->getImageLink($i), ['class' => '', 'style' => 'max-width: 200px;'])?>
-                        <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="deleteItemImg('<?=$i?>', '<?=$model->id?>', '<?=$model->watermarks[$i]->id?>');"><?=Yii::t('app', 'Удалить')?></a>
-                        <br><br>
-                    </div>
-                <?php } ?>
-            </div>
-        </div>
-    <?php } ?>
-
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
-
     <?php ActiveForm::end(); ?>
-
-    <?=TinyMce::widget() ?>
-
 </div>
+<?=TinyMce::widget() ?>
+
 <?php
 $urlPodcat = Url::toRoute('item/podcat');
 $urlFindElement = Url::toRoute('item/element');

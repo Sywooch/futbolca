@@ -1,0 +1,36 @@
+AddDefaultCharset utf-8
+Options -Indexes
+DirectoryIndex index.php index.html
+
+Options +FollowSymlinks
+RewriteEngine On
+RewriteBase /
+RewriteCond %{HTTP_HOST} ^www\.(.*) [NC]
+RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+# deal with admin first
+RewriteCond %{REQUEST_URI} ^/(admin)
+RewriteRule ^admin/assets/(.*)$ backend/web/assets/$1 [L]
+RewriteRule ^admin/css/(.*)$ backend/web/css/$1 [L]
+RewriteRule ^admin/js/(.*)$ backend/web/js/$1 [L]
+RewriteRule ^admin/tinymce/(.*)$ backend/web/tinymce/$1 [L]
+
+RewriteCond %{REQUEST_URI} !^/backend/web/(assets|css|tinymce|js)/
+RewriteCond %{REQUEST_URI} ^/(admin)
+RewriteRule ^.*$ backend/web/index.php [L]
+
+RewriteCond %{REQUEST_URI} ^/(assets|css|images|paying|js|file|robots.txt)
+RewriteRule ^assets/(.*)$ frontend/web/assets/$1 [L]
+RewriteRule ^css/(.*)$ frontend/web/css/$1 [L]
+RewriteRule ^images/(.*)$ frontend/web/images/$1 [L]
+RewriteRule ^paying/(.*)$ frontend/web/paying/$1 [L]
+RewriteRule ^js/(.*)$ frontend/web/js/$1 [L]
+RewriteRule ^file/(.*)$ frontend/web/file/$1 [L]
+RewriteRule ^filemanager/(.*)$  backend/web/tinymce/filemanager/$1 [L]
+RewriteRule robots\.txt  frontend/web/robots.txt [L]
+
+RewriteCond %{REQUEST_URI} !^/(frontend|backend)/web/(assets|css|images|paying|js|file|tinymce|robots.txt)/
+RewriteCond %{REQUEST_URI} !index.php
+RewriteCond %{REQUEST_FILENAME} !-f [OR]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ frontend/web/index.php
