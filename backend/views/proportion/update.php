@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model backend\models\Proportion */
 
 $this->title = Yii::t('app', 'Update {modelClass}: ', [
-    'modelClass' => 'Proportion',
+    'modelClass' => Yii::t('app', 'Proportion'),
 ]) . ' ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Proportions'), 'url' => ['index']];
 //$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];

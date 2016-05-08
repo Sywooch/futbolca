@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model backend\models\Podcategory */
 
 $this->title = Yii::t('app', 'Update {modelClass}: ', [
-    'modelClass' => 'Podcategory',
+    'modelClass' => Yii::t('app', 'Podcategory'),
 ]) . ' ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Podcategories'), 'url' => ['index']];
 //$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
