@@ -10,6 +10,7 @@ use Yii;
  * @property string $id
  * @property string $item
  * @property string $element
+ * @property string $position
  *
  * @property Element $element0
  * @property Item $item0
@@ -31,7 +32,7 @@ class ItemElement extends \yii\db\ActiveRecord
     {
         return [
             [['item', 'element'], 'required'],
-            [['item', 'element'], 'integer']
+            [['item', 'element', 'position'], 'integer']
         ];
     }
 
@@ -44,6 +45,7 @@ class ItemElement extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'item' => Yii::t('app', 'Item'),
             'element' => Yii::t('app', 'Element'),
+            'position' => Yii::t('app', 'Position'),
         ];
     }
 
@@ -61,5 +63,17 @@ class ItemElement extends \yii\db\ActiveRecord
     public function getItem0()
     {
         return $this->hasOne(Item::className(), ['id' => 'item']);
+    }
+
+    public static function getPos($item){
+        $model = self::find()->where("item = :item", [':item' => $item])->all();
+        if(!$model){
+            return [];
+        }
+        $r = [];
+        foreach($model AS $m){
+            $r[$m->element] = $m->position;
+        }
+        return $r;
     }
 }

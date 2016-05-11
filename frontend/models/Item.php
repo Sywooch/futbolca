@@ -104,7 +104,7 @@ class Item extends \yii\db\ActiveRecord
      */
     public function getItemElements()
     {
-        return $this->hasMany(ItemElement::className(), ['item' => 'id']);
+        return $this->hasMany(ItemElement::className(), ['item' => 'id'])->orderBy('position asc');
     }
 
     /**

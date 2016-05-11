@@ -155,7 +155,7 @@ class ItemController extends BaseController
 
     public function actionElement()
     {
-        Yii::$app->response->format = 'json';
+//        Yii::$app->response->format = 'json';
         $data = Yii::$app->request->post('data');
         if(!is_array($data)){
             $data = [];
@@ -163,11 +163,13 @@ class ItemController extends BaseController
         if(!is_array($data)){
             throw new NotFoundHttpException(Yii::t('app', 'Неверные параметры'));
         }
-        $models = Element::getCatForListForItem($data);
-        if(!$models){
-            return [];
-        }
-        return $models;
+        $model = Item::findOne((int)Yii::$app->request->post('id'));
+        $model->getElements();
+        $model->getFashion();
+        return $this->renderPartial('listElements', [
+            'model' => $model,
+            'data' => $data,
+        ]);
     }
 
     public function actionPodcat()

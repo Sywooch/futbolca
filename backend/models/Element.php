@@ -188,13 +188,19 @@ class Element extends \yii\db\ActiveRecord
     public static function getCatForListForItem($fashions = []){
         $r = [];
         if($fashions){
-            $models = self::find()->with('fashion0')->where(['in', 'fashion', $fashions])->orderBy("name asc")->all();
+            $models = self::find()->with('fashion0')->where(['in', 'fashion', $fashions])->orderBy("fashion, name asc")->all();
         }else{
-            $models = self::find()->with('fashion0')->orderBy("name asc")->all();
+            $models = self::find()->with('fashion0')->orderBy("fashion, name asc")->all();
         }
         foreach($models AS $model){
             $r[$model->id] = $model->name.' ('.$model->fashion0->name.') '.Html::img($model->getImageLink(), ['class' => 'img-responsive', 'style' => 'max-width: 60px;']);
         }
         return $r;
+    }
+
+    public static function listPosition(){
+        return [
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+        ];
     }
 }

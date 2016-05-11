@@ -105,6 +105,7 @@ return [
                 'item/changes' => 'item/changes',
 
                 't/<url:.*>' => 'item/view',
+                't2/<url:.*>' => 'item/view2',
                 'preview/<url:.*>' => 'item/preview',
                 't' => 'item/index',
 

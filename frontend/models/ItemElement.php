@@ -10,6 +10,7 @@ use Yii;
  * @property string $id
  * @property string $item
  * @property string $element
+ * @property string $position
  *
  * @property Item $item0
  * @property Element $element0
@@ -31,7 +32,7 @@ class ItemElement extends \yii\db\ActiveRecord
     {
         return [
             [['item', 'element'], 'required'],
-            [['item', 'element'], 'integer']
+            [['item', 'element', 'position'], 'integer']
         ];
     }
 
@@ -44,6 +45,7 @@ class ItemElement extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'item' => Yii::t('app', 'Item'),
             'element' => Yii::t('app', 'Element'),
+            'position' => Yii::t('app', 'Position'),
         ];
     }
 

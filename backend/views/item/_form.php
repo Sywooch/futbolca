@@ -14,7 +14,9 @@ use backend\models\Fashion;
 ?>
 
 <div class="item-form">
-    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+    <?php $form = ActiveForm::begin([
+        'options' => ['enctype' => 'multipart/form-data']
+    ]); ?>
     <?php if($model->getErrors()){ ?>
         <?php foreach($model->getErrors() AS $e){ ?>
             <p class="text-danger"><?=str_replace('Основа', 'Назначить основной', $e[0])?></p>
@@ -84,23 +86,24 @@ use backend\models\Fashion;
             <?= $form->field($model, 'markers')->checkboxList(\backend\models\Marker::getCatForList()) ?>
         </div>
         <div role="tabpanel" class="tab-pane" id="osnova">
-            <?= $form->field($model, 'elementsFilter')->checkboxList(Fashion::getToList(), ['encode' => false]) ?>
-            <label>
-                <input name="changeAll" value="1" type="checkbox" id="changeAllId">
-                <label for="changeAllId"><?=Yii::t('app', 'Выбраь все основы')?></label>
-            </label>
-            <!--    --><?//= $form->field($model, 'elements')->checkboxList(Element::getCatForListForItem(), ['encode' => false]) ?>
-            <div class="form-group field-item-elements">
-                <label class="control-label" for="item-elements"><?=Yii::t('app', 'Основы')?></label>
-                <input type="hidden" name="Item[elements]" value=""><div id="item-elements">
-                    <?php foreach(Element::getCatForListForItem() AS $idList => $valueList){ ?>
-                        <label for="Itemelements<?=$idList?>">
-                            <input id="item-element-<?=$idList?>" type="radio" name="Item[element]" <?=$model->element == $idList ? 'checked' : ''?> value="<?=$idList?>">
-                            <label for="item-element-<?=$idList?>"><small><?=Yii::t('app', 'Назначить основной')?></small></label>
-                            <input type="checkbox" name="Item[elements][]" value="<?=$idList?>" id="Itemelements<?=$idList?>">
-                            <?=$valueList?>
-                        </label>
-                    <?php } ?>
+            <div class="row">
+                <div class="col-sm-2 col-xs-12">
+                    <?= $form->field($model, 'elementsFilter')->checkboxList(Fashion::getToList(), ['encode' => false]) ?>
+                </div>
+                <div class="col-sm-10 col-xs-12">
+                    <label>
+                        <input name="changeAll" value="1" type="checkbox" id="changeAllId">
+                        <label for="changeAllId"><?=Yii::t('app', 'Выбраь все основы')?></label>
+                    </label>
+                    <div class="form-group field-item-elements">
+                        <label class="control-label" for="item-elements"><?=Yii::t('app', 'Основы')?></label>
+                        <input type="hidden" name="Item[elements]" value=""><div id="item-elements">
+                            <?=$this->render('listElements', [
+                                'model' => $model,
+                                'data' => [],
+                            ])?>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -152,8 +155,8 @@ use backend\models\Fashion;
     <?php ActiveForm::end(); ?>
 </div>
 <?=TinyMce::widget() ?>
-
 <?php
+$iremId = isset($model->id) ? $model->id : 0;
 $urlPodcat = Url::toRoute('item/podcat');
 $urlFindElement = Url::toRoute('item/element');
 $podcatPrompt = Yii::t('app', '-- Выберите подкатегории -- ');
@@ -181,6 +184,7 @@ $('#changeAllId').click(function(){
         var ids = [];
         var elementsList = {$elementsList};
         var heckedelement = '{$checkedelement}';
+        var itemId = {$iremId};
         $.each(data, function(i, item){
             if($(data[i]).prop('checked')){
                 ids.push($(data[i]).val());
@@ -190,8 +194,8 @@ $('#changeAllId').click(function(){
                 type: "POST",
                 cache : false,
                 url: "{$urlFindElement}",
-                data: ({data: ids}),
-                dataType: 'json',
+                data: ({data: ids, id : itemId}),
+                dataType: 'html',
                 beforeSend: function(){
                     $('#item-elements').html('Идет обновление, ждите');
                 },
@@ -199,27 +203,7 @@ $('#changeAllId').click(function(){
                     alert('Ошибка запроса к серверу, обновите страницу и попробуйте снова')
                 },
                 success: function(msg){
-                $('#item-elements').html('');
-                if(msg.length < 1){
-                    $('#item-elements').html('<p>Нет данных</p>');
-                }
-                    $.each(msg, function(i, item){
-                    var htmls = ' <label for="Itemelements' + i + '">';
-                        if(heckedelement == i){
-                            htmls += ' <input id="item-element-' + i + '" type="radio" name="Item[element]" value="' + i + '" checked> ';
-                        }else{
-                            htmls += ' <input id="item-element-' + i + '" type="radio" name="Item[element]" value="' + i + '"> ';
-                        }
-                        htmls += ' <label for="item-element-' + i + '"><small>Назначить основной</small></label> ';
-                        if(jQuery.inArray(i, elementsList) >= 0){
-                            htmls += ' <input type="checkbox" name="Item[elements][]" value="' + i + '" id="Itemelements' + i + '" checked> ';
-                        }else{
-                            htmls += ' <input type="checkbox" name="Item[elements][]" value="' + i + '" id="Itemelements' + i + '"> ';
-                        }
-                        htmls += ' ' + item + ' ';
-                        htmls += ' </label> ';
-                        $('#item-elements').append(htmls);
-                    });
+                    $('#item-elements').html(msg);
                 }
             });
     }

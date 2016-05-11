@@ -69,6 +69,12 @@ class Item extends \yii\db\ActiveRecord
 
     public function setElements(){
         if(is_array($this->elements) && sizeof($this->elements) > 0){
+            $position = Yii::$app->request->post('Item');
+            if($position){
+                $position = $position['elementsposition'];
+            }else{
+                $position = [];
+            }
             foreach($this->elements AS $elements){
                 $elements = (int)$elements;
                 if(!$elements){
@@ -77,6 +83,7 @@ class Item extends \yii\db\ActiveRecord
                 $current = new ItemElement();
                 $current->item = $this->id;
                 $current->element = $elements;
+                $current->position = isset($position[$elements]) ? (int)$position[$elements] : 0;
                 if($current->validate()){
                     $current->save();
                 }
