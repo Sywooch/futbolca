@@ -372,7 +372,7 @@ class Item extends \yii\db\ActiveRecord
         $ih = new CImageHandler();
         if($this->image) {
             foreach ($this->image AS $file) {
-                $currentName = UrlHelper::translateUrl($file->baseName) . '.' . $file->extension;
+                $currentName = $this->id.UrlHelper::translateUrl($file->baseName) . '.' . $file->extension;
                 $nameList[] = $currentName;
                 $file->saveAs(Yii::getAlias('@frontend/web/images/tepm/') . $currentName);
                 if($this->resizeH || $this->resizeW){

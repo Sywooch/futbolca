@@ -139,7 +139,7 @@ class Item extends \yii\db\ActiveRecord
         return $this->hasMany(OrderItem::className(), ['item' => 'id']);
     }
 
-    public function getImageFromItem($currentWatermark = 0, $elementItem = null, $pre = false){
+    public function getImageFromItem($currentWatermark = 0, $elementItem = null, $pre = null){
         $currentWatermark = (int)$currentWatermark;
         if($currentWatermark > 0){
             $watemark = null;

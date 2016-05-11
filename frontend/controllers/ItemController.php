@@ -18,88 +18,61 @@ class ItemController extends \yii\web\Controller
     const TIME = 3600;
     const TIMEAJAX = 3600;
 
-    public function actionBlock2()
+    public function actionBlock()
     {
-        $model = Item::find()->with(['element0', 'itemWatermarks', 'itemElements', 'itemCategories', 'itemCategories'])->where("id = :id",
-            [
-                ':id' => (int)Yii::$app->request->post('item')
-            ]
-        )->one();
-        if(!$model){
-            throw new BadRequestHttpException(Yii::t('app', 'Нет такого товара'));
+        if(!Yii::$app->request->isAjax){
+            throw new BadRequestHttpException(Yii::t('app', 'Not ajax found'));
         }
-        $elementItem = $model->element0;
-        $currentSize = 0;
-        $currentCount = 1;
-        $currentWatermark = 0;
-        $currentFashion = $elementItem->fashion;
-        $sizeId = ArrayHelper::map($elementItem->elementSizes, 'size', 'size');
-        $size = Proportion::find()->where(['in', 'id', $sizeId])->orderBy("id asc")->all();
+        $key = md5(Url::canonical().Json::encode(Yii::$app->request->post()));
 
+        $currentFashion = (int)Yii::$app->request->post('fashion');
+        $currentSize = (int)Yii::$app->request->post('size');
+        $currentCount = (int)Yii::$app->request->post('count');
+        $currentWatermark = (int)Yii::$app->request->post('watermark');
+
+        $model = Item::find()->with([
+            'element0',
+            'itemWatermarks',
+            'itemElements',
+            'itemCategories',
+            'itemCategories'
+        ])->where("id = :id", [':id' => (int)Yii::$app->request->post('item')])->one();
+        if (!$model) {
+            throw new BadRequestHttpException(Yii::t('app', 'Нет такой товара'));
+        }
+
+        $elementItem = Element::find()->where("id = :id",
+            [':id' => (int)Yii::$app->request->post('element')])->one();
+//        $elementItem = $model->element0;
+        if (!$elementItem) {
+            throw new BadRequestHttpException(Yii::t('app', 'Нет такой основы'));
+        }
         $elementId = ArrayHelper::map($model->itemElements, 'element', 'element');
-        $elements = Element::getByItem($elementId, $model);
+        $elements = Element::getByItem($elementId, $model, $currentFashion);
         $elementsForFashions = Element::getByItem($elementId);
         $fashions = Fashion::getBuItem($elementsForFashions, $model);
-
-        $key = md5(Url::canonical());
-        $timeCache = self::TIME;
-        $items = Yii::$app->cache->get($key);
-        if($items === false) {
-            $items = Item::getElementsForItemPage($model);
-            Yii::$app->cache->set($key, $items, $timeCache);
+        $sizeId = ArrayHelper::map($model->element0->elementSizes, 'size', 'size');
+        $size = Proportion::find()->where(['in', 'id', $sizeId])->orderBy("id asc")->all();
+        if ($elementItem->fashion != $currentFashion) {
+            $elementItem = $elements[0];
         }
-        return $this->renderPartial('view2', [
+        if($model->element0->fashion == $currentFashion){
+            $elements = ArrayHelper::merge([$model->element0], $elements);
+//            $elements[] = $model->element0;
+        }
+        $html = $this->renderPartial('block', [
             'model' => $model,
-            'items' => $items,
-            'elementItem' => $elementItem,
+            'elements' => $elements,
+            'fashions' => $fashions,
+            'size' => $size,
+            'currentFashion' => $currentFashion,
             'currentSize' => $currentSize,
             'currentCount' => $currentCount,
             'currentWatermark' => $currentWatermark,
-            'currentFashion' => $currentFashion,
-            'size' => $size,
-            'elements' => $elements,
-            'fashions' => $fashions,
-        ]);
-    }
-
-    public function actionView2($url)
-    {
-        $model = Item::find()->with(['element0', 'itemWatermarks', 'itemElements', 'itemCategories', 'itemCategories'])->where("url = :url", [':url' => $url])->one();
-        if(!$model){
-            throw new BadRequestHttpException(Yii::t('app', 'Нет такого товара'));
-        }
-        $elementItem = $model->element0;
-        $currentSize = 0;
-        $currentCount = 1;
-        $currentWatermark = 0;
-        $currentFashion = $elementItem->fashion;
-        $sizeId = ArrayHelper::map($elementItem->elementSizes, 'size', 'size');
-        $size = Proportion::find()->where(['in', 'id', $sizeId])->orderBy("id asc")->all();
-
-        $elementId = ArrayHelper::map($model->itemElements, 'element', 'element');
-        $elements = Element::getByItem($elementId, $model);
-        $elementsForFashions = Element::getByItem($elementId);
-        $fashions = Fashion::getBuItem($elementsForFashions, $model);
-
-        $key = md5(Url::canonical());
-        $timeCache = self::TIME;
-        $items = Yii::$app->cache->get($key);
-        if($items === false) {
-            $items = Item::getElementsForItemPage($model);
-            Yii::$app->cache->set($key, $items, $timeCache);
-        }
-        return $this->render('view2', [
-            'model' => $model,
-            'items' => $items,
             'elementItem' => $elementItem,
-            'currentSize' => $currentSize,
-            'currentCount' => $currentCount,
-            'currentWatermark' => $currentWatermark,
-            'currentFashion' => $currentFashion,
-            'size' => $size,
-            'elements' => $elements,
-            'fashions' => $fashions,
+            'preview' => (int)Yii::$app->request->get('preview'),
         ]);
+        echo $html;
     }
 
     public function actionView($url)
@@ -137,36 +110,7 @@ class ItemController extends \yii\web\Controller
             'currentCount' => $currentCount,
             'currentWatermark' => $currentWatermark,
             'elementItem' => $elementItem,
-        ]);
-    }
-
-    public function actionPreview($url)
-    {
-        $model = Item::find()->with(['element0', 'itemWatermarks', 'itemElements', 'itemCategories', 'itemCategories'])->where("url = :url", [':url' => $url])->one();
-        if(!$model){
-            throw new BadRequestHttpException(Yii::t('app', 'Нет такого товара'));
-        }
-        $elementItem = $model->element0;
-        $elementId = ArrayHelper::map($model->itemElements, 'element', 'element');
-        $elements = Element::getByItem($elementId, $model);
-        $elementsForFashions = Element::getByItem($elementId);
-        $fashions = Fashion::getBuItem($elementsForFashions, $model);
-        $sizeId = ArrayHelper::map($elementItem->elementSizes, 'size', 'size');
-        $size = Proportion::find()->where(['in', 'id', $sizeId])->orderBy("id asc")->all();
-        $currentFashion = $elementItem->fashion;
-        $currentSize = 0;
-        $currentCount = 1;
-        $currentWatermark = 0;
-        return $this->render('preview', [
-            'model' => $model,
-            'elements' => $elements,
-            'fashions' => $fashions,
-            'size' => $size,
-            'currentFashion' => $currentFashion,
-            'currentSize' => $currentSize,
-            'currentCount' => $currentCount,
-            'currentWatermark' => $currentWatermark,
-            'elementItem' => $elementItem,
+            'preview' => (int)Yii::$app->request->get('preview'),
         ]);
     }
 
@@ -178,64 +122,5 @@ class ItemController extends \yii\web\Controller
         Yii::$app->response->format = 'json';
         return Yii::$app->request->post('watermark');
 
-    }
-
-    public function actionBlock()
-    {
-        if(!Yii::$app->request->isAjax){
-            throw new BadRequestHttpException(Yii::t('app', 'Not ajax found'));
-        }
-        $key = md5(Url::canonical().Json::encode(Yii::$app->request->post()));
-//        var_dump($key);
-//        $htmlCache = self::TIMEAJAX;
-//        $html = Yii::$app->cache->get($key);
-//        if($html === false) {
-            $currentFashion = (int)Yii::$app->request->post('fashion');
-            $currentSize = (int)Yii::$app->request->post('size');
-            $currentCount = (int)Yii::$app->request->post('count');
-            $currentWatermark = (int)Yii::$app->request->post('watermark');
-
-            $model = Item::find()->with([
-                'element0',
-                'itemWatermarks',
-                'itemElements',
-                'itemCategories',
-                'itemCategories'
-            ])->where("id = :id", [':id' => (int)Yii::$app->request->post('item')])->one();
-            if (!$model) {
-                throw new BadRequestHttpException(Yii::t('app', 'Нет такой товара'));
-            }
-//            if($currentFashion == $model->element0->fashion){
-//                $elementItem = $model->element0;
-//            }else{
-                $elementItem = Element::find()->where("id = :id",
-                    [':id' => (int)Yii::$app->request->post('element')])->one();
-//            }
-            if (!$elementItem) {
-                throw new BadRequestHttpException(Yii::t('app', 'Нет такой основы'));
-            }
-            $elementId = ArrayHelper::map($model->itemElements, 'element', 'element');
-            $elements = Element::getByItem($elementId, $model, $currentFashion);
-            $elementsForFashions = Element::getByItem($elementId);
-            $fashions = Fashion::getBuItem($elementsForFashions, $model);
-            $sizeId = ArrayHelper::map($model->element0->elementSizes, 'size', 'size');
-            $size = Proportion::find()->where(['in', 'id', $sizeId])->orderBy("id asc")->all();
-            if ($elementItem->fashion != $currentFashion) {
-                $elementItem = $elements[0];
-            }
-            $html = $this->renderPartial('block', [
-                'model' => $model,
-                'elements' => $elements,
-                'fashions' => $fashions,
-                'size' => $size,
-                'currentFashion' => $currentFashion,
-                'currentSize' => $currentSize,
-                'currentCount' => $currentCount,
-                'currentWatermark' => $currentWatermark,
-                'elementItem' => $elementItem,
-            ]);
-//            Yii::$app->cache->set($key, $html, $htmlCache);
-//        }
-        echo $html;
     }
 }

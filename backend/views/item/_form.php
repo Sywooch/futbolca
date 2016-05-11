@@ -149,7 +149,7 @@ use backend\models\Fashion;
         <div class="form-group">
             <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
             <?php if(!$model->isNewRecord){ ?>
-            <a href="<?=str_replace('/admin/', '/', Url::toRoute(['item/preview', 'url' => $model->url]))?>" class="btn btn-warning" target="_blank"><?=Yii::t('app', 'Предпросмотр (сначала сохранить изменения)')?></a>
+            <a href="<?=str_replace('/admin/', '/', Url::toRoute(['item/view', 'url' => $model->url, 'preview' => 1]))?>" class="btn btn-warning" target="_blank"><?=Yii::t('app', 'Предпросмотр (сначала сохранить изменения)')?></a>
             <?php } ?>
         </div>
     <?php ActiveForm::end(); ?>

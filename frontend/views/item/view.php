@@ -105,6 +105,7 @@ $this->registerJs($js, $this::POS_HEAD, 'my-vk-api');
             'currentCount' => $currentCount,
             'currentWatermark' => $currentWatermark,
             'elementItem' => $elementItem,
+            'preview' => $preview,
         ])?>
     </div>
     <div class="product-descript">

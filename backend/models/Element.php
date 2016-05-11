@@ -136,7 +136,7 @@ class Element extends \yii\db\ActiveRecord
             mkdir(Yii::getAlias('@frontend/web/images/element/').$this->id, 0777);
         }
         $this->deleteImage();
-        $nameImg  = UrlHelper::translateUrl($this->image->baseName) . '.' . $this->image->extension;
+        $nameImg  = $this->id.UrlHelper::translateUrl($this->image->baseName) . '.' . $this->image->extension;
         $imgDirName = Yii::getAlias('@frontend/web/images/element/').$this->id.'/' . $nameImg;
         $imgDirNameMini = Yii::getAlias('@frontend/web/images/element/').$this->id.'/mini_' . $nameImg;
         $this->image->saveAs(Yii::getAlias('@frontend/web/images/tepm').'/'.$nameImg);

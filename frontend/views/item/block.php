@@ -21,19 +21,19 @@ use yii\helpers\Html;
 use frontend\models\Item;
 use yii\helpers\Json;
 
+$noList = 0;
+
 ?>
 <h1 class="page-title"><?=$model->name?></h1>
 <input type="hidden" name="currentElement" value="<?=$elementItem->id?>" id="currentElementId">
 <div class="product-img">
-    <img src="<?=$model->getImageFromItem($currentWatermark, $elementItem)?>" alt="<?=Html::encode($model->name)?>" id="fullImage">
+    <img src="<?=$model->getImageFromItem($currentWatermark, $elementItem, $preview)?>" alt="<?=Html::encode($model->name)?>" id="fullImage">
     <p></p>
     <span class="detail-title"><?=Yii::t('app', 'Цвет основы')?></span>
     <ul class="product-img-list">
-        <?php $noList = 0; if($model->element0->fashion == $currentFashion){ $noList = $model->element; ?>
         <li><img class="imgElementn" src="<?=$elementItem->getImageLink()?>" onclick="changes.element('<?=(int)$elementItem->id?>');" title="<?=Html::encode($model->element0->name)?>" alt="<?=Html::encode($model->element0->name)?>"></li>
-        <?php } ?>
         <?php foreach($elements AS $keyE => $element){ ?>
-            <?php if($noList == $element->id){ continue; } ?>
+            <?php if($elementItem->id == $element->id){ continue; } ?>
             <li><img class="imgElementn" src="<?=$element->getImageLink()?>" onclick="changes.element('<?=(int)$element->id?>');" title="<?=Html::encode($element->name)?>" alt="<?=Html::encode($element->name)?>"></li>
         <?php } ?>
     </ul>

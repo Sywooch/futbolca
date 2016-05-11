@@ -19,7 +19,7 @@ class ImageController extends \yii\web\Controller
         $timeCache = self::TIME;
         $data = Yii::$app->cache->get($key);
         if($data === false){
-            $element .= '%';
+            $element .= '.%';
             $element = Element::find()->where("photo LIKE :photo", [':photo' => $element])->one();
             if (!$element) {
                 throw new BadRequestHttpException(Yii::t('app', 'Не найдена основа'));
@@ -54,7 +54,7 @@ class ImageController extends \yii\web\Controller
     public function actionPreview($type, $element = null, $water = null, $top = 0, $left = 0)
     {
         $key = md5($type.$element.$water.$top.$left);
-        $element .= '%';
+        $element .= '.%';
         $element = Element::find()->where("photo LIKE :photo", [':photo' => $element])->one();
         if (!$element) {
             throw new BadRequestHttpException(Yii::t('app', 'Не найдена основа'));
