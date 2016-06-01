@@ -93,31 +93,33 @@ $this->registerJs($js, $this::POS_HEAD, 'my-vk-api');
     /*]]>*/
 </script>
 <div id="tovar_t1">
-    <div class="product-block">
-        <?=$this->render('block', [
-            'model' => $model,
-            'items' => $items,
-            'elements' => $elements,
-            'fashions' => $fashions,
-            'size' => $size,
-            'currentFashion' => $currentFashion,
-            'currentSize' => $currentSize,
-            'currentCount' => $currentCount,
-            'currentWatermark' => $currentWatermark,
-            'elementItem' => $elementItem,
-            'preview' => $preview,
-        ])?>
-    </div>
-    <div class="product-descript">
-        <?=$model->text?>
+    <div itemscope itemtype="http://schema.org/Product">
+        <?php if(sizeof($model->itemCategories) > 0 && isset($model->itemCategories[0])){ $firstCat = $model->itemCategories[0]; ?>
+            <meta itemprop="category" content="<?=$firstCat->category0->name?>">
+        <?php } ?>
+        <div class="product-block">
+            <?=$this->render('block', [
+                'model' => $model,
+                'items' => $items,
+                'elements' => $elements,
+                'fashions' => $fashions,
+                'size' => $size,
+                'currentFashion' => $currentFashion,
+                'currentSize' => $currentSize,
+                'currentCount' => $currentCount,
+                'currentWatermark' => $currentWatermark,
+                'elementItem' => $elementItem,
+                'preview' => $preview,
+            ])?>
+        </div>
+        <div class="product-descript" itemprop="description">
+            <?=$model->text?>
+        </div>
     </div>
     <div id="vk_comments"></div>
     <script type="text/javascript">
         VK.Widgets.Comments("vk_comments", {limit: 5, width: "580", attach: "*"});
     </script>
-    <div class="product-descript">
-
-    </div>
     <?php if(sizeof($items) > 0){ ?>
         <span class="page-title"><?=Yii::t('app', 'Похожие товары')?></span>
         <?php foreach($items AS $item){ ?>

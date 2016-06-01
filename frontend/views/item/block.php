@@ -24,10 +24,11 @@ use yii\helpers\Json;
 $noList = 0;
 
 ?>
-<h1 class="page-title"><?=$model->name?></h1>
+<h1 class="page-title" itemprop="name"><?=$model->name?></h1>
+<meta itemprop="productID" content="<?=$model->id?>">
 <input type="hidden" name="currentElement" value="<?=$elementItem->id?>" id="currentElementId">
 <div class="product-img">
-    <img src="<?=$model->getImageFromItem($currentWatermark, $elementItem, $preview)?>" alt="<?=Html::encode($model->name)?>" id="fullImage">
+    <img itemprop="image" src="<?=$model->getImageFromItem($currentWatermark, $elementItem, $preview)?>" alt="<?=Html::encode($model->name)?>" id="fullImage">
     <p></p>
     <span class="detail-title"><?=Yii::t('app', 'Цвет основы')?></span>
     <ul class="product-img-list">
@@ -42,7 +43,7 @@ $noList = 0;
 </div>
 <div class="product-detail">
     <span class="detail-title"><strong><?=Yii::t('app', 'Модель одежды')?></strong></span>
-    <label for="fashion-<?=(int)$model->element0->fashion?>" ><input type="radio" name="fashion" onclick="changes.fashion('<?=(int)$model->element0->fashion?>');" class="labelFashion"<?=$currentFashion == (int)(int)$model->element0->fashion ? ' checked' : ''?> value="<?=(int)$model->element0->fashion?>" id="fashion-<?=(int)$model->element0->fashion?>"><?=$model->element0->fashion0->name?></label>
+    <label for="fashion-<?=(int)$model->element0->fashion?>" ><input type="radio" name="fashion" onclick="changes.fashion('<?=(int)$model->element0->fashion?>');" class="labelFashion"<?=$currentFashion == (int)(int)$model->element0->fashion ? ' checked' : ''?> value="<?=(int)$model->element0->fashion?>" id="fashion-<?=(int)$model->element0->fashion?>"><span itemprop="brand"><?=$model->element0->fashion0->name?></span></label>
     <?php foreach($fashions AS $fashion){ ?>
         <label for="fashion-<?=(int)$fashion->id?>" ><input type="radio" name="fashion" onclick="changes.fashion('<?=(int)$fashion->id?>');" class="labelFashion"<?=$currentFashion == (int)$fashion->id ? ' checked' : ''?> value="<?=(int)$fashion->id?>" id="fashion-<?=(int)$fashion->id?>"><?=$fashion->name?></label>
     <?php } ?>
@@ -61,7 +62,12 @@ $noList = 0;
             <label for="size-id-<?=$sizeValue->id?>"><span><?=$sizeValue->name?></span><input type="radio" onclick="changes.size('<?=(int)$sizeValue->id?>');" name="sizeItem"<?=$currentSize == (int)$sizeValue->id ? ' checked' : ''?> value="<?=$sizeValue->name?>" id="size-id-<?=$sizeValue->id?>"></label>
         <?php } ?>
     </div>
-    <span class="detail-title"><?=Yii::t('app', 'Цена')?>: <strong id="price_tovar" class="price1"><?=(int)$model->getAllPrice($elementItem)?></strong> <?=Yii::t('app', 'грн')?>.</span>
-    <input type="text"  value="<?=(int)$currentCount?>" onblur="changes.count(this);" onkeyup="changes.count(this);" class="text-field" name="count_tovar">
-    <input type="button" value="<?=Yii::t('app', 'В корзину')?>" class="submit-btn" id="inCartClick">
+    <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+        <meta itemprop="price" content="<?=(int)$model->getAllPrice($elementItem)?>">
+        <meta itemprop="priceCurrency" content="UAH">
+        <span class="detail-title"><?=Yii::t('app', 'Цена')?>: <strong id="price_tovar" class="price1"><?=(int)$model->getAllPrice($elementItem)?></strong> <?=Yii::t('app', 'грн')?>.</span>
+        <input type="text"  value="<?=(int)$currentCount?>" onblur="changes.count(this);" onkeyup="changes.count(this);" class="text-field" name="count_tovar">
+        <input type="button" value="<?=Yii::t('app', 'В корзину')?>" class="submit-btn" id="inCartClick">
+        <link itemprop="availability" href="http://schema.org/InStock">
+    </div>
 </div>
