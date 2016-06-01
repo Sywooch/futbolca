@@ -29,6 +29,8 @@ class ItemController extends \yii\web\Controller
         $currentSize = (int)Yii::$app->request->post('size');
         $currentCount = (int)Yii::$app->request->post('count');
         $currentWatermark = (int)Yii::$app->request->post('watermark');
+        $postElement = (int)Yii::$app->request->post('element');
+
 
         $model = Item::find()->with([
             'element0',
@@ -41,9 +43,23 @@ class ItemController extends \yii\web\Controller
             throw new BadRequestHttpException(Yii::t('app', 'Нет такой товара'));
         }
 
-        $elementItem = Element::find()->where("id = :id",
-            [':id' => (int)Yii::$app->request->post('element')])->one();
-//        $elementItem = $model->element0;
+        $elementItem = Element::find()->where("id = :id AND fashion = :fashion",
+            [
+                ':id' => $postElement,
+                ':fashion' => $currentFashion,
+            ])->one();
+        if(!$elementItem){
+            if($currentFashion == $model->element0->fashion){
+                $elementItem = $model->element0;
+            }else{
+                $elementItem = $model->element0;
+//                $elementItem = Element::find()->where("fashion = :fashion",
+//                    [
+//                        ':fashion' => $currentFashion,
+//                    ])->orderBy('fashion asc, name asc')->one();
+            }
+        }
+
         if (!$elementItem) {
             throw new BadRequestHttpException(Yii::t('app', 'Нет такой основы'));
         }
@@ -53,14 +69,21 @@ class ItemController extends \yii\web\Controller
         $fashions = Fashion::getBuItem($elementsForFashions, $model);
         $sizeId = ArrayHelper::map($model->element0->elementSizes, 'size', 'size');
         $size = Proportion::find()->where(['in', 'id', $sizeId])->orderBy("id asc")->all();
-        if ($elementItem->fashion != $currentFashion) {
+
+        if ($elementItem->fashion != $currentFashion && isset($elements[0])) {
             $elementItem = $elements[0];
         }
-//        if($model->element0->fashion == $currentFashion){
-        $elements = ArrayHelper::merge([$elementItem], $elements);
-        $elements = ArrayHelper::merge([$model->element0], $elements);
-//            $elements[] = $model->element0;
+        if($model->element0->fashion == $currentFashion){
+            $elements = ArrayHelper::merge([$model->element0], $elements);
+        }
+//        $elements = ArrayHelper::merge([$elements[0]], $elements);
+
+//        foreach($elements AS $idd => $element){
+//            if($element->fashion != $currentFashion){
+//                unset($elements[$idd]);
+//            }
 //        }
+
         $html = $this->renderPartial('block', [
             'model' => $model,
             'elements' => $elements,
@@ -100,7 +123,6 @@ class ItemController extends \yii\web\Controller
         $currentSize = 0;
         $currentCount = 1;
         $currentWatermark = 0;
-        $elements = ArrayHelper::merge([$model->element0], $elements);
         $elements = ArrayHelper::merge([$model->element0], $elements);
         return $this->render('view', [
             'model' => $model,
