@@ -1,2 +1,14 @@
 User-agent: *
-Disallow:
+Disallow: /seach.html
+Disallow: /seach.html*
+Disallow: /site/requestpasswordreset.html
+Disallow: /user/car.html
+Sitemap: httр:/futboland.com.ua/sitemap.xml
+
+User-agent: Yandex
+Disallow: /seach.html
+Disallow: /seach.html*
+Disallow: /site/requestpasswordreset.html
+Disallow: /user/car.html
+Sitemap: httр://futboland.com.ua/sitemap.xml
+Host: futboland.com.ua

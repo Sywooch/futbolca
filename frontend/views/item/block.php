@@ -31,9 +31,11 @@ $noList = 0;
     <p></p>
     <span class="detail-title"><?=Yii::t('app', 'Цвет основы')?></span>
     <ul class="product-img-list">
+        <!--
         <li><img class="imgElementn" src="<?=$elementItem->getImageLink()?>" onclick="changes.element('<?=(int)$elementItem->id?>');" title="<?=Html::encode($model->element0->name)?>" alt="<?=Html::encode($model->element0->name)?>"></li>
+        -->
         <?php foreach($elements AS $keyE => $element){ ?>
-            <?php if($elementItem->id == $element->id){ continue; } ?>
+            <?php if($keyE == 1){ continue; } ?>
             <li><img class="imgElementn" src="<?=$element->getImageLink()?>" onclick="changes.element('<?=(int)$element->id?>');" title="<?=Html::encode($element->name)?>" alt="<?=Html::encode($element->name)?>"></li>
         <?php } ?>
     </ul>

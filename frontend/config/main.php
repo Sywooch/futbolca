@@ -137,18 +137,23 @@ return [
 
 //                'img/full/<element:\w+>/<water:\w+>/<top:\d+>/<left:\d+>' => 'search/index',
                 [
-                    'pattern' => 'img/<type:(full|mini)>/<element:[0-9a-zA-Z\-_]+>-<water:\w+>-<top:\d+>-<left:\d+>',
+                    'pattern' => 'img/<type:(full|mini)>/<element:[0-9a-zA-Z\-_]+>_<water:[0-9a-zA-Z\-_]+>_<top:\d+>-<left:\d+>',
                     'route' => 'image/create',
                     'suffix' => '.jpg',
                 ],
                 [
-                    'pattern' => 'imgpre/<type:(full|mini)>/<element:[0-9a-zA-Z\-_]+>-<water:\w+>-<top:\d+>-<left:\d+>',
+                    'pattern' => 'imgpre/<type:(full|mini)>/<element:[0-9a-zA-Z\-_]+>_<water:[0-9a-zA-Z\-_]+>_<top:\d+>-<left:\d+>',
                     'route' => 'image/preview',
                     'suffix' => '.jpg',
                 ],
                 [
                     'pattern' => 'sitemap',
                     'route' => 'site/sitemap',
+                    'suffix' => '.xml',
+                ],
+                [
+                    'pattern' => 'yandex',
+                    'route' => 'yandex/index',
                     'suffix' => '.xml',
                 ],
                 [

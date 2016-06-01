@@ -56,10 +56,11 @@ class ItemController extends \yii\web\Controller
         if ($elementItem->fashion != $currentFashion) {
             $elementItem = $elements[0];
         }
-        if($model->element0->fashion == $currentFashion){
-            $elements = ArrayHelper::merge([$model->element0], $elements);
+//        if($model->element0->fashion == $currentFashion){
+        $elements = ArrayHelper::merge([$elementItem], $elements);
+        $elements = ArrayHelper::merge([$model->element0], $elements);
 //            $elements[] = $model->element0;
-        }
+//        }
         $html = $this->renderPartial('block', [
             'model' => $model,
             'elements' => $elements,
@@ -99,6 +100,8 @@ class ItemController extends \yii\web\Controller
         $currentSize = 0;
         $currentCount = 1;
         $currentWatermark = 0;
+        $elements = ArrayHelper::merge([$model->element0], $elements);
+        $elements = ArrayHelper::merge([$model->element0], $elements);
         return $this->render('view', [
             'model' => $model,
             'items' => $items,

@@ -131,8 +131,9 @@ class Element extends \yii\db\ActiveRecord
                 $model->andWhere("fashion = :fashion", [':fashion' => $item->element0->fashion]);
             }
             $model->andWhere("id <> :id", [':id' => $item->element]);
-            $model->orderBy('fashion asc, name asc');
+
         }
+        $model->orderBy('fashion asc, name asc');
         return $model->all();
     }
 
