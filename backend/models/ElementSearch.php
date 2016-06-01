@@ -18,7 +18,7 @@ class ElementSearch extends Element
     public function rules()
     {
         return [
-            [['id', 'stock', 'home', 'fashion', 'toppx', 'leftpx', 'price', 'increase'], 'integer'],
+            [['id', 'stock', 'home', 'fashion', 'toppx', 'leftpx', 'price', 'increase', 'position'], 'integer'],
             [['name', 'size', 'photo'], 'safe'],
         ];
     }
@@ -64,6 +64,7 @@ class ElementSearch extends Element
             'leftpx' => $this->leftpx,
             'price' => $this->price,
             'increase' => $this->increase,
+            'position' => $this->position,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])

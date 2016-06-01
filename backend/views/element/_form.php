@@ -56,11 +56,14 @@ $this->registerJs($js, $this::POS_END, 'my-img-delete');
         <div class="col-sm-4 col-xs-12">
             <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
         </div>
-        <div class="col-sm-4 col-xs-12">
+        <div class="col-sm-2 col-xs-12">
             <?= $form->field($model, 'stock')->dropDownList(Element::listHome()) ?>
         </div>
-        <div class="col-sm-4 col-xs-12">
+        <div class="col-sm-3 col-xs-12">
             <?= $form->field($model, 'home')->dropDownList(Element::listHome()) ?>
+        </div>
+        <div class="col-sm-3 col-xs-12">
+            <?= $form->field($model, 'position')->dropDownList(Element::listPosition()) ?>
         </div>
     </div>
     <?= $form->field($model, 'size')->checkboxList(Proportion::getToList()) ?>

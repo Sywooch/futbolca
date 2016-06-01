@@ -13,6 +13,7 @@ use yii\helpers\Html;
  *
  * @property string $id
  * @property string $name
+ * @property integer $position
  * @property string $size
  * @property integer $stock
  * @property integer $home
@@ -62,7 +63,7 @@ class Element extends \yii\db\ActiveRecord
             [['name', 'photo'], 'filter', 'filter' => 'trim', 'skipOnArray' => true],
             [['name', 'photo'], 'filter', 'filter' => 'strip_tags', 'skipOnArray' => true],
             [['name', 'fashion'], 'required'],
-            [['stock', 'home', 'fashion', 'toppx', 'leftpx', 'price', 'increase', 'resizeW', 'resizeH'], 'integer'],
+            [['stock', 'home', 'fashion', 'toppx', 'leftpx', 'price', 'increase', 'resizeW', 'resizeH', 'position'], 'integer'],
             [['name', 'photo'], 'string', 'max' => 255],
 //            [['name'], 'unique'],
             [['size'], 'each', 'rule' => ['string']],
@@ -78,6 +79,7 @@ class Element extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
+            'position' => Yii::t('app', 'Position'),
             'size' => Yii::t('app', 'Size'),
             'stock' => Yii::t('app', 'Stock'),
             'home' => Yii::t('app', 'Основной'),
@@ -200,7 +202,8 @@ class Element extends \yii\db\ActiveRecord
 
     public static function listPosition(){
         return [
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+            31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60
         ];
     }
 }

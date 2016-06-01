@@ -10,6 +10,7 @@ use Yii;
  *
  * @property string $id
  * @property string $old
+ * @property integer $position
  * @property string $name
  * @property string $size
  * @property integer $stock
@@ -46,7 +47,7 @@ class Element extends \yii\db\ActiveRecord
             [['name', 'photo'], 'filter', 'filter' => 'trim', 'skipOnArray' => true],
             [['name', 'photo'], 'filter', 'filter' => 'strip_tags', 'skipOnArray' => true],
             [['name', 'fashion'], 'required'],
-            [['stock', 'home', 'fashion', 'toppx', 'leftpx', 'price', 'increase', 'old'], 'integer'],
+            [['stock', 'home', 'fashion', 'toppx', 'leftpx', 'price', 'increase', 'old', 'position'], 'integer'],
             [['name', 'size', 'photo'], 'string', 'max' => 255]
         ];
     }
@@ -68,6 +69,7 @@ class Element extends \yii\db\ActiveRecord
             'price' => Yii::t('app', 'Price'),
             'increase' => Yii::t('app', 'Increase'),
             'photo' => Yii::t('app', 'Photo'),
+            'position' => Yii::t('app', 'Position'),
         ];
     }
 
@@ -134,7 +136,7 @@ class Element extends \yii\db\ActiveRecord
             $model->andWhere("{{%element}}.`id` <> :id", [':id' => $item->element]);
             $model->andWhere("{{%item_element}}.`item` = :item2", [':item2' => $item->id]);
         }
-        $model->orderBy('{{%item_element}}.`position` desc, {{%element}}.`fashion` asc, {{%element}}.`name` asc');
+        $model->orderBy('{{%item_element}}.`position` desc, {{%element}}.`position` desc, {{%element}}.`name` asc');
         return $model->all();
     }
 

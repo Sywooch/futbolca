@@ -111,6 +111,15 @@ $idList = [];
                     return '<a title="Редактировать" href="javascript:void(0);" data-name="increase" data-pk="'.$model->id.'" data-url="'.Url::toRoute('element/edit').'" id="'.$idTag.'" data-type="text" data-title="Редактировать">'.$model->increase.'</a>';
                 },
             ],
+            [
+                'attribute' => 'position',
+                'format' => 'raw',
+                'value'=> function ($model) use(&$idList) {
+                    $idTag = 'position_edit_'.$model->id;
+                    $idList[] = '#'.$idTag;
+                    return '<a title="Редактировать" href="javascript:void(0);" data-name="position" data-pk="'.$model->id.'" data-value="'.$model->position.'" data-source=\''.Json::encode(Element::listPosition()).'\' data-url="'.Url::toRoute('element/edit').'" id="'.$idTag.'" data-type="select" data-title="Редактировать">'.$model->position.'</a>';
+                },
+            ],
 
             ['class' => 'yii\grid\ActionColumn',
                 'template'=>'{update} {delete}',
