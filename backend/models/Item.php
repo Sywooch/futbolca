@@ -187,16 +187,16 @@ class Item extends \yii\db\ActiveRecord
 
     public function beforeValidate()
     {
-        if($this->isNewRecord){
-            if(!$this->url){
-                $this->url = UrlHelper::translateUrl($this->name);
-            }
-            if(!$this->description){
-                $this->description = $this->name;
-            }
-        }else{
-            $this->url = UrlHelper::translateUrl($this->url);
-        }
+//        if($this->isNewRecord){
+//            if(!$this->url){
+//                $this->url = UrlHelper::translateUrl($this->name);
+//            }
+//            if(!$this->description){
+//                $this->description = $this->name;
+//            }
+//        }else{
+//            $this->url = UrlHelper::translateUrl($this->url);
+//        }
         return parent::beforeValidate();
     }
 

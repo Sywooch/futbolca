@@ -228,6 +228,10 @@ class ItemController extends BaseController
         $model->getElements();
         $model->getFashion();
         if ($model->load(Yii::$app->request->post())) {
+            if(!$model->url){
+                $model->url = UrlHelper::translateUrl($model->name);
+            }
+            $model->url = UrlHelper::translateUrl($model->url);
             if($model->validate()){
                 $model->save(false);
                 $model->setMarkers();
@@ -273,7 +277,11 @@ class ItemController extends BaseController
         $model->getPodcategories();
         $model->getElements();
         $model->getFashion();
+        $uldUrl = $model->url;
         if ($model->load(Yii::$app->request->post())) {
+            if($uldUrl != $model->url){
+                $model->url = UrlHelper::translateUrl($model->url);
+            }
             if($model->validate()){
                 $model->save(false);
                 $model->deleteMarkers();

@@ -122,18 +122,19 @@ class Element extends \yii\db\ActiveRecord
         $currentFashion = (int)$currentFashion;
         $model = self::find();
         $model->distinct();
-        $model->where(['in', 'id', $elementId]);
+        $model->join('LEFT JOIN', '{{%item_element}}', '{{%item_element}}.`element` = {{%element}}.`id`');
+        $model->where(['in', '{{%element}}.`id`', $elementId]);
         if($item){
             $model->with(['fashion0']);
             if($currentFashion > 0){
-                $model->andWhere("fashion = :fashion", [':fashion' => $currentFashion]);
+                $model->andWhere("{{%element}}.`fashion` = :fashion", [':fashion' => $currentFashion]);
             }else{
-                $model->andWhere("fashion = :fashion", [':fashion' => $item->element0->fashion]);
+                $model->andWhere("{{%element}}.`fashion` = :fashion", [':fashion' => $item->element0->fashion]);
             }
-            $model->andWhere("id <> :id", [':id' => $item->element]);
-
+            $model->andWhere("{{%element}}.`id` <> :id", [':id' => $item->element]);
+            $model->andWhere("{{%item_element}}.`item` = :item2", [':item2' => $item->id]);
         }
-        $model->orderBy('fashion asc, name asc');
+        $model->orderBy('{{%item_element}}.`position` desc, {{%element}}.`fashion` asc, {{%element}}.`name` asc');
         return $model->all();
     }
 
