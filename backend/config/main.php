@@ -95,14 +95,8 @@ return [
                 '<controller:\w+>' => '<controller>/index',
             ],
         ],
-        'db' => [
-            'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=futbolend',
-            'username' => 'futbolend',
-            'password' => 'fdgfg546DHBGScz',
-            'charset' => 'utf8',
-            'tablePrefix' => 'fl_',
-        ],
+        'mail' => require_once(__DIR__.'/../../frontend/config/mail.php'),
+        'db' => require_once(__DIR__.'/../../frontend/config/db.php'),
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,

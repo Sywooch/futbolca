@@ -49,18 +49,7 @@ return [
             ],
 
         ],
-        'mail' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            'viewPath' => '@common/mail',
-            'transport' => [
-                'class' => 'Swift_SmtpTransport',
-                'host' => 'smtp.yandex.ru',
-                'username' => 'shop@futboland.com.ua',
-                'password' => '88kuropatka34',
-                'port' => '465',
-                'encryption' => 'ssl',
-            ],
-        ],
+        'mail' => require_once(__DIR__.'/mail.php'),
         'formatter' => [
             'timeZone' => 'Europe/Moscow',
             'dateFormat' => 'dd.MM.yyyy',
@@ -74,19 +63,7 @@ return [
             'cookieValidationKey' => 'sdf#$5w543hrg()dhdSg',
             'baseUrl' => ''
         ],
-        'db' => [
-            'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=futbolend',
-            'username' => 'futbolend',
-            'password' => 'fdgfg546DHBGScz',
-            'charset' => 'utf8',
-            'tablePrefix' => 'fl_',
-            'enableSchemaCache' => true,
-            // Duration of schema cache.
-            'schemaCacheDuration' => 3600,
-            // Name of the cache component used to store schema information
-            'schemaCache' => 'cacheFile',
-        ],
+        'db' => require_once(__DIR__.'/db.php'),
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
