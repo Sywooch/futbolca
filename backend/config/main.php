@@ -67,6 +67,7 @@ return [
             ],
         ],
         'request' => [
+            'enableCsrfValidation' => false,
             'baseUrl' => '/admin/',
             'cookieValidationKey' => '0npz9bGwqKJdh6n8OAvYvCdOwuS36ovg',
         ],

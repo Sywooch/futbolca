@@ -164,6 +164,9 @@ class ItemController extends BaseController
             throw new NotFoundHttpException(Yii::t('app', 'Неверные параметры'));
         }
         $model = Item::findOne((int)Yii::$app->request->post('id'));
+        if(!$model){
+            $model = new Item();
+        }
         $model->getElements();
         $model->getFashion();
         return $this->renderPartial('listElements', [
